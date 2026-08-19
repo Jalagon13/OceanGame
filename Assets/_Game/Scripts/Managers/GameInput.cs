@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace LittleGuyGamePrototype
+namespace OceanGame
 {
     public class GameInput : MonoBehaviour
     {

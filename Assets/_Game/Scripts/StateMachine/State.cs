@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LittleGuyGamePrototype
+namespace OceanGame
 {
     public abstract class State 
     {

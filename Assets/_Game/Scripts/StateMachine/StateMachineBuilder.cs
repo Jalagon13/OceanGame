@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-namespace LittleGuyGamePrototype
+namespace OceanGame
 {
     public class StateMachineBuilder
     {
