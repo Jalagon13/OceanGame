@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef9b7a05dde03423597432d094b53640, type: 3}
+  m_Name: BasicSoldierSO
+  m_EditorClassIdentifier: Assembly-CSharp::LittleGuyGamePrototype.SoldierSO
+  <MaxHealth>k__BackingField: 8
+  <BaseDamage>k__BackingField: 1
+  <MoveSpeed>k__BackingField: 2
+  <IFrameDuration>k__BackingField: 0.16
+  <CanKnockback>k__BackingField: 1
+  <KnockbackForce>k__BackingField: 3
+  <MinIdleTime>k__BackingField: 3
+  <MaxIdleTime>k__BackingField: 5
+  <WanderDestinationSearchRadius>k__BackingField: 3
+  <AgroRadius>k__BackingField: 16
