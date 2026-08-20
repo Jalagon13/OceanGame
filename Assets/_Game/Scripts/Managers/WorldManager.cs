@@ -6,6 +6,9 @@ namespace OceanGame
     public class WorldManager : MonoBehaviour
     {
         public static WorldManager Instance { get; private set; }
+        
+        [SerializeField] private int _tempX = 45;
+        [SerializeField] private int _tempY = 45;
 
         [field: Header("World Settings")]
         [field: SerializeField] public int WorldWidth { get; } = 100;
@@ -33,8 +36,8 @@ namespace OceanGame
             {
                 for (int y = 0; y < WorldHeight; y++)
                 {
-                    if(y > 45) continue;
-                    if(x > 45) continue;
+                    if(y > _tempY) continue;
+                    if(x > _tempX) continue;
                 
                     ForegroundLayer[x, y] = GameDataRegistry.Instance.GetTileId(_grassTile);
                     BackgroundLayer[x, y] = GameDataRegistry.Instance.GetTileId(_grassTile);
