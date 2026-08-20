@@ -4,6 +4,7 @@ namespace OceanGame
 {
     #region Root State
 
+    // Root state remains active permanently
     public class PlayerRootState : State
     {
         public readonly PlayerGroundedState Grounded;
@@ -25,7 +26,7 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            return _ctx.Swimming ? Swimming : _ctx.Grounded ? Grounded : Airborne;
+            return _ctx.Swimming ? Swimming : _ctx.Grounded ? null : Airborne;
         }
     }
 
@@ -54,7 +55,12 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            return null; // WIP
+            return null;
+        }
+
+        protected override void OnEnter()
+        {
+            // On Grounded Animation set here
         }
     }
 
@@ -73,7 +79,12 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            return null; // WIP
+            return _ctx.Swimming ? ((PlayerRootState)Parent).Swimming : _ctx.Grounded ? ((PlayerRootState)Parent).Grounded : null;
+        }
+
+        protected override void OnEnter()
+        {
+            // On Jump Animation set here
         }
     }
 
@@ -92,7 +103,12 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            return null; // WIP
+            return !_ctx.Swimming ? _ctx.Grounded ? (Parent as PlayerRootState).Grounded : (Parent as PlayerRootState).Airborne : null;
+        }
+
+        protected override void OnEnter()
+        {
+            // On Swimming Animation set here
         }
     }
 
@@ -111,7 +127,12 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            return null; // WIP
+            if(_ctx.DesiredDirection != Vector2.zero)
+            {
+                return ((PlayerGroundedState)Parent).Move;
+            }
+        
+            return null;
         }
     }
 
@@ -130,7 +151,12 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            return null; // WIP
+            if (_ctx.DesiredDirection == Vector2.zero)
+            {
+                return ((PlayerGroundedState)Parent).Idle;
+            }
+
+            return null; 
         }
     }
 

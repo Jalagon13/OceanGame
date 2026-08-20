@@ -25,6 +25,16 @@ namespace OceanGame
             Ctx.Transform = transform;
         }
         
+        private void Start() 
+        {
+            GameInput.Instance.MoveInputPressed += OnMoveInputPressed;
+        }
+        
+        private void OnDestroy() 
+        {
+            GameInput.Instance.MoveInputPressed -= OnMoveInputPressed;
+        }
+
         private void Update()
         {
             _machine.Tick(Time.deltaTime);
@@ -37,6 +47,11 @@ namespace OceanGame
             }
         }
 
+        private void OnMoveInputPressed(Vector2 rawMoveInput)
+        {
+            Ctx.DesiredDirection = rawMoveInput;
+        }
+
         private static string StatePath(State s)
         {
             return string.Join(" > ", s.PathToRoot().Reverse().Select(n => n.GetType().Name));
@@ -46,6 +61,8 @@ namespace OceanGame
     public class PlayerContext
     {
         [HideInInspector] public Transform Transform;
+        [HideInInspector] public Vector2 DesiredDirection;
+        [HideInInspector] public Vector2 Velocity;
         [HideInInspector] public bool Grounded = true;
         [HideInInspector] public bool Swimming = false;
     }
