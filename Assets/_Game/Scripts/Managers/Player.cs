@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -49,7 +50,9 @@ namespace OceanGame
         
         private void FixedUpdate()
         {
-            transform.position += (Vector3)Ctx.Velocity * Time.fixedDeltaTime;
+            Vector2 boxSize = Ctx.PlayerBodyCollider.size; // Player's size
+
+            transform.position = GridPhysics.MoveAndResolve(transform.position, Ctx.Velocity, boxSize, Time.fixedDeltaTime);
         }
 
         private void OnMoveInputPressed(Vector2 rawMoveInput)
@@ -63,10 +66,12 @@ namespace OceanGame
         }
     }
     
+    [Serializable]
     public class PlayerContext
     {
         public float MoveSpeed = 3.5f;
         public float TurnSharpness = 5f;
+        public BoxCollider2D PlayerBodyCollider;
     
         [HideInInspector] public Transform Transform;
         [HideInInspector] public Vector2 DesiredDirection;

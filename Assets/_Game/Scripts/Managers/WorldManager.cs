@@ -33,6 +33,9 @@ namespace OceanGame
             {
                 for (int y = 0; y < WorldHeight; y++)
                 {
+                    if(y > 45) continue;
+                    if(x > 45) continue;
+                
                     ForegroundLayer[x, y] = GameDataRegistry.Instance.GetTileId(_grassTile);
                     BackgroundLayer[x, y] = GameDataRegistry.Instance.GetTileId(_grassTile);
                 }
