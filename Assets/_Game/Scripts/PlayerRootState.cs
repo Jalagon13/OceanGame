@@ -55,12 +55,17 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            return null;
+            
         }
 
         protected override void OnEnter()
         {
             // On Grounded Animation set here
+        }
+
+        protected override void OnFixedUpdate(float fixedDeltaTime)
+        {
+            
         }
     }
 
@@ -85,6 +90,11 @@ namespace OceanGame
         protected override void OnEnter()
         {
             // On Jump Animation set here
+        }
+
+        protected override void OnFixedUpdate(float fixedDeltaTime)
+        {
+
         }
     }
 
@@ -140,10 +150,10 @@ namespace OceanGame
             _ctx.Velocity = Vector2.zero;
         }
         
-        protected override void OnUpdate(float deltaTime)
+        protected override void OnFixedUpdate(float fixedDeltaTime)
         {
             var currentSpeed = _ctx.MoveSpeed;
-            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, deltaTime * _ctx.TurnSharpness);
+            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.TurnSharpness);
         }
     }
 
@@ -170,10 +180,10 @@ namespace OceanGame
             return null; 
         }
 
-        protected override void OnUpdate(float deltaTime)
+        protected override void OnFixedUpdate(float fixedDeltaTime)
         {
             var currentSpeed = _ctx.MoveSpeed;
-            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, deltaTime * _ctx.TurnSharpness);
+            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.TurnSharpness);
         }
     }
 

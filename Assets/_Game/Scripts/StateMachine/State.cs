@@ -22,6 +22,7 @@ namespace OceanGame
         protected virtual void OnEnter() { }
         protected virtual void OnExit() { }
         protected virtual void OnUpdate(float deltaTime) { }
+        protected virtual void OnFixedUpdate(float fixedDeltaTime) { }
 
         internal void Enter()
         {
@@ -49,6 +50,12 @@ namespace OceanGame
 
             if(ActiveChild != null) ActiveChild.Update(deltaTime);
             OnUpdate(deltaTime);
+        }
+
+        internal void FixedUpdate(float fixedDeltaTime)
+        {
+            if (ActiveChild != null) ActiveChild.FixedUpdate(fixedDeltaTime);
+            OnFixedUpdate(fixedDeltaTime);
         }
 
         // Returns the deepest currently-active state descendant state (the leaf of the active path).

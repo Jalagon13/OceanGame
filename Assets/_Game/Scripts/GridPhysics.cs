@@ -5,8 +5,21 @@ namespace OceanGame
 {
     public static class GridPhysics
     {
-        public static Vector2 MoveAndResolve(Vector2 currentPos, Vector2 velocity, Vector2 size, float deltaTime)
+        private const float SKIN_SIZE = 0.01f;
+
+        public struct CollisionResult
         {
+            public Vector2 NewPosition;
+            public bool TouchingLeft;
+            public bool TouchingRight;
+            public bool TouchingBottom; // Can use this for grounded flag
+            public bool TouchingTop;
+        }
+
+        public static CollisionResult MoveAndResolve(Vector2 currentPos, Vector2 velocity, Vector2 size, float deltaTime)
+        {
+            CollisionResult result = new CollisionResult();
+
             var world = WorldManager.Instance;
 
             float halfWidth = size.x / 2f;
@@ -87,11 +100,13 @@ namespace OceanGame
                                 // Resolve horizontal overlap: Are we moving right or left?
                                 if (velocity.x > 0 && playerRight > tileX && startRight <= tileX)
                                 {
+                                    // Triggered right wall impact
                                     // Moving right: push back to the left edge of the block
                                     currentPos.x = tileX - halfWidth;
                                 }
                                 else if (velocity.x < 0 && playerLeft < tileX + 1 && startLeft >= tileX + 1)
                                 {
+                                    // Triggered left wall impact
                                     // Moving left: push forward to the right edge of the block
                                     currentPos.x = (tileX + 1) + halfWidth;
                                 }
@@ -137,11 +152,13 @@ namespace OceanGame
                                 // Resolve vertical overlap: Are we going up or down
                                 if (velocity.y > 0 && playerTop > tileY && startTop <= tileY)
                                 {
+                                    // Hit ceiling
                                     // Moving up: hit ceiling, push down below the block
                                     currentPos.y = tileY - halfHeight;
                                 }
                                 else if (velocity.y < 0 && playerBottom < tileY + 1 && startBottom >= tileY + 1)
                                 {
+                                    // Landed on ground (Grounded)
                                     // Moving down: landed on ground, push up on top of the block
                                     currentPos.y = (tileY + 1) + halfHeight;
                                 }
@@ -155,7 +172,59 @@ namespace OceanGame
                 }
             }
 
-            return currentPos;
+            // Skin contact monitoring
+            // Recompute the final player boundaries after all movement resolutions are done
+            float finalLeft = currentPos.x - halfWidth;
+            float finalRight = currentPos.x + halfWidth;
+            float finalBottom = currentPos.y - halfHeight;
+            float finalTop = currentPos.y + halfHeight;
+
+            // We slightly pull the perpendicular corners inward to prevent side-walls 
+            // from falsely flagging as ground contact or ceiling contact.
+            float inset = 0.02f;
+
+            // Check Bottom Contact (Grounded Check)
+            int bMinX = Mathf.FloorToInt(finalLeft + inset);
+            int bMaxX = Mathf.FloorToInt(finalRight - inset);
+            int bTileY = Mathf.FloorToInt(finalBottom - SKIN_SIZE);
+            for (int x = bMinX; x <= bMaxX; x++)
+            {
+                if (world.ForegroundLayer[x, bTileY] >= 0) result.TouchingBottom = true;
+            }
+
+            // Check Top Contact (Ceiling Check)
+            int tMinX = Mathf.FloorToInt(finalLeft + inset);
+            int tMaxX = Mathf.FloorToInt(finalRight - inset);
+            int tTileY = Mathf.FloorToInt(finalTop + SKIN_SIZE);
+            for (int x = tMinX; x <= tMaxX; x++)
+            {
+                if (world.ForegroundLayer[x, tTileY] >= 0) result.TouchingTop = true;
+            }
+
+            // Check Left Contact (Left Wall Check)
+            int lTileX = Mathf.FloorToInt(finalLeft - SKIN_SIZE);
+            int lMinY = Mathf.FloorToInt(finalBottom + inset);
+            int lMaxY = Mathf.FloorToInt(finalTop - inset);
+            for (int y = lMinY; y <= lMaxY; y++)
+            {
+                if (world.ForegroundLayer[lTileX, y] >= 0) result.TouchingLeft = true;
+            }
+
+            // Check Right Contact (Right Wall Check)
+            int rTileX = Mathf.FloorToInt(finalRight + SKIN_SIZE);
+            int rMinY = Mathf.FloorToInt(finalBottom + inset);
+            int rMaxY = Mathf.FloorToInt(finalTop - inset);
+            for (int y = rMinY; y <= rMaxY; y++)
+            {
+                if (world.ForegroundLayer[rTileX, y] >= 0) result.TouchingRight = true;
+            }
+
+            // If the entity is entombed, force their contact indicators to true natively
+            if (isEntombedX) { result.TouchingLeft = true; result.TouchingRight = true; }
+            if (isEntombedY) { result.TouchingBottom = true; result.TouchingTop = true; }
+
+            result.NewPosition = currentPos;
+            return result;
         }
 
         // Pure mathematical evaluation: checks if two rectangular boundary definitions intersect

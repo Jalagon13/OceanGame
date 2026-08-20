@@ -738,7 +738,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldManager
   _tempX: 60
-  _tempY: 60
+  _tempY: 45
   _grassTile: {fileID: 11400000, guid: ac1de6a6f08164a80a3edcffdf473437, type: 2}
   _foregroundTilemap: {fileID: 1420173610}
   _backgroundTilemap: {fileID: 1608990557}
@@ -1070,7 +1070,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.Player
   Ctx:
-    MoveSpeed: 5
+    MoveSpeed: 10
     TurnSharpness: 5
     PlayerBodyCollider: {fileID: 1715237433}
     Transform: {fileID: 0}

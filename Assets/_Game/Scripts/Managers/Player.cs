@@ -50,9 +50,12 @@ namespace OceanGame
         
         private void FixedUpdate()
         {
+            _machine.FixedTick(Time.fixedDeltaTime);
+
             Vector2 boxSize = Ctx.PlayerBodyCollider.size; // Player's size
 
-            transform.position = GridPhysics.MoveAndResolve(transform.position, Ctx.Velocity, boxSize, Time.fixedDeltaTime);
+            Ctx.CollisionResult = GridPhysics.MoveAndResolve(transform.position, Ctx.Velocity, boxSize, Time.fixedDeltaTime);
+            transform.position = Ctx.CollisionResult.NewPosition;
         }
 
         private void OnMoveInputPressed(Vector2 rawMoveInput)
@@ -76,7 +79,7 @@ namespace OceanGame
         [HideInInspector] public Transform Transform;
         [HideInInspector] public Vector2 DesiredDirection;
         [HideInInspector] public Vector2 Velocity;
-        [HideInInspector] public bool Grounded = true;
+        [HideInInspector] public GridPhysics.CollisionResult CollisionResult;
         [HideInInspector] public bool Swimming = false;
 
     }

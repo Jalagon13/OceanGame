@@ -29,7 +29,14 @@ namespace OceanGame
             InternalTick(deltaTime);
         }
 
+        public void FixedTick(float fixedDeltaTime)
+        {
+            if (!_started) return;
+            InternalFixedTick(fixedDeltaTime);
+        }
+
         internal void InternalTick(float deltaTime) => Root.Update(deltaTime);
+        internal void InternalFixedTick(float fixedDeltaTime) => Root.FixedUpdate(fixedDeltaTime);
 
         // Perform the actual switch from 'from' to 'to' by exiting up to the shared ancestor, then entering down to the target
         public void ChangeState(State from, State to)
