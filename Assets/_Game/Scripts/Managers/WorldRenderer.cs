@@ -7,42 +7,22 @@ namespace OceanGame
     public class WorldRenderer : MonoBehaviour
     {
         public static WorldRenderer Instance { get; private set; }
-        public event Action<RectInt> OnVisibleTileBoundsChanged;
-
+        
         [SerializeField] private Camera _mainCamera;
-        [SerializeField] private int _padding = 4;
-
-        public RectInt CurrentVisibleTileBounds { get; private set; }
 
         private void Awake()
         {
             Instance = this;
         }
-
-        private void LateUpdate()
+        
+        private void Start() 
         {
-            int padding = _padding;
-            Vector2 bottomLeft = _mainCamera.ViewportToWorldPoint(new Vector2(0, 0));
-            Vector2 topRight = _mainCamera.ViewportToWorldPoint(new Vector2(1, 1));
-
-            int minX = Mathf.FloorToInt(bottomLeft.x) - padding;
-            int minY = Mathf.FloorToInt(bottomLeft.y) - padding;
-            int maxX = Mathf.CeilToInt(topRight.x) + padding;
-            int maxY = Mathf.CeilToInt(topRight.y) + padding;
-
-            RectInt visibleBounds = new(minX, minY, Mathf.Max(0, maxX - minX), Mathf.Max(0, maxY - minY));
-
-            if (visibleBounds == CurrentVisibleTileBounds)
-            {
-                return;
-            }
-
-            RectInt previousBounds = CurrentVisibleTileBounds;
-
-            CurrentVisibleTileBounds = visibleBounds;
-            OnVisibleTileBoundsChanged?.Invoke(visibleBounds);
-
-            OnTileBoundsChanged(previousBounds, visibleBounds);
+            PlayerCamera.Instance.OnVisibleTileBoundsChanged += OnTileBoundsChanged;
+        }
+        
+        private void OnDestroy() 
+        {
+            PlayerCamera.Instance.OnVisibleTileBoundsChanged -= OnTileBoundsChanged;
         }
 
         private void OnTileBoundsChanged(RectInt oldBounds, RectInt newBounds)

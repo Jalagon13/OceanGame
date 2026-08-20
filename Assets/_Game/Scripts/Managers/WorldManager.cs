@@ -7,9 +7,9 @@ namespace OceanGame
     {
         public static WorldManager Instance { get; private set; }
 
-        [Header("World Settings")]
-        [SerializeField] private int _worldWidth = 100;
-        [SerializeField] private int _worldHeight = 100;
+        [field: Header("World Settings")]
+        [field: SerializeField] public int WorldWidth { get; } = 100;
+        [field: SerializeField] public int WorldHeight { get; } = 100;
 
         [Header("World References")]
         [SerializeField] private TileBase _grassTile;
@@ -23,15 +23,15 @@ namespace OceanGame
         {
             Instance = this;
             
-            ForegroundLayer = new TileLayer(_worldWidth, _worldHeight, _foregroundTilemap);
-            BackgroundLayer = new TileLayer(_worldWidth, _worldHeight, _backgroundTilemap);
+            ForegroundLayer = new TileLayer(WorldWidth, WorldHeight, _foregroundTilemap);
+            BackgroundLayer = new TileLayer(WorldWidth, WorldHeight, _backgroundTilemap);
         }
 
         private void Start() 
         {
-            for (int x = 0; x < _worldWidth; x++)
+            for (int x = 0; x < WorldWidth; x++)
             {
-                for (int y = 0; y < _worldHeight; y++)
+                for (int y = 0; y < WorldHeight; y++)
                 {
                     ForegroundLayer[x, y] = GameDataRegistry.Instance.GetTileId(_grassTile);
                     BackgroundLayer[x, y] = GameDataRegistry.Instance.GetTileId(_grassTile);
