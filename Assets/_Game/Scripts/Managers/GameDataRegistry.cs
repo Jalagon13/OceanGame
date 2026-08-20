@@ -47,7 +47,11 @@ namespace OceanGame
 
         public int GetTileId(TileBase tile)
         {
-            if (tile == null) return 0;
+            if (tile == null) 
+            {
+                Debug.LogError("Attempted to get ID for a null tile.");
+                return -3;
+            }
 
             if (_tileToIdMap.TryGetValue(tile, out int id))
             {
@@ -55,12 +59,12 @@ namespace OceanGame
             }
 
             Debug.LogError($"Tile '{tile.name}' is not registered in the GameDataRegistry!");
-            return 0;
+            return -3;
         }
 
         public TileBase GetTileFromId(int id)
         {
-            if (id <= 0 || id >= _tileDatabase.Count) return null;
+            if (id <= -3 || id >= _tileDatabase.Count) return null;
             return _tileDatabase[id];
         }
         

@@ -12,8 +12,9 @@ namespace OceanGame
         [SerializeField] private int _worldHeight = 100;
 
         [Header("World References")]
-        [SerializeField] private TilemapRenderer _foregroundTilemap;
-        [SerializeField] private TilemapRenderer _backgroundTilemap;
+        [SerializeField] private TileBase _grassTile;
+        [SerializeField] private Tilemap _foregroundTilemap;
+        [SerializeField] private Tilemap _backgroundTilemap;
 
         public TileLayer ForegroundLayer { get; private set; }
         public TileLayer BackgroundLayer { get; private set; }
@@ -28,7 +29,14 @@ namespace OceanGame
 
         private void Start() 
         {
-            
+            for (int x = 0; x < _worldWidth; x++)
+            {
+                for (int y = 0; y < _worldHeight; y++)
+                {
+                    ForegroundLayer[x, y] = GameDataRegistry.Instance.GetTileId(_grassTile);
+                    BackgroundLayer[x, y] = GameDataRegistry.Instance.GetTileId(_grassTile);
+                }
+            }
         }
     }
     
@@ -38,15 +46,21 @@ namespace OceanGame
         private readonly int _width;
         private readonly int _height;
         
-        public TilemapRenderer Tilemap { get; }
+        public Tilemap Tilemap { get; }
         
-        public TileLayer(int width, int height, TilemapRenderer tilemap)
+        public TileLayer(int width, int height, Tilemap tilemap)
         {
             _width = width;
             _height = height;
             Tilemap = tilemap;
             
             _tiles = new int[width * height];
+
+            // Overwrite the defaults so the world starts as empty Air (-1)
+            for (int i = 0; i < _tiles.Length; i++)
+            {
+                _tiles[i] = -1;
+            }
         }
         
         public int this[int x, int y]
@@ -55,8 +69,8 @@ namespace OceanGame
             {
                 if (x < 0 || x >= _width || y < 0 || y >= _height) 
                 {
-                    Debug.LogError($"Attempted to access tile at ({x}, {y}) which is out of bounds.");
-                    return -1;
+                    // Debug.LogWarning($"{Tilemap.name}: Attempted to access tile at ({x}, {y}) which is out of bounds.");
+                    return -2; // Return a special value indicating out-of-bounds access
                 }
         
                 return _tiles[y * _width + x];
@@ -65,7 +79,7 @@ namespace OceanGame
             {
                 if (x < 0 || x >= _width || y < 0 || y >= _height)
                 {
-                    Debug.LogError($"Attempted to set tile at ({x}, {y}) which is out of bounds.");
+                    Debug.LogError($"{Tilemap.name}: Attempted to set tile at ({x}, {y}) which is out of bounds.");
                     return;
                 }
         
@@ -73,6 +87,16 @@ namespace OceanGame
             }
         }
 
+        // public bool IsInBounds(int x, int y)
+        // {
+        //     if (x < 0 || x >= _width || y < 0 || y >= _height)
+        //     {
+        //         return false;
+        //     }
+
+        //     // Checks if the tile gives back a real block/air code, or the out-of-bounds error code
+        //     return _tiles[y * _width + x] >= -1;
+        // }
     }
 }
 
