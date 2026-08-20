@@ -1,0 +1,52 @@
+using System.Linq;
+using UnityEngine;
+
+namespace OceanGame
+{
+    public class Player : MonoBehaviour
+    {
+        public static Player Instance { get; private set; }
+        
+        public PlayerContext Ctx = new();
+        
+        private StateMachine _machine;
+        private State _root;
+        private string _lastPath;
+        
+        private void Awake() 
+        {
+            Instance = this;    
+            
+            _root = new PlayerRootState(null, Ctx);
+            var builder = new StateMachineBuilder(_root);
+            _machine = builder.Build();
+            _machine.Start();
+
+            Ctx.Transform = transform;
+        }
+        
+        private void Update()
+        {
+            _machine.Tick(Time.deltaTime);
+            
+            var path = StatePath(_machine.Root.Leaf());
+            if (path != _lastPath)
+            {
+                Debug.Log($"{name}: {path}");
+                _lastPath = path;
+            }
+        }
+
+        private static string StatePath(State s)
+        {
+            return string.Join(" > ", s.PathToRoot().Reverse().Select(n => n.GetType().Name));
+        }
+    }
+    
+    public class PlayerContext
+    {
+        [HideInInspector] public Transform Transform;
+        [HideInInspector] public bool Grounded = true;
+        [HideInInspector] public bool Swimming = false;
+    }
+}

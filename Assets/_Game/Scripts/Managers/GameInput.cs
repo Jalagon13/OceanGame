@@ -12,7 +12,7 @@ namespace OceanGame
         public event Action JumpPressed;
 
         public Vector2 MoveInput { get; private set; }
-        public Vector2 LookInput { get; private set; }
+        public bool JumpHold { get; private set; }
 
         private PlayerInput _playerInput;
 
@@ -26,9 +26,7 @@ namespace OceanGame
             _playerInput.Player.Move.started += GameInput_OnMove;
             _playerInput.Player.Move.performed += GameInput_OnMove;
             _playerInput.Player.Move.canceled += GameInput_OnMove;
-            _playerInput.Player.Look.started += GameInput_OnLook;
-            _playerInput.Player.Look.performed += GameInput_OnLook;
-            _playerInput.Player.Look.canceled += GameInput_OnLook;
+            
             _playerInput.Player.Jump.started += GameInput_OnJump;
             _playerInput.Player.Jump.performed += GameInput_OnJump;
         }
@@ -43,9 +41,7 @@ namespace OceanGame
             _playerInput.Player.Move.started -= GameInput_OnMove;
             _playerInput.Player.Move.performed -= GameInput_OnMove;
             _playerInput.Player.Move.canceled -= GameInput_OnMove;
-            _playerInput.Player.Look.started -= GameInput_OnLook;
-            _playerInput.Player.Look.performed -= GameInput_OnLook;
-            _playerInput.Player.Look.canceled -= GameInput_OnLook;
+            
             _playerInput.Player.Jump.started -= GameInput_OnJump;
             _playerInput.Player.Jump.performed -= GameInput_OnJump;
             _playerInput.Disable();
@@ -53,7 +49,16 @@ namespace OceanGame
 
         private void GameInput_OnJump(InputAction.CallbackContext context)
         {
-            if (context.phase == InputActionPhase.Started || context.phase == InputActionPhase.Performed)
+            if(context.phase == InputActionPhase.Started)
+            {
+                JumpHold = true;
+            }
+            else if(context.phase == InputActionPhase.Canceled)
+            {
+                JumpHold = false;
+            }
+        
+            if (context.phase == InputActionPhase.Started)
             {
                 JumpPressed?.Invoke();
             }
@@ -67,11 +72,6 @@ namespace OceanGame
             {
                 MoveInputPressed?.Invoke(MoveInput);
             }
-        }
-
-        private void GameInput_OnLook(InputAction.CallbackContext context)
-        {
-            LookInput = context.ReadValue<Vector2>();
         }
     }
 }
