@@ -9,8 +9,12 @@ namespace OceanGame
     
         public event Action<RectInt, RectInt> OnVisibleTileBoundsChanged;
 
+        [SerializeField] private GameObject _player;
         [SerializeField] private Camera _camera;
         [SerializeField] private int _padding = 4;
+
+        [Header("Movement Settings")]
+        [SerializeField, Range(0.01f, 1f)] private float _smoothSpeed = 0.125f; // Lower numbers mean smoother, delayed tracking. 1f means instant locking.
 
         public RectInt CurrentVisibleTileBounds { get; private set; }
         
@@ -47,6 +51,8 @@ namespace OceanGame
 
         private void ClampCameraToWorld()
         {
+            Vector3 targetPos = new(_player.transform.position.x, _player.transform.position.y, transform.position.z);
+
             var world = WorldManager.Instance;
 
             float camHeight = _camera.orthographicSize;
@@ -57,8 +63,6 @@ namespace OceanGame
 
             float minY = camHeight;
             float maxY = world.WorldHeight - camHeight;
-
-            Vector3 targetPos = transform.position;
 
             // Special case: If the world is smaller than the camera viewport, center it
             if (world.WorldWidth <= camWidth * 2)
@@ -79,7 +83,7 @@ namespace OceanGame
                 targetPos.y = Mathf.Clamp(targetPos.y, minY, maxY);
             }
 
-            transform.position = targetPos;
+            transform.position = Vector3.Lerp(transform.position, targetPos, _smoothSpeed);
         }
     }
 }

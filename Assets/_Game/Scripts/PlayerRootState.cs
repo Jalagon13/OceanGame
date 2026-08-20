@@ -127,12 +127,23 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            if(_ctx.DesiredDirection != Vector2.zero)
+            if(_ctx.Velocity.sqrMagnitude > 0.1f)
             {
                 return ((PlayerGroundedState)Parent).Move;
             }
         
             return null;
+        }
+
+        protected override void OnEnter()
+        {
+            _ctx.Velocity = Vector2.zero;
+        }
+        
+        protected override void OnUpdate(float deltaTime)
+        {
+            var currentSpeed = _ctx.MoveSpeed;
+            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, deltaTime * _ctx.TurnSharpness);
         }
     }
 
@@ -151,12 +162,18 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            if (_ctx.DesiredDirection == Vector2.zero)
+            if (_ctx.Velocity.sqrMagnitude <= 0.1f)
             {
                 return ((PlayerGroundedState)Parent).Idle;
             }
 
             return null; 
+        }
+
+        protected override void OnUpdate(float deltaTime)
+        {
+            var currentSpeed = _ctx.MoveSpeed;
+            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, deltaTime * _ctx.TurnSharpness);
         }
     }
 

@@ -46,6 +46,11 @@ namespace OceanGame
                 _lastPath = path;
             }
         }
+        
+        private void FixedUpdate()
+        {
+            transform.position += (Vector3)Ctx.Velocity * Time.fixedDeltaTime;
+        }
 
         private void OnMoveInputPressed(Vector2 rawMoveInput)
         {
@@ -60,10 +65,14 @@ namespace OceanGame
     
     public class PlayerContext
     {
+        public float MoveSpeed = 3.5f;
+        public float TurnSharpness = 5f;
+    
         [HideInInspector] public Transform Transform;
         [HideInInspector] public Vector2 DesiredDirection;
         [HideInInspector] public Vector2 Velocity;
         [HideInInspector] public bool Grounded = true;
         [HideInInspector] public bool Swimming = false;
+
     }
 }

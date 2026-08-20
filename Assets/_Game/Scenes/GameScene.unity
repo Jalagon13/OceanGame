@@ -400,8 +400,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b9b28a14b5574a55a1d861e9bb49e3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.PlayerCamera
+  _player: {fileID: 1715237430}
   _camera: {fileID: 330585545}
   _padding: 4
+  _smoothSpeed: 0.125
 --- !u!1 &652389235
 GameObject:
   m_ObjectHideFlags: 0
