@@ -64,7 +64,7 @@ namespace OceanGame
 
                     // Process Foreground Layer
                     int fgId = world.ForegroundLayer[x, y];
-                    if (fgId > -1)
+                    if (fgId > TileLayer.AIR_ID)
                     {
                         var fgTileAsset = registry.GetTileFromId(fgId);
                         if (fgTileAsset != null)
@@ -72,10 +72,14 @@ namespace OceanGame
                             world.ForegroundLayer.Tilemap.SetTile(tilePos, fgTileAsset);
                         }
                     }
+                    else if( fgId == TileLayer.AIR_ID) // If we are setting it to air
+                    {
+                        world.ForegroundLayer.Tilemap.SetTile(tilePos, null);
+                    }
 
                     // Process Background Layer
                     int bgId = world.BackgroundLayer[x, y];
-                    if (bgId > -1)
+                    if (bgId > TileLayer.AIR_ID)
                     {
                         var bgTileAsset = registry.GetTileFromId(bgId);
                         if (bgTileAsset != null)
@@ -83,11 +87,15 @@ namespace OceanGame
                             world.BackgroundLayer.Tilemap.SetTile(tilePos, bgTileAsset);
                         }
                     }
+                    else if(bgId == TileLayer.AIR_ID) // If we are setting it to air
+                    {
+                        world.BackgroundLayer.Tilemap.SetTile(tilePos, null);
+                    }
                     
                     // Process Sea Layer
                     if(y <= WorldManager.Instance.SeaLevel)
                     {
-                        if (fgId <= -1 && world.ForegroundLayer[x, y] != TileLayer.OUT_OF_BOUNDS_ID)
+                        if (fgId <= TileLayer.AIR_ID && world.ForegroundLayer[x, y] != TileLayer.OUT_OF_BOUNDS_ID)
                         {
                             _waterTilemap.SetTile(tilePos, _waterTile);
                         }

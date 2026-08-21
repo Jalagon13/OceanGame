@@ -692,6 +692,7 @@ GameObject:
   - component: {fileID: 970924656}
   - component: {fileID: 970924657}
   - component: {fileID: 970924658}
+  - component: {fileID: 970924659}
   m_Layer: 0
   m_Name: GAME_MANAGERS
   m_TagString: Untagged
@@ -775,6 +776,19 @@ MonoBehaviour:
   _mainCamera: {fileID: 330585545}
   _waterTilemap: {fileID: 2070694661}
   _waterTile: {fileID: 11400000, guid: 01df45f836ac5496399a9414a0acb621, type: 2}
+--- !u!114 &970924659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 970924653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4bed4a711e9f4b6fb94e41e71facc38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldInteractionManager
+  _grassTile: {fileID: 11400000, guid: ac1de6a6f08164a80a3edcffdf473437, type: 2}
 --- !u!1 &1420173607
 GameObject:
   m_ObjectHideFlags: 0
@@ -1077,6 +1091,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.Player
   Ctx:
     PlayerBodyCollider: {fileID: 1715237433}
+    WalkingBoxColliderSize: {x: 0.6, y: 1.8}
+    SwimmingBoxColliderSize: {x: 0.6, y: 0.6}
     MoveSpeed: 7
     LandTurnSharpness: 5
     AirborneMoveSpeedMultiplier: 0.7

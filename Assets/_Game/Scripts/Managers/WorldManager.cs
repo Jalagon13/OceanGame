@@ -49,7 +49,8 @@ namespace OceanGame
     
     public class TileLayer
     {
-        public static int OUT_OF_BOUNDS_ID = -2;
+        public static int OUT_OF_BOUNDS_ID { get; } = -2;
+        public static int AIR_ID { get; } = -1;
     
         private readonly int[] _tiles;
         private readonly int _width;
@@ -78,7 +79,6 @@ namespace OceanGame
             {
                 if (x < 0 || x >= _width || y < 0 || y >= _height) 
                 {
-                    // Debug.LogWarning($"{Tilemap.name}: Attempted to access tile at ({x}, {y}) which is out of bounds.");
                     return OUT_OF_BOUNDS_ID; // Return a special value indicating out-of-bounds access
                 }
         
@@ -91,8 +91,14 @@ namespace OceanGame
                     Debug.LogError($"{Tilemap.name}: Attempted to set tile at ({x}, {y}) which is out of bounds.");
                     return;
                 }
-        
+                
                 _tiles[y * _width + x] = value;
+                
+                // If its a change on screen, refresh the bounds to refresh the rendered tiles
+                if(PlayerCamera.Instance.PositionExistsInBounds(x, y))
+                {
+                    PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
+                }
             }
         }
 

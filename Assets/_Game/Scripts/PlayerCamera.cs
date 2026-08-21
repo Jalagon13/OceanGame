@@ -85,5 +85,18 @@ namespace OceanGame
 
             transform.position = Vector3.Lerp(transform.position, targetPos, _smoothSpeed);
         }
+
+        public void InvokeCurrentBoundsRefresh()
+        {
+            OnVisibleTileBoundsChanged?.Invoke(CurrentVisibleTileBounds, CurrentVisibleTileBounds);
+        }
+        
+        public bool PositionExistsInBounds(int x, int y)
+        {
+            Vector2Int positionToCheck = new Vector2Int(x, y);
+            return CurrentVisibleTileBounds.Contains(positionToCheck);
+        }
+
+        
     }
 }

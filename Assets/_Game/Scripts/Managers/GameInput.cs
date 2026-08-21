@@ -8,8 +8,10 @@ namespace OceanGame
     {
         public static GameInput Instance { get; private set; }
 
-        public event Action<Vector2> MoveInputPressed;
-        public event Action JumpPressed;
+        public event Action<Vector2> OnMoveInputPressed;
+        public event Action OnJumpPressed;
+        public event Action OnPrimaryActionPressed;
+        public event Action OnSecondaryActionPressed;
 
         public Vector2 MoveInput { get; private set; }
         public bool JumpHold { get; private set; }
@@ -29,6 +31,9 @@ namespace OceanGame
             
             _playerInput.Player.Jump.started += GameInput_OnJump;
             _playerInput.Player.Jump.canceled += GameInput_OnJump;
+            
+            _playerInput.Player.PrimaryAction.started += GameInput_OnPrimaryAction;
+            _playerInput.Player.SecondaryAction.started += GameInput_OnSecondaryAction;
         }
 
         private void OnDestroy()
@@ -44,7 +49,28 @@ namespace OceanGame
             
             _playerInput.Player.Jump.started -= GameInput_OnJump;
             _playerInput.Player.Jump.canceled -= GameInput_OnJump;
+
+            _playerInput.Player.PrimaryAction.started -= GameInput_OnPrimaryAction;
+            _playerInput.Player.SecondaryAction.started -= GameInput_OnSecondaryAction;
             _playerInput.Disable();
+        }
+
+        private void GameInput_OnPrimaryAction(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Started)
+            {
+                Debug.Log($"prim");
+                OnPrimaryActionPressed?.Invoke();
+            }
+        }
+
+        private void GameInput_OnSecondaryAction(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Started)
+            {
+                Debug.Log($"sec");
+                OnSecondaryActionPressed?.Invoke();
+            }
         }
 
         private void GameInput_OnJump(InputAction.CallbackContext context)
@@ -60,7 +86,7 @@ namespace OceanGame
         
             if (context.phase == InputActionPhase.Started)
             {
-                JumpPressed?.Invoke();
+                OnJumpPressed?.Invoke();
             }
         }
 
@@ -70,7 +96,7 @@ namespace OceanGame
 
             if (context.phase == InputActionPhase.Started || context.phase == InputActionPhase.Performed || context.phase == InputActionPhase.Canceled)
             {
-                MoveInputPressed?.Invoke(MoveInput);
+                OnMoveInputPressed?.Invoke(MoveInput);
             }
         }
     }

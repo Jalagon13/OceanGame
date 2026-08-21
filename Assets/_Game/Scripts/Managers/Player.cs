@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace OceanGame
 {
+    // TODO: Next is Breaking and placing foreground tiles. then swimming and land colliders. so swimming turns the player collider to 0.8x0.8 and then when on land it becomes 0.8x1.8 
+    // so i can test it in underwater made tunnels. Research what dimensions Minecraft uses for their swimming
+
     public class Player : MonoBehaviour
     {
         public static Player Instance { get; private set; }
@@ -28,14 +31,14 @@ namespace OceanGame
         
         private void Start() 
         {
-            GameInput.Instance.MoveInputPressed += OnMoveInputPressed;
-            GameInput.Instance.JumpPressed += OnJumpPressed;
+            GameInput.Instance.OnMoveInputPressed += OnMoveInputPressed;
+            GameInput.Instance.OnJumpPressed += OnJumpPressed;
         }
         
         private void OnDestroy() 
         {
-            GameInput.Instance.MoveInputPressed -= OnMoveInputPressed;
-            GameInput.Instance.JumpPressed -= OnJumpPressed;
+            GameInput.Instance.OnMoveInputPressed -= OnMoveInputPressed;
+            GameInput.Instance.OnJumpPressed -= OnJumpPressed;
         }
 
         private void Update()
@@ -90,7 +93,10 @@ namespace OceanGame
     [Serializable]
     public class PlayerContext
     {
+        [Header("Player Collider")]
         public BoxCollider2D PlayerBodyCollider;
+        public Vector2 WalkingBoxColliderSize;
+        public Vector2 SwimmingBoxColliderSize;
         
         [Header("Land")]
         public float MoveSpeed = 3.5f;
