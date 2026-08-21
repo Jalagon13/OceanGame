@@ -739,7 +739,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldManager
   _tempX: 60
-  _tempY: 45
+  _tempY: 43
   <WorldWidth>k__BackingField: 100
   <WorldHeight>k__BackingField: 100
   <SeaLevel>k__BackingField: 40
@@ -1076,21 +1076,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.Player
   Ctx:
-    MoveSpeed: 10
-    AirborneMoveSpeedMultiplier: 0.5
-    TurnSharpness: 5
+    PlayerBodyCollider: {fileID: 1715237433}
+    MoveSpeed: 7
+    LandTurnSharpness: 5
+    AirborneMoveSpeedMultiplier: 0.7
     GravityForce: 30
     TerminalVelocity: -40
+    SwimSpeed: 7
+    SwimDashSpeed: 12
+    SwimDashCooldown: 1.5
+    SwimmingTurnSharpness: 3
+    FromWaterJumpSpeed: 15
     MinJumpSpeed: 9
     MaxJumpHoldDuration: 0.25
     JumpBufferDuration: 0.15
     CoyoteTimeBufferDuration: 0.15
-    PlayerBodyCollider: {fileID: 1715237433}
     Transform: {fileID: 0}
     DesiredDirection: {x: 0, y: 0}
     Velocity: {x: 0, y: 0}
-    Swimming: 0
     JumpPressed: 0
+    WaterJumpBuffered: 0
+    SwimDashCooldownTimer: 0
 --- !u!61 &1715237433
 BoxCollider2D:
   m_ObjectHideFlags: 0

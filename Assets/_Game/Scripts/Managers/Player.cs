@@ -40,6 +40,11 @@ namespace OceanGame
 
         private void Update()
         {
+            if (Ctx.SwimDashCooldownTimer > 0f)
+            {
+                Ctx.SwimDashCooldownTimer -= Time.deltaTime;
+            }
+
             _machine.Tick(Time.deltaTime);
             
             var path = StatePath(_machine.Root.Leaf());
@@ -62,7 +67,10 @@ namespace OceanGame
 
         private void OnJumpPressed()
         {
-            if(Ctx.CollisionResult.TouchingBottom)
+            bool canJumpFromGround = Ctx.CollisionResult.TouchingBottom;
+            bool canJumpFromWater = _machine.Root.Leaf() is PlayerSwimmingState && Ctx.IsHeadAboveWater();
+
+            if (canJumpFromGround || canJumpFromWater)
             {
                 Ctx.JumpPressed = true;
             }
@@ -82,27 +90,51 @@ namespace OceanGame
     [Serializable]
     public class PlayerContext
     {
+        public BoxCollider2D PlayerBodyCollider;
+        
+        [Header("Land")]
         public float MoveSpeed = 3.5f;
+        public float LandTurnSharpness = 5f;
         public float AirborneMoveSpeedMultiplier = 0.5f;
-        public float TurnSharpness = 5f;
+        
+        [Header("Gravity")]
         public float GravityForce = 25f;
         public float TerminalVelocity = -40f;
+        
+        [Header("Swimming")]
+        public float SwimSpeed = 3.5f;
+        public float SwimDashSpeed = 15f;
+        public float SwimDashCooldown = 3f;
+        public float SwimmingTurnSharpness = 5f;
+        public float FromWaterJumpSpeed = 10f;
+        
+        [Header("Jumping")]
         public float MinJumpSpeed = 5f;
         public float MaxJumpHoldDuration = 0.4f;
         public float JumpBufferDuration = 0.15f;
         public float CoyoteTimeBufferDuration = 0.15f;
-        
-        public BoxCollider2D PlayerBodyCollider;
     
         [HideInInspector] public Transform Transform;
         [HideInInspector] public Vector2 DesiredDirection;
         [HideInInspector] public Vector2 Velocity;
         [HideInInspector] public GridPhysics.CollisionResult CollisionResult;
         [HideInInspector] public bool JumpPressed = false;
+        [HideInInspector] public bool WaterJumpBuffered = false;
+        [HideInInspector] public float SwimDashCooldownTimer;
+        
+        public bool IsHeadAboveWater()
+        {
+            if (Transform.position.y + 0.6f >= WorldManager.Instance.SeaLevel)
+            {
+                return true;
+            }
+
+            return false;
+        }
         
         public bool IsInOcean()
         {
-            if(Transform.position.y <= WorldManager.Instance.SeaLevel)
+            if(Transform.position.y - 0.6f <= WorldManager.Instance.SeaLevel)
             {
                 return true;
             }

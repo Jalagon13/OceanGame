@@ -118,6 +118,11 @@ namespace OceanGame
             
             if(_ctx.IsInOcean())
             {
+                if (_jumpBufferTimer > 0f)
+                {
+                    _ctx.WaterJumpBuffered = true;
+                }
+
                 return (Parent as PlayerRootState).Swimming;
             }
         
@@ -183,7 +188,7 @@ namespace OceanGame
             {
                 _jumpHoldTimer -= fixedDeltaTime;
                 
-                _ctx.Velocity.y = _ctx.MinJumpSpeed;
+                // _ctx.Velocity.y = _ctx.Velocity.y;
             }
             else
             {
@@ -199,7 +204,7 @@ namespace OceanGame
         
             // Allow horizontal movement while airborne
             var currentSpeed = _ctx.MoveSpeed * _ctx.AirborneMoveSpeedMultiplier;
-            _ctx.Velocity.x = Mathf.Lerp(_ctx.Velocity.x, _ctx.DesiredDirection.x * currentSpeed, fixedDeltaTime * _ctx.TurnSharpness);
+            _ctx.Velocity.x = Mathf.Lerp(_ctx.Velocity.x, _ctx.DesiredDirection.x * currentSpeed, fixedDeltaTime * _ctx.LandTurnSharpness);
         }
 
         private void OnJumpPressed()
@@ -230,19 +235,55 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
+            if (_ctx.IsHeadAboveWater() && (_ctx.JumpPressed || _ctx.WaterJumpBuffered))
+            {
+                _ctx.JumpPressed = false;
+                _ctx.WaterJumpBuffered = false;
+                _ctx.Velocity.y = _ctx.FromWaterJumpSpeed;
 
+                return (Parent as PlayerRootState).Airborne;
+            }
+        
+            if(!_ctx.IsInOcean())
+            {
+                if(!_ctx.CollisionResult.TouchingBottom)
+                {
+                    return (Parent as PlayerRootState).Airborne;
+                }
+                else
+                {
+                    return (Parent as PlayerRootState).Grounded;
+                }
+            }
         
             return null;
         }
 
         protected override void OnEnter()
         {
-            // On Swimming Animation set here
+            GameInput.Instance.JumpPressed += ExecuteDash;
+        }
+
+        protected override void OnExit()
+        {
+            GameInput.Instance.JumpPressed -= ExecuteDash;
         }
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
-            
+            var currentSpeed = _ctx.SwimSpeed;
+            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.SwimmingTurnSharpness);
+        }
+
+        private void ExecuteDash()
+        {
+            if (_ctx.SwimDashCooldownTimer > 0f || _ctx.IsHeadAboveWater()) // If head is above water, do not execute dash only dash when i am underwater
+            {
+                return;
+            }
+
+            _ctx.Velocity = _ctx.DesiredDirection * _ctx.SwimDashSpeed;
+            _ctx.SwimDashCooldownTimer = _ctx.SwimDashCooldown;
         }
     }
 
@@ -282,7 +323,7 @@ namespace OceanGame
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
             var currentSpeed = _ctx.MoveSpeed;
-            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.TurnSharpness);
+            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.LandTurnSharpness);
         }
     }
 
@@ -317,7 +358,7 @@ namespace OceanGame
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
             var currentSpeed = _ctx.MoveSpeed;
-            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.TurnSharpness);
+            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.LandTurnSharpness);
         }
     }
 
