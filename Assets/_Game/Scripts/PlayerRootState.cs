@@ -26,7 +26,11 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            return _ctx.Swimming ? Swimming : _ctx.Grounded ? null : Airborne;
+            if (_ctx.Swimming) return Swimming;
+
+            if (_ctx.JumpPressed) return null;
+
+            return _ctx.CollisionResult.TouchingBottom ? null : Airborne;
         }
     }
 
@@ -55,7 +59,20 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            
+            if(_ctx.JumpPressed)
+            {
+                _ctx.JumpPressed = false;
+                _ctx.Velocity.y = _ctx.JumpSpeed;
+                
+                return (Parent as PlayerRootState).Airborne;
+            }
+        
+            if(!_ctx.CollisionResult.TouchingBottom)
+            {
+                return (Parent as PlayerRootState).Airborne;
+            }
+        
+            return null;
         }
 
         protected override void OnEnter()
@@ -65,7 +82,7 @@ namespace OceanGame
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
-            
+            _ctx.Velocity.y = -0.1f; // To firmly keep the character firmly pressed to the floor
         }
     }
 
@@ -84,7 +101,12 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            return _ctx.Swimming ? ((PlayerRootState)Parent).Swimming : _ctx.Grounded ? ((PlayerRootState)Parent).Grounded : null;
+            if(_ctx.CollisionResult.TouchingBottom && _ctx.Velocity.y <= 0f)
+            {
+                return (Parent as PlayerRootState).Grounded;
+            }
+        
+            return null;
         }
 
         protected override void OnEnter()
@@ -94,7 +116,15 @@ namespace OceanGame
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
-
+            var currentSpeed = _ctx.MoveSpeed * _ctx.AirborneMoveSpeedMultiplier;
+            _ctx.Velocity.x = Mathf.Lerp(_ctx.Velocity.x, _ctx.DesiredDirection.x * currentSpeed, fixedDeltaTime * _ctx.TurnSharpness);
+            
+            _ctx.Velocity.y -= _ctx.GravityForce * fixedDeltaTime;
+            
+            if(_ctx.Velocity.y < _ctx.TerminalVelocity)
+            {
+                _ctx.Velocity.y = _ctx.TerminalVelocity;
+            }
         }
     }
 
@@ -113,7 +143,7 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            return !_ctx.Swimming ? _ctx.Grounded ? (Parent as PlayerRootState).Grounded : (Parent as PlayerRootState).Airborne : null;
+            return null;
         }
 
         protected override void OnEnter()
@@ -137,7 +167,12 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            if(_ctx.Velocity.sqrMagnitude > 0.1f)
+            if (!_ctx.CollisionResult.TouchingBottom)
+            {
+                return ((PlayerGroundedState)Parent).Parent is PlayerRootState root ? root.Airborne : null;
+            }
+
+            if (_ctx.Velocity.sqrMagnitude > 0.1f)
             {
                 return ((PlayerGroundedState)Parent).Move;
             }
@@ -147,7 +182,7 @@ namespace OceanGame
 
         protected override void OnEnter()
         {
-            _ctx.Velocity = Vector2.zero;
+            _ctx.Velocity.y = 0f;
         }
         
         protected override void OnFixedUpdate(float fixedDeltaTime)
@@ -172,6 +207,11 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
+            if (!_ctx.CollisionResult.TouchingBottom)
+            {
+                return ((PlayerGroundedState)Parent).Parent is PlayerRootState root ? root.Airborne : null;
+            }
+        
             if (_ctx.Velocity.sqrMagnitude <= 0.1f)
             {
                 return ((PlayerGroundedState)Parent).Idle;

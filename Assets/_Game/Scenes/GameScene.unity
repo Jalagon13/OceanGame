@@ -463,8 +463,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 5}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 4.51, y: 9.59, z: 5}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 652389236}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1071,13 +1071,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.Player
   Ctx:
     MoveSpeed: 10
+    AirborneMoveSpeedMultiplier: 0.5
     TurnSharpness: 5
+    GravityForce: 25
+    TerminalVelocity: -40
+    JumpSpeed: 15
     PlayerBodyCollider: {fileID: 1715237433}
     Transform: {fileID: 0}
     DesiredDirection: {x: 0, y: 0}
     Velocity: {x: 0, y: 0}
-    Grounded: 1
     Swimming: 0
+    JumpPressed: 0
 --- !u!61 &1715237433
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1122,7 +1126,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.8, y: 1.8}
   m_EdgeRadius: 0
 --- !u!1 &2142474278
 GameObject:

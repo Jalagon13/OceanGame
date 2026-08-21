@@ -29,11 +29,13 @@ namespace OceanGame
         private void Start() 
         {
             GameInput.Instance.MoveInputPressed += OnMoveInputPressed;
+            GameInput.Instance.JumpPressed += OnJumpPressed;
         }
         
         private void OnDestroy() 
         {
             GameInput.Instance.MoveInputPressed -= OnMoveInputPressed;
+            GameInput.Instance.JumpPressed -= OnJumpPressed;
         }
 
         private void Update()
@@ -58,6 +60,14 @@ namespace OceanGame
             transform.position = Ctx.CollisionResult.NewPosition;
         }
 
+        private void OnJumpPressed()
+        {
+            if(Ctx.CollisionResult.TouchingBottom)
+            {
+                Ctx.JumpPressed = true;
+            }
+        }
+
         private void OnMoveInputPressed(Vector2 rawMoveInput)
         {
             Ctx.DesiredDirection = rawMoveInput;
@@ -73,7 +83,11 @@ namespace OceanGame
     public class PlayerContext
     {
         public float MoveSpeed = 3.5f;
+        public float AirborneMoveSpeedMultiplier = 0.5f;
         public float TurnSharpness = 5f;
+        public float GravityForce = 25f;
+        public float TerminalVelocity = -40f;
+        public float JumpSpeed = 10f;
         public BoxCollider2D PlayerBodyCollider;
     
         [HideInInspector] public Transform Transform;
@@ -81,6 +95,7 @@ namespace OceanGame
         [HideInInspector] public Vector2 Velocity;
         [HideInInspector] public GridPhysics.CollisionResult CollisionResult;
         [HideInInspector] public bool Swimming = false;
+        [HideInInspector] public bool JumpPressed = false;
 
     }
 }
