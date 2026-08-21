@@ -47,7 +47,7 @@ namespace OceanGame
             {
                 for (int y = sMinY; y <= sMaxY; y++)
                 {
-                    if (world.ForegroundLayer[x, y] >= 0)
+                    if (world.ForegroundLayer[x, y] >= 0 || world.ForegroundLayer[x, y] == TileLayer.OUT_OF_BOUNDS_ID)
                     {
                         // Check if we overlap this solid tile
                         if (IsOverlapping(startLeft, startRight, startBottom, startTop, x, x + 1, y, y + 1))
@@ -91,8 +91,8 @@ namespace OceanGame
                 {
                     for (int tileY = minY; tileY <= maxY; tileY++)
                     {
-                        // If the tile is solid (0 or higher, since -1 is Air and -2 is Out of bounds)
-                        if (world.ForegroundLayer[tileX, tileY] >= 0)
+                        // If the tile is solid or out of bounds(0 or higher, since -1 is Air and -2 is Out of bounds)
+                        if (world.ForegroundLayer[tileX, tileY] >= 0 || world.ForegroundLayer[tileX, tileY] == TileLayer.OUT_OF_BOUNDS_ID)
                         {
                             // Check if the player's box overlaps this specific tile's AABB
                             if (IsOverlapping(playerLeft, playerRight, playerBottom, playerTop, tileX, tileX + 1, tileY, tileY + 1))
@@ -145,7 +145,7 @@ namespace OceanGame
                 {
                     for (int tileY = minY; tileY <= maxY; tileY++)
                     {
-                        if (world.ForegroundLayer[tileX, tileY] >= 0)
+                        if (world.ForegroundLayer[tileX, tileY] >= 0 || world.ForegroundLayer[tileX, tileY] == TileLayer.OUT_OF_BOUNDS_ID)
                         {
                             if (IsOverlapping(playerLeft, playerRight, playerBottom, playerTop, tileX, tileX + 1, tileY, tileY + 1))
                             {
@@ -189,7 +189,7 @@ namespace OceanGame
             int bTileY = Mathf.FloorToInt(finalBottom - SKIN_SIZE);
             for (int x = bMinX; x <= bMaxX; x++)
             {
-                if (world.ForegroundLayer[x, bTileY] >= 0) result.TouchingBottom = true;
+                if (world.ForegroundLayer[x, bTileY] >= 0 || world.ForegroundLayer[x, bTileY] == TileLayer.OUT_OF_BOUNDS_ID) result.TouchingBottom = true;
             }
 
             // Check Top Contact (Ceiling Check)
@@ -198,7 +198,7 @@ namespace OceanGame
             int tTileY = Mathf.FloorToInt(finalTop + SKIN_SIZE);
             for (int x = tMinX; x <= tMaxX; x++)
             {
-                if (world.ForegroundLayer[x, tTileY] >= 0) result.TouchingTop = true;
+                if (world.ForegroundLayer[x, tTileY] >= 0 || world.ForegroundLayer[x, tTileY] == TileLayer.OUT_OF_BOUNDS_ID) result.TouchingTop = true;
             }
 
             // Check Left Contact (Left Wall Check)
@@ -207,7 +207,7 @@ namespace OceanGame
             int lMaxY = Mathf.FloorToInt(finalTop - inset);
             for (int y = lMinY; y <= lMaxY; y++)
             {
-                if (world.ForegroundLayer[lTileX, y] >= 0) result.TouchingLeft = true;
+                if (world.ForegroundLayer[lTileX, y] >= 0 || world.ForegroundLayer[lTileX, y] == TileLayer.OUT_OF_BOUNDS_ID) result.TouchingLeft = true;
             }
 
             // Check Right Contact (Right Wall Check)
@@ -216,7 +216,7 @@ namespace OceanGame
             int rMaxY = Mathf.FloorToInt(finalTop - inset);
             for (int y = rMinY; y <= rMaxY; y++)
             {
-                if (world.ForegroundLayer[rTileX, y] >= 0) result.TouchingRight = true;
+                if (world.ForegroundLayer[rTileX, y] >= 0 || world.ForegroundLayer[rTileX, y] == TileLayer.OUT_OF_BOUNDS_ID) result.TouchingRight = true;
             }
 
             // If the entity is entombed, force their contact indicators to true natively

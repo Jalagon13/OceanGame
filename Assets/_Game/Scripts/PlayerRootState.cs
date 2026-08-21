@@ -97,6 +97,7 @@ namespace OceanGame
         private float _jumpBufferTimer; // Used for keeping track of how long the player can buffer a jump after pressing jump while airborne
         private float _coyoteTimer;
         private bool _coyoteJumpRequested;
+        private bool _topTouchedFlag; // Used for checking during this ariborne state if the player's head hit a ceiling once.
 
         public PlayerAirborneState(StateMachine m, State parent, PlayerContext ctx) : base(m, parent)
         {
@@ -123,6 +124,7 @@ namespace OceanGame
             _jumpBufferTimer = 0;
             _coyoteTimer = _ctx.Velocity.y <= 0f ? _ctx.CoyoteTimeBufferDuration : 0f;
             _coyoteJumpRequested = false;
+            _topTouchedFlag = false;
 
             // On Jump Animation set here
             if (GameInput.Instance.JumpHold && _ctx.Velocity.y > 0)
@@ -140,7 +142,8 @@ namespace OceanGame
             _jumpBufferTimer = 0;
             _coyoteTimer = 0;
             _coyoteJumpRequested = false;
-            
+            _topTouchedFlag = false;
+
             GameInput.Instance.JumpPressed -= OnJumpPressed;
         }
 
@@ -163,8 +166,15 @@ namespace OceanGame
             {
                 _jumpBufferTimer -= fixedDeltaTime;
             }
-        
-            if(GameInput.Instance.JumpHold && _ctx.Velocity.y > 0 && _jumpHoldTimer > 0 && !_jumpHoldEnded)
+
+            if (_ctx.CollisionResult.TouchingTop && !_topTouchedFlag) // Player bangs his head during jump, set velocity to -0.1 once
+            {
+                _jumpHoldEnded = true;
+                _topTouchedFlag = true;
+                _ctx.Velocity.y = -0.1f;
+            }
+
+            if (GameInput.Instance.JumpHold && _ctx.Velocity.y > 0 && _jumpHoldTimer > 0 && !_jumpHoldEnded)
             {
                 _jumpHoldTimer -= fixedDeltaTime;
                 

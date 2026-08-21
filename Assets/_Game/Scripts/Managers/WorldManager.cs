@@ -11,8 +11,9 @@ namespace OceanGame
         [SerializeField] private int _tempY = 45;
 
         [field: Header("World Settings")]
-        [field: SerializeField] public int WorldWidth { get; } = 100;
-        [field: SerializeField] public int WorldHeight { get; } = 100;
+        [field: SerializeField] public int WorldWidth { get; private set; } = 100;
+        [field: SerializeField] public int WorldHeight { get; private set; } = 100;
+        [field: SerializeField] public int SeaLevel { get; private set; } = 40;
 
         [Header("World References")]
         [SerializeField] private TileBase _grassTile;
@@ -36,7 +37,7 @@ namespace OceanGame
             {
                 for (int y = 0; y < WorldHeight; y++)
                 {
-                    if(y > _tempY) continue;
+                    if(y > _tempY /* && y < _tempY + 4 */) continue;
                     if(x > _tempX) continue;
                 
                     ForegroundLayer[x, y] = GameDataRegistry.Instance.GetTileId(_grassTile);
@@ -48,6 +49,8 @@ namespace OceanGame
     
     public class TileLayer
     {
+        public static int OUT_OF_BOUNDS_ID = -2;
+    
         private readonly int[] _tiles;
         private readonly int _width;
         private readonly int _height;
@@ -76,7 +79,7 @@ namespace OceanGame
                 if (x < 0 || x >= _width || y < 0 || y >= _height) 
                 {
                     // Debug.LogWarning($"{Tilemap.name}: Attempted to access tile at ({x}, {y}) which is out of bounds.");
-                    return -2; // Return a special value indicating out-of-bounds access
+                    return OUT_OF_BOUNDS_ID; // Return a special value indicating out-of-bounds access
                 }
         
                 return _tiles[y * _width + x];

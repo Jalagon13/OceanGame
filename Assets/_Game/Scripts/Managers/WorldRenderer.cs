@@ -9,6 +9,8 @@ namespace OceanGame
         public static WorldRenderer Instance { get; private set; }
         
         [SerializeField] private Camera _mainCamera;
+        [SerializeField] private Tilemap _waterTilemap;
+        [SerializeField] private TileBase _waterTile;
 
         private void Awake()
         {
@@ -47,6 +49,7 @@ namespace OceanGame
                             Vector3Int tilePos = new Vector3Int(x, y, 0);
                             world.ForegroundLayer.Tilemap.SetTile(tilePos, null);
                             world.BackgroundLayer.Tilemap.SetTile(tilePos, null);
+                            _waterTilemap.SetTile(tilePos, null);
                         }
                     }
                 }
@@ -79,6 +82,12 @@ namespace OceanGame
                         {
                             world.BackgroundLayer.Tilemap.SetTile(tilePos, bgTileAsset);
                         }
+                    }
+                    
+                    // Process Sea Layer
+                    if(y <= WorldManager.Instance.SeaLevel)
+                    {
+                        _waterTilemap.SetTile(tilePos, _waterTile);
                     }
                 }
             }
