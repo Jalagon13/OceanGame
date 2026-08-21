@@ -4,9 +4,6 @@ using UnityEngine;
 
 namespace OceanGame
 {
-    // TODO: Next is Breaking and placing foreground tiles. then swimming and land colliders. so swimming turns the player collider to 0.8x0.8 and then when on land it becomes 0.8x1.8 
-    // so i can test it in underwater made tunnels. Research what dimensions Minecraft uses for their swimming
-
     public class Player : MonoBehaviour
     {
         public static Player Instance { get; private set; }

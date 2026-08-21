@@ -837,6 +837,7 @@ MonoBehaviour:
   <WorldHeight>k__BackingField: 100
   <SeaLevel>k__BackingField: 40
   _grassTile: {fileID: 11400000, guid: ac1de6a6f08164a80a3edcffdf473437, type: 2}
+  _dirtBgTile: {fileID: 11400000, guid: de790d75c4d7642e3810e3bbc47c7853, type: 2}
   _foregroundTilemap: {fileID: 1420173610}
   _backgroundTilemap: {fileID: 1608990557}
 --- !u!114 &970924657
@@ -853,6 +854,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.GameDataRegistry
   _tileDatabase:
   - {fileID: 11400000, guid: ac1de6a6f08164a80a3edcffdf473437, type: 2}
+  - {fileID: 11400000, guid: de790d75c4d7642e3810e3bbc47c7853, type: 2}
 --- !u!114 &970924658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -986,7 +988,7 @@ Tilemap:
   m_TileColorArray: []
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.8773585, g: 0.57559854, b: 0.29383236, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: 0, y: 0, z: 0}
   m_Size: {x: 0, y: 0, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -1357,7 +1359,7 @@ Tilemap:
   m_TileColorArray: []
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 0, g: 0.54118204, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: 0, y: 0, z: 0}
   m_Size: {x: 0, y: 0, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}

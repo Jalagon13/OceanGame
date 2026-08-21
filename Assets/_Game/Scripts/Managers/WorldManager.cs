@@ -17,6 +17,7 @@ namespace OceanGame
 
         [Header("World References")]
         [SerializeField] private TileBase _grassTile;
+        [SerializeField] private TileBase _dirtBgTile;
         [SerializeField] private Tilemap _foregroundTilemap;
         [SerializeField] private Tilemap _backgroundTilemap;
 
@@ -41,7 +42,7 @@ namespace OceanGame
                     if(x > _tempX) continue;
                 
                     ForegroundLayer[x, y] = GameDataRegistry.Instance.GetTileId(_grassTile);
-                    BackgroundLayer[x, y] = GameDataRegistry.Instance.GetTileId(_grassTile);
+                    BackgroundLayer[x, y] = GameDataRegistry.Instance.GetTileId(_dirtBgTile);
                 }
             }
         }
