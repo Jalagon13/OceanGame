@@ -1075,7 +1075,8 @@ MonoBehaviour:
     TurnSharpness: 5
     GravityForce: 25
     TerminalVelocity: -40
-    JumpSpeed: 15
+    MinJumpSpeed: 8
+    MaxJumpSpeed: 14
     PlayerBodyCollider: {fileID: 1715237433}
     Transform: {fileID: 0}
     DesiredDirection: {x: 0, y: 0}

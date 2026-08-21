@@ -87,7 +87,8 @@ namespace OceanGame
         public float TurnSharpness = 5f;
         public float GravityForce = 25f;
         public float TerminalVelocity = -40f;
-        public float JumpSpeed = 10f;
+        public float MinJumpSpeed = 5f;
+        public float MaxJumpSpeed = 15f;
         public BoxCollider2D PlayerBodyCollider;
     
         [HideInInspector] public Transform Transform;

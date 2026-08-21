@@ -62,7 +62,7 @@ namespace OceanGame
             if(_ctx.JumpPressed)
             {
                 _ctx.JumpPressed = false;
-                _ctx.Velocity.y = _ctx.JumpSpeed;
+                _ctx.Velocity.y = _ctx.MinJumpSpeed;
                 
                 return (Parent as PlayerRootState).Airborne;
             }
@@ -118,6 +118,8 @@ namespace OceanGame
         {
             var currentSpeed = _ctx.MoveSpeed * _ctx.AirborneMoveSpeedMultiplier;
             _ctx.Velocity.x = Mathf.Lerp(_ctx.Velocity.x, _ctx.DesiredDirection.x * currentSpeed, fixedDeltaTime * _ctx.TurnSharpness);
+            
+            // TODO Make it so when you tap jump you do the min jump speed but when you hold it down for like 0.25 seconds you jump to max jump speed somehow
             
             _ctx.Velocity.y -= _ctx.GravityForce * fixedDeltaTime;
             
