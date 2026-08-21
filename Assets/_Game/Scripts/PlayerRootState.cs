@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace OceanGame
@@ -93,6 +94,7 @@ namespace OceanGame
         private readonly PlayerContext _ctx;
         private float _jumpHoldTracker; // Used for keeping track of how long jump has been held.
         private bool _jumpHoldEnded;
+        private float _jumpBufferTimer; // Used for keeping track of how long the player can buffer a jump after pressing jump while airborne
 
         public PlayerAirborneState(StateMachine m, State parent, PlayerContext ctx) : base(m, parent)
         {
@@ -103,6 +105,11 @@ namespace OceanGame
         {
             if(_ctx.CollisionResult.TouchingBottom && _ctx.Velocity.y <= 0f)
             {
+                if (_jumpBufferTimer > 0f)
+                {
+                    _ctx.JumpPressed = true;
+                }
+
                 return (Parent as PlayerRootState).Grounded;
             }
         
@@ -111,16 +118,33 @@ namespace OceanGame
 
         protected override void OnEnter()
         {
+            _jumpBufferTimer = 0;
+
             // On Jump Animation set here
-            if(GameInput.Instance.JumpHold && _ctx.Velocity.y > 0)
+            if (GameInput.Instance.JumpHold && _ctx.Velocity.y > 0)
             {
                 _jumpHoldTracker = _ctx.MaxJumpHoldDuration;
                 _jumpHoldEnded = false;
             }
+            
+            GameInput.Instance.JumpPressed += OnJumpPressed;
+        }
+
+        protected override void OnExit()
+        {
+            _jumpHoldTracker = 0;
+            _jumpBufferTimer = 0;
+            
+            GameInput.Instance.JumpPressed -= OnJumpPressed;
         }
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
+            if(_jumpBufferTimer > 0)
+            {
+                _jumpBufferTimer -= fixedDeltaTime;
+            }
+        
             // TODO Make it so when you tap jump you do the min jump speed but when you hold it down for like 0.25 seconds you jump to max jump speed somehow
             if(GameInput.Instance.JumpHold && _ctx.Velocity.y > 0 && _jumpHoldTracker > 0 && !_jumpHoldEnded)
             {
@@ -145,10 +169,11 @@ namespace OceanGame
             _ctx.Velocity.x = Mathf.Lerp(_ctx.Velocity.x, _ctx.DesiredDirection.x * currentSpeed, fixedDeltaTime * _ctx.TurnSharpness);
         }
 
-        protected override void OnExit()
+        private void OnJumpPressed()
         {
-            _jumpHoldTracker = 0;
+            _jumpBufferTimer = _ctx.JumpBufferDuration;
         }
+
     }
 
     #endregion
