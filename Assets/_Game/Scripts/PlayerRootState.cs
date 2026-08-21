@@ -188,6 +188,7 @@ namespace OceanGame
             {
                 _jumpHoldTimer -= fixedDeltaTime;
                 
+                // Here we do not set velocity y because the jump value from grounded and swimming are different values so just keep the y the same as what it was set to prior to switching to this state
                 // _ctx.Velocity.y = _ctx.Velocity.y;
             }
             else

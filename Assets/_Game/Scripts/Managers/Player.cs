@@ -124,7 +124,7 @@ namespace OceanGame
         
         public bool IsHeadAboveWater()
         {
-            if (Transform.position.y + 0.6f >= WorldManager.Instance.SeaLevel)
+            if (Transform.position.y + 1f >= WorldManager.Instance.SeaLevel)
             {
                 return true;
             }

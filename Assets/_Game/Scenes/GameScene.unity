@@ -1083,10 +1083,10 @@ MonoBehaviour:
     GravityForce: 30
     TerminalVelocity: -40
     SwimSpeed: 7
-    SwimDashSpeed: 12
+    SwimDashSpeed: 13
     SwimDashCooldown: 1.5
-    SwimmingTurnSharpness: 3
-    FromWaterJumpSpeed: 15
+    SwimmingTurnSharpness: 5
+    FromWaterJumpSpeed: 14
     MinJumpSpeed: 9
     MaxJumpHoldDuration: 0.25
     JumpBufferDuration: 0.15

@@ -87,7 +87,10 @@ namespace OceanGame
                     // Process Sea Layer
                     if(y <= WorldManager.Instance.SeaLevel)
                     {
-                        _waterTilemap.SetTile(tilePos, _waterTile);
+                        if (fgId <= -1 && world.ForegroundLayer[x, y] != TileLayer.OUT_OF_BOUNDS_ID)
+                        {
+                            _waterTilemap.SetTile(tilePos, _waterTile);
+                        }
                     }
                 }
             }
