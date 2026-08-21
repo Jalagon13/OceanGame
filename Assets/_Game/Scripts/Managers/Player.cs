@@ -98,8 +98,17 @@ namespace OceanGame
         [HideInInspector] public Vector2 DesiredDirection;
         [HideInInspector] public Vector2 Velocity;
         [HideInInspector] public GridPhysics.CollisionResult CollisionResult;
-        [HideInInspector] public bool Swimming = false;
         [HideInInspector] public bool JumpPressed = false;
+        
+        public bool IsInOcean()
+        {
+            if(Transform.position.y <= WorldManager.Instance.SeaLevel)
+            {
+                return true;
+            }
+            
+            return false;
+        }
 
     }
 }

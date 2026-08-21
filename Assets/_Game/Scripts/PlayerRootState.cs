@@ -25,12 +25,12 @@ namespace OceanGame
 
         protected override State GetInitialState() => Grounded;
 
-        protected override State GetTransition()
-        {
-            if (_ctx.Swimming && ActiveChild != Swimming) return Swimming;
+        // protected override State GetTransition()
+        // {
+        //     if (_ctx.IsInOcean() && ActiveChild != Swimming) return Swimming;
 
-            return null;
-        }
+        //     return null;
+        // }
     }
 
     #endregion
@@ -114,6 +114,11 @@ namespace OceanGame
                 }
 
                 return (Parent as PlayerRootState).Grounded;
+            }
+            
+            if(_ctx.IsInOcean())
+            {
+                return (Parent as PlayerRootState).Swimming;
             }
         
             return null;
@@ -225,12 +230,19 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
+
+        
             return null;
         }
 
         protected override void OnEnter()
         {
             // On Swimming Animation set here
+        }
+
+        protected override void OnFixedUpdate(float fixedDeltaTime)
+        {
+            
         }
     }
 
