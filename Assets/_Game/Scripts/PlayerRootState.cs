@@ -92,9 +92,11 @@ namespace OceanGame
     public class PlayerAirborneState : State
     {
         private readonly PlayerContext _ctx;
-        private float _jumpHoldTracker; // Used for keeping track of how long jump has been held.
+        private float _jumpHoldTimer; // Used for keeping track of how long jump has been held.
         private bool _jumpHoldEnded;
         private float _jumpBufferTimer; // Used for keeping track of how long the player can buffer a jump after pressing jump while airborne
+        private float _coyoteTimer;
+        private bool _coyoteJumpRequested;
 
         public PlayerAirborneState(StateMachine m, State parent, PlayerContext ctx) : base(m, parent)
         {
@@ -119,11 +121,13 @@ namespace OceanGame
         protected override void OnEnter()
         {
             _jumpBufferTimer = 0;
+            _coyoteTimer = _ctx.Velocity.y <= 0f ? _ctx.CoyoteTimeBufferDuration : 0f;
+            _coyoteJumpRequested = false;
 
             // On Jump Animation set here
             if (GameInput.Instance.JumpHold && _ctx.Velocity.y > 0)
             {
-                _jumpHoldTracker = _ctx.MaxJumpHoldDuration;
+                _jumpHoldTimer = _ctx.MaxJumpHoldDuration;
                 _jumpHoldEnded = false;
             }
             
@@ -132,23 +136,37 @@ namespace OceanGame
 
         protected override void OnExit()
         {
-            _jumpHoldTracker = 0;
+            _jumpHoldTimer = 0;
             _jumpBufferTimer = 0;
+            _coyoteTimer = 0;
+            _coyoteJumpRequested = false;
             
             GameInput.Instance.JumpPressed -= OnJumpPressed;
         }
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
-            if(_jumpBufferTimer > 0)
+            if (_coyoteTimer > 0f)
+            {
+                _coyoteTimer -= fixedDeltaTime;
+            }
+
+            if (_coyoteJumpRequested)
+            {
+                _coyoteJumpRequested = false;
+                _ctx.Velocity.y = _ctx.MinJumpSpeed;
+                _jumpHoldTimer = GameInput.Instance.JumpHold ? _ctx.MaxJumpHoldDuration : 0f;
+                _jumpHoldEnded = !GameInput.Instance.JumpHold;
+            }
+
+            if (_jumpBufferTimer > 0)
             {
                 _jumpBufferTimer -= fixedDeltaTime;
             }
         
-            // TODO Make it so when you tap jump you do the min jump speed but when you hold it down for like 0.25 seconds you jump to max jump speed somehow
-            if(GameInput.Instance.JumpHold && _ctx.Velocity.y > 0 && _jumpHoldTracker > 0 && !_jumpHoldEnded)
+            if(GameInput.Instance.JumpHold && _ctx.Velocity.y > 0 && _jumpHoldTimer > 0 && !_jumpHoldEnded)
             {
-                _jumpHoldTracker -= fixedDeltaTime;
+                _jumpHoldTimer -= fixedDeltaTime;
                 
                 _ctx.Velocity.y = _ctx.MinJumpSpeed;
             }
@@ -171,6 +189,12 @@ namespace OceanGame
 
         private void OnJumpPressed()
         {
+            if (_coyoteTimer > 0f)
+            {
+                _coyoteJumpRequested = true;
+                return;
+            }
+
             _jumpBufferTimer = _ctx.JumpBufferDuration;
         }
 

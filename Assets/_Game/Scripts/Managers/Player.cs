@@ -90,6 +90,7 @@ namespace OceanGame
         public float MinJumpSpeed = 5f;
         public float MaxJumpHoldDuration = 0.4f;
         public float JumpBufferDuration = 0.15f;
+        public float CoyoteTimeBufferDuration = 0.15f;
         
         public BoxCollider2D PlayerBodyCollider;
     
