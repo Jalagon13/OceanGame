@@ -26,11 +26,9 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            if (_ctx.Swimming) return Swimming;
+            if (_ctx.Swimming && ActiveChild != Swimming) return Swimming;
 
-            if (_ctx.JumpPressed) return null;
-
-            return _ctx.CollisionResult.TouchingBottom ? null : Airborne;
+            return null;
         }
     }
 
@@ -93,6 +91,8 @@ namespace OceanGame
     public class PlayerAirborneState : State
     {
         private readonly PlayerContext _ctx;
+        private float _jumpHoldTracker; // Used for keeping track of how long jump has been held.
+        private bool _jumpHoldEnded;
 
         public PlayerAirborneState(StateMachine m, State parent, PlayerContext ctx) : base(m, parent)
         {
@@ -112,21 +112,42 @@ namespace OceanGame
         protected override void OnEnter()
         {
             // On Jump Animation set here
+            if(GameInput.Instance.JumpHold && _ctx.Velocity.y > 0)
+            {
+                _jumpHoldTracker = _ctx.MaxJumpHoldDuration;
+                _jumpHoldEnded = false;
+            }
         }
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
+            // TODO Make it so when you tap jump you do the min jump speed but when you hold it down for like 0.25 seconds you jump to max jump speed somehow
+            if(GameInput.Instance.JumpHold && _ctx.Velocity.y > 0 && _jumpHoldTracker > 0 && !_jumpHoldEnded)
+            {
+                _jumpHoldTracker -= fixedDeltaTime;
+                
+                _ctx.Velocity.y = _ctx.MinJumpSpeed;
+            }
+            else
+            {
+                _jumpHoldEnded = true;
+
+                _ctx.Velocity.y -= _ctx.GravityForce * fixedDeltaTime;
+
+                if (_ctx.Velocity.y < _ctx.TerminalVelocity)
+                {
+                    _ctx.Velocity.y = _ctx.TerminalVelocity;
+                }
+            }
+        
+            // Allow horizontal movement while airborne
             var currentSpeed = _ctx.MoveSpeed * _ctx.AirborneMoveSpeedMultiplier;
             _ctx.Velocity.x = Mathf.Lerp(_ctx.Velocity.x, _ctx.DesiredDirection.x * currentSpeed, fixedDeltaTime * _ctx.TurnSharpness);
-            
-            // TODO Make it so when you tap jump you do the min jump speed but when you hold it down for like 0.25 seconds you jump to max jump speed somehow
-            
-            _ctx.Velocity.y -= _ctx.GravityForce * fixedDeltaTime;
-            
-            if(_ctx.Velocity.y < _ctx.TerminalVelocity)
-            {
-                _ctx.Velocity.y = _ctx.TerminalVelocity;
-            }
+        }
+
+        protected override void OnExit()
+        {
+            _jumpHoldTracker = 0;
         }
     }
 

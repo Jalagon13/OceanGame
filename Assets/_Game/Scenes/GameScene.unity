@@ -1076,7 +1076,7 @@ MonoBehaviour:
     GravityForce: 25
     TerminalVelocity: -40
     MinJumpSpeed: 8
-    MaxJumpSpeed: 14
+    MaxJumpHoldDuration: 0.3
     PlayerBodyCollider: {fileID: 1715237433}
     Transform: {fileID: 0}
     DesiredDirection: {x: 0, y: 0}

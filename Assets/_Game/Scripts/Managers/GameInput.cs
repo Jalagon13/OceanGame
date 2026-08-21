@@ -28,7 +28,7 @@ namespace OceanGame
             _playerInput.Player.Move.canceled += GameInput_OnMove;
             
             _playerInput.Player.Jump.started += GameInput_OnJump;
-            _playerInput.Player.Jump.performed += GameInput_OnJump;
+            _playerInput.Player.Jump.canceled += GameInput_OnJump;
         }
 
         private void OnDestroy()
@@ -43,7 +43,7 @@ namespace OceanGame
             _playerInput.Player.Move.canceled -= GameInput_OnMove;
             
             _playerInput.Player.Jump.started -= GameInput_OnJump;
-            _playerInput.Player.Jump.performed -= GameInput_OnJump;
+            _playerInput.Player.Jump.canceled -= GameInput_OnJump;
             _playerInput.Disable();
         }
 
