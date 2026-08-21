@@ -93,6 +93,8 @@ namespace OceanGame
     [Serializable]
     public class PlayerContext
     {
+        public Transform VisualsTransform;
+    
         [Header("Player Collider")]
         public BoxCollider2D PlayerBodyCollider;
         public Vector2 WalkingBoxColliderSize;

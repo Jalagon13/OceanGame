@@ -231,6 +231,8 @@ namespace OceanGame
     public class PlayerSwimmingState : State
     {
         private readonly PlayerContext _ctx;
+        
+        private Vector2 _desiredVisualRotation;
 
         public PlayerSwimmingState(StateMachine m, State parent, PlayerContext ctx) : base(m, parent)
         {
@@ -272,6 +274,8 @@ namespace OceanGame
 
         protected override void OnExit()
         {
+            _ctx.VisualsTransform.up = Vector2.up;
+
             GameInput.Instance.OnJumpPressed -= ExecuteDash;
         }
 
@@ -279,6 +283,20 @@ namespace OceanGame
         {
             var currentSpeed = _ctx.SwimSpeed;
             _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.SwimmingTurnSharpness);
+        }
+
+        protected override void OnUpdate(float deltaTime)
+        {
+            if(_ctx.Velocity.sqrMagnitude <= 1f)
+            {
+                _desiredVisualRotation = Vector2.up;
+            }
+            else
+            {
+                _desiredVisualRotation = _ctx.DesiredDirection;
+            }
+            
+            _ctx.VisualsTransform.up = Vector2.Lerp(_ctx.VisualsTransform.up, _desiredVisualRotation, 15f * deltaTime).normalized;
         }
 
         private void ExecuteDash()
