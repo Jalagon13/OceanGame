@@ -287,7 +287,7 @@ namespace OceanGame
 
         protected override void OnUpdate(float deltaTime)
         {
-            if(_ctx.Velocity.sqrMagnitude <= 1f)
+            if(_ctx.Velocity.sqrMagnitude <= 1f && _ctx.DesiredDirection == Vector2.zero)
             {
                 _desiredVisualRotation = Vector2.up;
             }

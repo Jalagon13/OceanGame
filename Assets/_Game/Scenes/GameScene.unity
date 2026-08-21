@@ -556,7 +556,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4.51, y: 8.78, z: 5}
+  m_LocalScale: {x: 4.51, y: 12.3, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 652389236}
@@ -610,7 +610,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -785,6 +785,7 @@ GameObject:
   - component: {fileID: 970924657}
   - component: {fileID: 970924658}
   - component: {fileID: 970924659}
+  - component: {fileID: 970924660}
   m_Layer: 0
   m_Name: GAME_MANAGERS
   m_TagString: Untagged
@@ -883,6 +884,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldInteractionManager
   _grassTile: {fileID: 11400000, guid: ac1de6a6f08164a80a3edcffdf473437, type: 2}
+--- !u!114 &970924660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 970924653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 654375c16992f4eedb9fbea3ae2a0a46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.InventoryManager
 --- !u!1 &1420173607
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,7 +1199,7 @@ MonoBehaviour:
   Ctx:
     VisualsTransform: {fileID: 652389236}
     PlayerBodyCollider: {fileID: 1715237433}
-    WalkingBoxColliderSize: {x: 0.6, y: 1.8}
+    WalkingBoxColliderSize: {x: 0.6, y: 1.7}
     SwimmingBoxColliderSize: {x: 0.6, y: 0.6}
     MoveSpeed: 7
     LandTurnSharpness: 5
@@ -1197,7 +1210,7 @@ MonoBehaviour:
     SwimDashSpeed: 13
     SwimDashCooldown: 1.5
     SwimmingTurnSharpness: 5
-    FromWaterJumpSpeed: 14
+    FromWaterJumpSpeed: 13
     MinJumpSpeed: 9
     MaxJumpHoldDuration: 0.25
     JumpBufferDuration: 0.15
