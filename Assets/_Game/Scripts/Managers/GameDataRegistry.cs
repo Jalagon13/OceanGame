@@ -9,8 +9,11 @@ namespace OceanGame
         public static GameDataRegistry Instance { get; private set; }
 
         [SerializeField] private List<TileBase> _tileDatabase = new();
+        [Space(25)]
+        [SerializeField] private List<ItemSO> _itemDatabase = new();
 
         private Dictionary<TileBase, int> _tileToIdMap = new();
+        private Dictionary<ItemSO, int> _itemToIdMap = new();
 
         private void Awake()
         {
@@ -22,7 +25,7 @@ namespace OceanGame
         {
             _tileToIdMap.Clear();
 
-            // Loop through your inspector list and map each asset to its list index (ID)
+            // Loop through the tile list and map each tile asset to its list index (ID)
             for (int i = 0; i < _tileDatabase.Count; i++)
             {
                 if (_tileDatabase[i] != null)
@@ -39,6 +42,26 @@ namespace OceanGame
                 else
                 {
                     Debug.LogError($"Null tile found in registry at index {i}");
+                }
+            }
+
+            // Loop through the item list and map each item asset to its list index (ID)
+            for (int i = 0; i < _itemDatabase.Count; i++)
+            {
+                if (_itemDatabase[i] != null)
+                {
+                    // If a tile is accidentally added twice, log a warning
+                    if (_itemToIdMap.ContainsKey(_itemDatabase[i]))
+                    {
+                        Debug.LogError($"Duplicate item found in registry: {_itemDatabase[i].name} at index {i}");
+                        continue;
+                    }
+
+                    _itemToIdMap.Add(_itemDatabase[i], i);
+                }
+                else
+                {
+                    Debug.LogError($"Null item found in registry at index {i}");
                 }
             }
         }
@@ -67,7 +90,27 @@ namespace OceanGame
             if (id <= -3 || id >= _tileDatabase.Count) return null;
             return _tileDatabase[id];
         }
-        
+
+        #endregion
+
+        #region Item Functions
+
+        public int GetItemId(ItemSO item)
+        {
+            if (item == null) return -1; // -1 represents empty inventory slot
+
+            if (_itemToIdMap.TryGetValue(item, out int id)) return id;
+
+            Debug.LogError($"Item '{item.ItemName}' is not registered in the GameDataRegistry!");
+            return -1;
+        }
+
+        public ItemSO GetItemFromId(int id)
+        {
+            if (id < 0 || id >= _itemDatabase.Count) return null;
+            return _itemDatabase[id];
+        }
+
         #endregion
     }
 }
