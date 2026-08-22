@@ -12,6 +12,8 @@ namespace OceanGame
         public event Action OnJumpPressed;
         public event Action OnPrimaryActionPressed;
         public event Action OnSecondaryActionPressed;
+        public event Action<InputAction.CallbackContext> OnScrollWheel;
+        public event Action<InputAction.CallbackContext> OnSelectSlot;
 
         public Vector2 MoveInput { get; private set; }
         public bool JumpHold { get; private set; }
@@ -34,6 +36,9 @@ namespace OceanGame
             
             _playerInput.Player.PrimaryAction.started += GameInput_OnPrimaryAction;
             _playerInput.Player.SecondaryAction.started += GameInput_OnSecondaryAction;
+
+            _playerInput.UI.ScrollWheel.performed += PlayerInput_OnScrollWheel;
+            _playerInput.UI.SelectSlot.started += PlayerInput_OnSelectSlot;
         }
 
         private void OnDestroy()
@@ -52,7 +57,27 @@ namespace OceanGame
 
             _playerInput.Player.PrimaryAction.started -= GameInput_OnPrimaryAction;
             _playerInput.Player.SecondaryAction.started -= GameInput_OnSecondaryAction;
+
+            _playerInput.UI.ScrollWheel.performed -= PlayerInput_OnScrollWheel;
+            _playerInput.UI.SelectSlot.started -= PlayerInput_OnSelectSlot;
+            
             _playerInput.Disable();
+        }
+
+        private void PlayerInput_OnScrollWheel(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Performed)
+            {
+                OnScrollWheel?.Invoke(context);
+            }
+        }
+
+        private void PlayerInput_OnSelectSlot(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Started)
+            {
+                OnSelectSlot?.Invoke(context);
+            }
         }
 
         private void GameInput_OnPrimaryAction(InputAction.CallbackContext context)

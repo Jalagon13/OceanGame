@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace OceanGame
 {
@@ -8,36 +10,53 @@ namespace OceanGame
         public static InventoryManager Instance { get; private set; }
 
         [Header("Inventory Setup")]
-        [SerializeField] private int _inventorySize = 36; 
-        [SerializeField] private int _maxStackSize = 999;
+        [field: SerializeField] public int InventorySize { get; private set; } = 40;
+        [field: SerializeField] public int MaxStackSize { get; private set; } = 999;
+        [field: SerializeField] public int HotbarSize { get; private set; } = 10;
 
-        private InventorySlot[] _slots;
+        public InventorySlot[] Slots { get; private set; }
+        public InventorySlot SelectedSlot { get; private set; }
+        public int SelectedSlotIndex { get; private set; }
         
         private void Awake() 
         {
             Instance = this;
 
             // Initialize Inventory Slots
-            _slots = new InventorySlot[_inventorySize];
-            for (int i = 0; i < _slots.Length; i++)
+            Slots = new InventorySlot[InventorySize];
+            for (int i = 0; i < Slots.Length; i++)
             {
-                _slots[i] = new InventorySlot();
+                Slots[i] = new InventorySlot();
             }
         }
+        
+        private void Start() 
+        {
+            GameInput.Instance.OnScrollWheel += OnScrollWheel;
+            GameInput.Instance.OnSelectSlot += OnSelectSlot;
+        }
+
+        private void OnDestroy()
+        {
+            GameInput.Instance.OnScrollWheel -= OnScrollWheel;
+            GameInput.Instance.OnSelectSlot -= OnSelectSlot;
+        }
+
+        #region Inventory Functions
 
         public int AddItem(int itemId, int amount) // Returns remainder 
         {
             // Search for existing matching stacks
-            for (int i = 0; i < _slots.Length; i++)
+            for (int i = 0; i < Slots.Length; i++)
             {
-                if (!_slots[i].IsEmpty && _slots[i].ItemId == itemId)
+                if (!Slots[i].IsEmpty && Slots[i].ItemId == itemId)
                 {
                     // Check if there is room remaining in this stack
-                    int roomLeft = _maxStackSize - _slots[i].StackSize;
-                    if(roomLeft > 0)
+                    int roomLeft = MaxStackSize - Slots[i].StackSize;
+                    if (roomLeft > 0)
                     {
                         int amountToAdd = Mathf.Min(amount, roomLeft);
-                        _slots[i].AddToStack(amountToAdd);
+                        Slots[i].AddToStack(amountToAdd);
                         amount -= amountToAdd;
 
                         if (amount <= 0) return 0;
@@ -46,12 +65,12 @@ namespace OceanGame
             }
 
             // Next find a fresh empty slot for leftover amounts
-            for (int i = 0; i < _slots.Length; i++)
+            for (int i = 0; i < Slots.Length; i++)
             {
-                if (_slots[i].IsEmpty)
+                if (Slots[i].IsEmpty)
                 {
-                    int amountToAdd = Mathf.Min(amount, _maxStackSize);
-                    _slots[i].AssignItem(itemId, amountToAdd);
+                    int amountToAdd = Mathf.Min(amount, MaxStackSize);
+                    Slots[i].AssignItem(itemId, amountToAdd);
                     amount -= amountToAdd;
 
                     if (amount <= 0) return 0;
@@ -69,34 +88,34 @@ namespace OceanGame
             if (GetTotalItemCount(itemId) < amount) return false;
 
             // Remove items starting from the back of the inventory
-            for (int i = _slots.Length -1; i >= 0; i--)
+            for (int i = Slots.Length - 1; i >= 0; i--)
             {
-                if (!_slots[i].IsEmpty && _slots[i].ItemId == itemId)
+                if (!Slots[i].IsEmpty && Slots[i].ItemId == itemId)
                 {
-                    if(_slots[i].StackSize >= amount)
+                    if (Slots[i].StackSize >= amount)
                     {
-                        _slots[i].RemoveFromStack(amount);
+                        Slots[i].RemoveFromStack(amount);
                         return true;
                     }
                     else
                     {
-                        amount -= _slots[i].StackSize;
-                        _slots[i].Clear();
+                        amount -= Slots[i].StackSize;
+                        Slots[i].Clear();
                     }
                 }
             }
-            
+
             return true;
         }
 
         public int GetTotalItemCount(int itemId)
         {
             int total = 0;
-            for (int i = 0; i < _slots.Length; i++)
+            for (int i = 0; i < Slots.Length; i++)
             {
-                if (!_slots[i].IsEmpty && _slots[i].ItemId == itemId)
+                if (!Slots[i].IsEmpty && Slots[i].ItemId == itemId)
                 {
-                    total += _slots[i].StackSize;
+                    total += Slots[i].StackSize;
                 }
             }
             return total;
@@ -106,24 +125,24 @@ namespace OceanGame
         {
             int remainingAmount = amount;
 
-            for (int i = 0; i < _slots.Length; i++)
+            for (int i = 0; i < Slots.Length; i++)
             {
-                // 1. If it's an empty slot, it can hold a full maximum stack size
-                if (_slots[i].IsEmpty)
+                // If it's an empty slot, it can hold a full maximum stack size
+                if (Slots[i].IsEmpty)
                 {
-                    remainingAmount -= _maxStackSize;
+                    remainingAmount -= MaxStackSize;
                 }
-                // 2. If it matches, it can hold whatever room is left in this specific stack
-                else if (_slots[i].ItemId == itemId)
+                // If it matches, it can hold whatever room is left in this specific stack
+                else if (Slots[i].ItemId == itemId)
                 {
-                    int roomLeft = _maxStackSize - _slots[i].StackSize;
+                    int roomLeft = MaxStackSize - Slots[i].StackSize;
                     if (roomLeft > 0)
                     {
                         remainingAmount -= roomLeft;
                     }
                 }
 
-                // The moment remainingAmount hits 0 or less, the ENTIRE amount fits!
+                // if remaining amount 0, it can accept it
                 if (remainingAmount <= 0)
                 {
                     return true;
@@ -133,6 +152,65 @@ namespace OceanGame
             // If we finished checking every slot and there's still leftover amount, it cannot fully fit
             return false;
         }
+
+        #endregion
+
+        #region Selection Input
+
+        private void OnScrollWheel(InputAction.CallbackContext context)
+        {
+            Vector2 scrollDelta = context.ReadValue<Vector2>();
+            int itemCount = HotbarSize;
+            if (itemCount == 0)
+            {
+                return;
+            }
+
+            int selectedSlotIndex = SelectedSlotIndex;
+
+            if (scrollDelta.y > 0f)
+            {
+                int upcomingIndex = selectedSlotIndex - 1;
+                selectedSlotIndex = upcomingIndex < 0 ? itemCount - 1 : selectedSlotIndex - 1;
+                SelectHotbarSlot(selectedSlotIndex);
+            }
+            else if (scrollDelta.y < 0f)
+            {
+                int upcomingIndex = selectedSlotIndex + 1;
+                selectedSlotIndex = upcomingIndex >= itemCount ? 0 : selectedSlotIndex + 1;
+                SelectHotbarSlot(selectedSlotIndex);
+            }
+        }
+
+        private void OnSelectSlot(InputAction.CallbackContext context)
+        {
+            var control = context.control;
+
+            if (control is KeyControl key)
+            {
+                int slotIndex = key.keyCode - Key.Digit1;
+                if (slotIndex >= 0 && slotIndex < HotbarSize)
+                {
+                    SelectHotbarSlot(slotIndex);
+                }
+            }
+        }
+
+        private void SelectHotbarSlot(int hotbarSlotIndex)
+        {
+            int newIndex = Mathf.Clamp(hotbarSlotIndex, 0, HotbarSize - 1);
+            
+            if (newIndex == SelectedSlotIndex) // Ignore same calls
+            {
+                return;
+            }
+
+            SelectedSlotIndex = newIndex;
+            SelectedSlot = Slots[newIndex];
+            Debug.Log($"Selected Slot Index is: {newIndex}");
+        }
+
+        #endregion
 
     }
 

@@ -94,14 +94,12 @@ namespace OceanGame
         private void DetectPlayer()
         {
             int hitCount = Physics2D.OverlapCircle(transform.position, _detectRange, _playerFilter, _detectionResults);
-            Debug.Log($"hitcount: {hitCount}");
             Player closestPlayer = null;
             float closestDistance = _detectRange;
 
             for (int i = 0; i < hitCount; i++)
             {
                 var currentCollider = _detectionResults[i];
-                Debug.Log($"Found collider: {currentCollider}");
 
                 if (currentCollider.TryGetComponent(out Player player))
                 {
@@ -120,7 +118,7 @@ namespace OceanGame
                     }
                 }
             }
-            Debug.Log($"Found Player?: {closestPlayer != null}");
+            
             Ctx.ClosestPlayer = closestPlayer;
         }
         

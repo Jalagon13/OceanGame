@@ -97,12 +97,12 @@ namespace OceanGame
 
         public int GetItemId(ItemSO item)
         {
-            if (item == null) return -1; // -1 represents empty inventory slot
+            if (item == null) return InventorySlot.EMPTY_SLOT_ID; // -1 represents empty inventory slot
 
             if (_itemToIdMap.TryGetValue(item, out int id)) return id;
 
             Debug.LogError($"Item '{item.ItemName}' is not registered in the GameDataRegistry!");
-            return -1;
+            return InventorySlot.EMPTY_SLOT_ID;
         }
 
         public ItemSO GetItemFromId(int id)
