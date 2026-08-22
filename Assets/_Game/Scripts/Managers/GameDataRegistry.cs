@@ -8,11 +8,11 @@ namespace OceanGame
     {
         public static GameDataRegistry Instance { get; private set; }
 
-        [SerializeField] private List<TileBase> _tileDatabase = new();
+        [SerializeField] private List<TileSO> _tileDatabase = new();
         [Space(25)]
         [SerializeField] private List<ItemSO> _itemDatabase = new();
 
-        private Dictionary<TileBase, int> _tileToIdMap = new();
+        private Dictionary<TileSO, int> _tileToIdMap = new();
         private Dictionary<ItemSO, int> _itemToIdMap = new();
 
         private void Awake()
@@ -68,7 +68,7 @@ namespace OceanGame
 
         #region Tile Functions
 
-        public int GetTileId(TileBase tile)
+        public int GetTileId(TileSO tile)
         {
             if (tile == null) 
             {
@@ -85,7 +85,7 @@ namespace OceanGame
             return -3;
         }
 
-        public TileBase GetTileFromId(int id)
+        public TileSO GetTileFromId(int id)
         {
             if (id <= -3 || id >= _tileDatabase.Count) return null;
             return _tileDatabase[id];

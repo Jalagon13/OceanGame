@@ -16,3 +16,4 @@ MonoBehaviour:
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules: []
+  <DropItem>k__BackingField: {fileID: 11400000, guid: f32585c26cdce4c878d8639828e0e0c6, type: 2}

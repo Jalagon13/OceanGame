@@ -60,7 +60,6 @@ namespace OceanGame
             _machine.FixedTick(Time.fixedDeltaTime);
 
             Vector2 boxSize = Ctx.PlayerBodyCollider.size; // Player's size
-
             Ctx.CollisionResult = GridPhysics.MoveAndResolve(transform.position, Ctx.Velocity, boxSize, Time.fixedDeltaTime);
             transform.position = Ctx.CollisionResult.NewPosition;
         }

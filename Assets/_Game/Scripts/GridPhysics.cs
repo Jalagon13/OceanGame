@@ -16,9 +16,9 @@ namespace OceanGame
             public bool TouchingTop;
         }
 
-        public static CollisionResult MoveAndResolve(Vector2 currentPos, Vector2 velocity, Vector2 size, float deltaTime)
+        public static CollisionResult MoveAndResolve(Vector2 currentPos, Vector2 velocity, Vector2 size, float deltaTime, bool ignoreCollisions = false)
         {
-            CollisionResult result = new CollisionResult();
+            CollisionResult result = new();
 
             var world = WorldManager.Instance;
 
@@ -31,40 +31,46 @@ namespace OceanGame
             float startBottom = currentPos.y - halfHeight;
             float startTop = currentPos.y + halfHeight;
 
-            // For checking entombed state
-            bool isLeftOverlapping = false;
-            bool isRightOverlapping = false;
-            bool isBottomOverlapping = false;
-            bool isTopOverlapping = false;
+            bool isEntombedX = false;
+            bool isEntombedY = false;
 
-            // Scan the immediate tiles around the player's current position to check for entombment
-            int sMinX = Mathf.FloorToInt(startLeft);
-            int sMaxX = Mathf.CeilToInt(startRight);
-            int sMinY = Mathf.FloorToInt(startBottom);
-            int sMaxY = Mathf.CeilToInt(startTop);
-
-            for (int x = sMinX; x <= sMaxX; x++)
+            if (!ignoreCollisions) // If we ignore collisions, skip entombed check
             {
-                for (int y = sMinY; y <= sMaxY; y++)
+                // For checking entombed state
+                bool isLeftOverlapping = false;
+                bool isRightOverlapping = false;
+                bool isBottomOverlapping = false;
+                bool isTopOverlapping = false;
+
+                // Scan the immediate tiles around the player's current position to check for entombment
+                int sMinX = Mathf.FloorToInt(startLeft);
+                int sMaxX = Mathf.CeilToInt(startRight);
+                int sMinY = Mathf.FloorToInt(startBottom);
+                int sMaxY = Mathf.CeilToInt(startTop);
+
+                for (int x = sMinX; x <= sMaxX; x++)
                 {
-                    if (world.ForegroundLayer[x, y] >= 0 || world.ForegroundLayer[x, y] == TileLayer.OUT_OF_BOUNDS_ID)
+                    for (int y = sMinY; y <= sMaxY; y++)
                     {
-                        // Check if we overlap this solid tile
-                        if (IsOverlapping(startLeft, startRight, startBottom, startTop, x, x + 1, y, y + 1))
+                        if (world.ForegroundLayer[x, y] >= 0 || world.ForegroundLayer[x, y] == TileLayer.OUT_OF_BOUNDS_ID)
                         {
-                            // Determine which edges of the player are currently inside this tile
-                            if (startLeft < x + 1 && startLeft > x) isLeftOverlapping = true;
-                            if (startRight > x && startRight < x + 1) isRightOverlapping = true;
-                            if (startBottom < y + 1 && startBottom > y) isBottomOverlapping = true;
-                            if (startTop > y && startTop < y + 1) isTopOverlapping = true;
+                            // Check if we overlap this solid tile
+                            if (IsOverlapping(startLeft, startRight, startBottom, startTop, x, x + 1, y, y + 1))
+                            {
+                                // Determine which edges of the player are currently inside this tile
+                                if (startLeft < x + 1 && startLeft > x) isLeftOverlapping = true;
+                                if (startRight > x && startRight < x + 1) isRightOverlapping = true;
+                                if (startBottom < y + 1 && startBottom > y) isBottomOverlapping = true;
+                                if (startTop > y && startTop < y + 1) isTopOverlapping = true;
+                            }
                         }
                     }
                 }
-            }
 
-            // Determine entombment states. Entombed meaning overlapping on both sides of the bounding box on either axis
-            bool isEntombedX = isLeftOverlapping && isRightOverlapping;
-            bool isEntombedY = isBottomOverlapping && isTopOverlapping;
+                // Determine entombment states. Entombed meaning overlapping on both sides of the bounding box on either axis
+                isEntombedX = isLeftOverlapping && isRightOverlapping;
+                isEntombedY = isBottomOverlapping && isTopOverlapping;
+            }
 
             if (isEntombedX)
             {
@@ -74,46 +80,49 @@ namespace OceanGame
             {
                 // First focus on the horizontal movement
                 currentPos.x += velocity.x * deltaTime;
-
-                // Define the bounding box area based on our new potential X position
-                float playerLeft = currentPos.x - halfWidth;
-                float playerRight = currentPos.x + halfWidth;
-                float playerBottom = currentPos.y - halfHeight;
-                float playerTop = currentPos.y + halfHeight;
-
-                // Get a tiny grid loop range surrounding the player's bounds
-                int minX = Mathf.FloorToInt(playerLeft);
-                int maxX = Mathf.CeilToInt(playerRight);
-                int minY = Mathf.FloorToInt(playerBottom);
-                int maxY = Mathf.CeilToInt(playerTop);
-
-                for (int tileX = minX; tileX <= maxX; tileX++)
+                
+                if(!ignoreCollisions) // If we ignore collisions, skip collision check
                 {
-                    for (int tileY = minY; tileY <= maxY; tileY++)
-                    {
-                        // If the tile is solid or out of bounds(0 or higher, since -1 is Air and -2 is Out of bounds)
-                        if (world.ForegroundLayer[tileX, tileY] >= 0 || world.ForegroundLayer[tileX, tileY] == TileLayer.OUT_OF_BOUNDS_ID)
-                        {
-                            // Check if the player's box overlaps this specific tile's AABB
-                            if (IsOverlapping(playerLeft, playerRight, playerBottom, playerTop, tileX, tileX + 1, tileY, tileY + 1))
-                            {
-                                // Resolve horizontal overlap: Are we moving right or left?
-                                if (velocity.x > 0 && playerRight > tileX && startRight <= tileX)
-                                {
-                                    // Triggered right wall impact
-                                    // Moving right: push back to the left edge of the block
-                                    currentPos.x = tileX - halfWidth;
-                                }
-                                else if (velocity.x < 0 && playerLeft < tileX + 1 && startLeft >= tileX + 1)
-                                {
-                                    // Triggered left wall impact
-                                    // Moving left: push forward to the right edge of the block
-                                    currentPos.x = (tileX + 1) + halfWidth;
-                                }
+                    // Define the bounding box area based on our new potential X position
+                    float playerLeft = currentPos.x - halfWidth;
+                    float playerRight = currentPos.x + halfWidth;
+                    float playerBottom = currentPos.y - halfHeight;
+                    float playerTop = currentPos.y + halfHeight;
 
-                                // Re-cache edges for next iterations in the grid loop
-                                playerLeft = currentPos.x - halfWidth;
-                                playerRight = currentPos.x + halfWidth;
+                    // Get a tiny grid loop range surrounding the player's bounds
+                    int minX = Mathf.FloorToInt(playerLeft);
+                    int maxX = Mathf.CeilToInt(playerRight);
+                    int minY = Mathf.FloorToInt(playerBottom);
+                    int maxY = Mathf.CeilToInt(playerTop);
+
+                    for (int tileX = minX; tileX <= maxX; tileX++)
+                    {
+                        for (int tileY = minY; tileY <= maxY; tileY++)
+                        {
+                            // If the tile is solid or out of bounds(0 or higher, since -1 is Air and -2 is Out of bounds)
+                            if (world.ForegroundLayer[tileX, tileY] >= 0 || world.ForegroundLayer[tileX, tileY] == TileLayer.OUT_OF_BOUNDS_ID)
+                            {
+                                // Check if the player's box overlaps this specific tile's AABB
+                                if (IsOverlapping(playerLeft, playerRight, playerBottom, playerTop, tileX, tileX + 1, tileY, tileY + 1))
+                                {
+                                    // Resolve horizontal overlap: Are we moving right or left?
+                                    if (velocity.x > 0 && playerRight > tileX && startRight <= tileX)
+                                    {
+                                        // Triggered right wall impact
+                                        // Moving right: push back to the left edge of the block
+                                        currentPos.x = tileX - halfWidth;
+                                    }
+                                    else if (velocity.x < 0 && playerLeft < tileX + 1 && startLeft >= tileX + 1)
+                                    {
+                                        // Triggered left wall impact
+                                        // Moving left: push forward to the right edge of the block
+                                        currentPos.x = (tileX + 1) + halfWidth;
+                                    }
+
+                                    // Re-cache edges for next iterations in the grid loop
+                                    playerLeft = currentPos.x - halfWidth;
+                                    playerRight = currentPos.x + halfWidth;
+                                }
                             }
                         }
                     }
@@ -129,99 +138,105 @@ namespace OceanGame
                 // Second focus on the vertical movement
                 currentPos.y += velocity.y * deltaTime;
 
-                // Recalculate vertical edges with the x positons from earlier
-                float playerLeft = currentPos.x - halfWidth;
-                float playerRight = currentPos.x + halfWidth;
-                float playerBottom = currentPos.y - halfHeight;
-                float playerTop = currentPos.y + halfHeight;
-
-                // Again Get a tiny grid loop range surrounding the player's bounds
-                int minX = Mathf.FloorToInt(playerLeft);
-                int maxX = Mathf.CeilToInt(playerRight);
-                int minY = Mathf.FloorToInt(playerBottom);
-                int maxY = Mathf.CeilToInt(playerTop);
-
-                for (int tileX = minX; tileX <= maxX; tileX++)
+                if (!ignoreCollisions) // If we ignore collisions, skip collision check
                 {
-                    for (int tileY = minY; tileY <= maxY; tileY++)
-                    {
-                        if (world.ForegroundLayer[tileX, tileY] >= 0 || world.ForegroundLayer[tileX, tileY] == TileLayer.OUT_OF_BOUNDS_ID)
-                        {
-                            if (IsOverlapping(playerLeft, playerRight, playerBottom, playerTop, tileX, tileX + 1, tileY, tileY + 1))
-                            {
-                                // Resolve vertical overlap: Are we going up or down
-                                if (velocity.y > 0 && playerTop > tileY && startTop <= tileY)
-                                {
-                                    // Hit ceiling
-                                    // Moving up: hit ceiling, push down below the block
-                                    currentPos.y = tileY - halfHeight;
-                                }
-                                else if (velocity.y < 0 && playerBottom < tileY + 1 && startBottom >= tileY + 1)
-                                {
-                                    // Landed on ground (Grounded)
-                                    // Moving down: landed on ground, push up on top of the block
-                                    currentPos.y = (tileY + 1) + halfHeight;
-                                }
+                    // Recalculate vertical edges with the x positons from earlier
+                    float playerLeft = currentPos.x - halfWidth;
+                    float playerRight = currentPos.x + halfWidth;
+                    float playerBottom = currentPos.y - halfHeight;
+                    float playerTop = currentPos.y + halfHeight;
 
-                                // Re-cache edges
-                                playerBottom = currentPos.y - halfHeight;
-                                playerTop = currentPos.y + halfHeight;
+                    // Again Get a tiny grid loop range surrounding the player's bounds
+                    int minX = Mathf.FloorToInt(playerLeft);
+                    int maxX = Mathf.CeilToInt(playerRight);
+                    int minY = Mathf.FloorToInt(playerBottom);
+                    int maxY = Mathf.CeilToInt(playerTop);
+
+                    for (int tileX = minX; tileX <= maxX; tileX++)
+                    {
+                        for (int tileY = minY; tileY <= maxY; tileY++)
+                        {
+                            if (world.ForegroundLayer[tileX, tileY] >= 0 || world.ForegroundLayer[tileX, tileY] == TileLayer.OUT_OF_BOUNDS_ID)
+                            {
+                                if (IsOverlapping(playerLeft, playerRight, playerBottom, playerTop, tileX, tileX + 1, tileY, tileY + 1))
+                                {
+                                    // Resolve vertical overlap: Are we going up or down
+                                    if (velocity.y > 0 && playerTop > tileY && startTop <= tileY)
+                                    {
+                                        // Hit ceiling
+                                        // Moving up: hit ceiling, push down below the block
+                                        currentPos.y = tileY - halfHeight;
+                                    }
+                                    else if (velocity.y < 0 && playerBottom < tileY + 1 && startBottom >= tileY + 1)
+                                    {
+                                        // Landed on ground (Grounded)
+                                        // Moving down: landed on ground, push up on top of the block
+                                        currentPos.y = (tileY + 1) + halfHeight;
+                                    }
+
+                                    // Re-cache edges
+                                    playerBottom = currentPos.y - halfHeight;
+                                    playerTop = currentPos.y + halfHeight;
+                                }
                             }
                         }
                     }
                 }
             }
-
-            // Skin contact monitoring
-            // Recompute the final player boundaries after all movement resolutions are done
-            float finalLeft = currentPos.x - halfWidth;
-            float finalRight = currentPos.x + halfWidth;
-            float finalBottom = currentPos.y - halfHeight;
-            float finalTop = currentPos.y + halfHeight;
-
-            // We slightly pull the perpendicular corners inward to prevent side-walls 
-            // from falsely flagging as ground contact or ceiling contact.
-            float inset = 0.02f;
-
-            // Check Bottom Contact (Grounded Check)
-            int bMinX = Mathf.FloorToInt(finalLeft + inset);
-            int bMaxX = Mathf.FloorToInt(finalRight - inset);
-            int bTileY = Mathf.FloorToInt(finalBottom - SKIN_SIZE);
-            for (int x = bMinX; x <= bMaxX; x++)
+            
+            if(!ignoreCollisions) // If we are ignoring collisions, do not calculate touching checks
             {
-                if (world.ForegroundLayer[x, bTileY] >= 0 || world.ForegroundLayer[x, bTileY] == TileLayer.OUT_OF_BOUNDS_ID) result.TouchingBottom = true;
-            }
+                // Skin contact monitoring
+                // Recompute the final player boundaries after all movement resolutions are done
+                float finalLeft = currentPos.x - halfWidth;
+                float finalRight = currentPos.x + halfWidth;
+                float finalBottom = currentPos.y - halfHeight;
+                float finalTop = currentPos.y + halfHeight;
 
-            // Check Top Contact (Ceiling Check)
-            int tMinX = Mathf.FloorToInt(finalLeft + inset);
-            int tMaxX = Mathf.FloorToInt(finalRight - inset);
-            int tTileY = Mathf.FloorToInt(finalTop + SKIN_SIZE);
-            for (int x = tMinX; x <= tMaxX; x++)
-            {
-                if (world.ForegroundLayer[x, tTileY] >= 0 || world.ForegroundLayer[x, tTileY] == TileLayer.OUT_OF_BOUNDS_ID) result.TouchingTop = true;
-            }
+                // We slightly pull the perpendicular corners inward to prevent side-walls 
+                // from falsely flagging as ground contact or ceiling contact.
+                float inset = 0.02f;
 
-            // Check Left Contact (Left Wall Check)
-            int lTileX = Mathf.FloorToInt(finalLeft - SKIN_SIZE);
-            int lMinY = Mathf.FloorToInt(finalBottom + inset);
-            int lMaxY = Mathf.FloorToInt(finalTop - inset);
-            for (int y = lMinY; y <= lMaxY; y++)
-            {
-                if (world.ForegroundLayer[lTileX, y] >= 0 || world.ForegroundLayer[lTileX, y] == TileLayer.OUT_OF_BOUNDS_ID) result.TouchingLeft = true;
-            }
+                // Check Bottom Contact (Grounded Check)
+                int bMinX = Mathf.FloorToInt(finalLeft + inset);
+                int bMaxX = Mathf.FloorToInt(finalRight - inset);
+                int bTileY = Mathf.FloorToInt(finalBottom - SKIN_SIZE);
+                for (int x = bMinX; x <= bMaxX; x++)
+                {
+                    if (world.ForegroundLayer[x, bTileY] >= 0 || world.ForegroundLayer[x, bTileY] == TileLayer.OUT_OF_BOUNDS_ID) result.TouchingBottom = true;
+                }
 
-            // Check Right Contact (Right Wall Check)
-            int rTileX = Mathf.FloorToInt(finalRight + SKIN_SIZE);
-            int rMinY = Mathf.FloorToInt(finalBottom + inset);
-            int rMaxY = Mathf.FloorToInt(finalTop - inset);
-            for (int y = rMinY; y <= rMaxY; y++)
-            {
-                if (world.ForegroundLayer[rTileX, y] >= 0 || world.ForegroundLayer[rTileX, y] == TileLayer.OUT_OF_BOUNDS_ID) result.TouchingRight = true;
-            }
+                // Check Top Contact (Ceiling Check)
+                int tMinX = Mathf.FloorToInt(finalLeft + inset);
+                int tMaxX = Mathf.FloorToInt(finalRight - inset);
+                int tTileY = Mathf.FloorToInt(finalTop + SKIN_SIZE);
+                for (int x = tMinX; x <= tMaxX; x++)
+                {
+                    if (world.ForegroundLayer[x, tTileY] >= 0 || world.ForegroundLayer[x, tTileY] == TileLayer.OUT_OF_BOUNDS_ID) result.TouchingTop = true;
+                }
 
-            // If the entity is entombed, force their contact indicators to true natively
-            if (isEntombedX) { result.TouchingLeft = true; result.TouchingRight = true; }
-            if (isEntombedY) { result.TouchingBottom = true; result.TouchingTop = true; }
+                // Check Left Contact (Left Wall Check)
+                int lTileX = Mathf.FloorToInt(finalLeft - SKIN_SIZE);
+                int lMinY = Mathf.FloorToInt(finalBottom + inset);
+                int lMaxY = Mathf.FloorToInt(finalTop - inset);
+                for (int y = lMinY; y <= lMaxY; y++)
+                {
+                    if (world.ForegroundLayer[lTileX, y] >= 0 || world.ForegroundLayer[lTileX, y] == TileLayer.OUT_OF_BOUNDS_ID) result.TouchingLeft = true;
+                }
+
+                // Check Right Contact (Right Wall Check)
+                int rTileX = Mathf.FloorToInt(finalRight + SKIN_SIZE);
+                int rMinY = Mathf.FloorToInt(finalBottom + inset);
+                int rMaxY = Mathf.FloorToInt(finalTop - inset);
+                for (int y = rMinY; y <= rMaxY; y++)
+                {
+                    if (world.ForegroundLayer[rTileX, y] >= 0 || world.ForegroundLayer[rTileX, y] == TileLayer.OUT_OF_BOUNDS_ID) result.TouchingRight = true;
+                }
+
+                // If the entity is entombed, force their contact indicators to true natively
+                if (isEntombedX) { result.TouchingLeft = true; result.TouchingRight = true; }
+                if (isEntombedY) { result.TouchingBottom = true; result.TouchingTop = true; }
+            }
 
             result.NewPosition = currentPos;
             return result;

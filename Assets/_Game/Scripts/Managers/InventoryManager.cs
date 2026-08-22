@@ -12,7 +12,7 @@ namespace OceanGame
         [SerializeField] private int _maxStackSize = 999;
 
         private InventorySlot[] _slots;
-
+        
         private void Awake() 
         {
             Instance = this;
@@ -25,7 +25,7 @@ namespace OceanGame
             }
         }
 
-        public bool AddItem(int itemId, int amount)
+        public int AddItem(int itemId, int amount) // Returns remainder 
         {
             // Search for existing matching stacks
             for (int i = 0; i < _slots.Length; i++)
@@ -40,7 +40,7 @@ namespace OceanGame
                         _slots[i].AddToStack(amountToAdd);
                         amount -= amountToAdd;
 
-                        if (amount <= 0) return true;
+                        if (amount <= 0) return 0;
                     }
                 }
             }
@@ -54,13 +54,13 @@ namespace OceanGame
                     _slots[i].AssignItem(itemId, amountToAdd);
                     amount -= amountToAdd;
 
-                    if (amount <= 0) return true;
+                    if (amount <= 0) return 0;
                 }
             }
 
             // If amount is still greater than 0, inventory is completely full
             Debug.LogWarning($"No more space in inventory. Need to develop what happens when inventory is full");
-            return amount <= 0;
+            return amount;
         }
 
         public bool RemoveItem(int itemId, int amount)
@@ -101,8 +101,41 @@ namespace OceanGame
             }
             return total;
         }
+
+        public bool CanAcceptItem(int itemId, int amount)
+        {
+            int remainingAmount = amount;
+
+            for (int i = 0; i < _slots.Length; i++)
+            {
+                // 1. If it's an empty slot, it can hold a full maximum stack size
+                if (_slots[i].IsEmpty)
+                {
+                    remainingAmount -= _maxStackSize;
+                }
+                // 2. If it matches, it can hold whatever room is left in this specific stack
+                else if (_slots[i].ItemId == itemId)
+                {
+                    int roomLeft = _maxStackSize - _slots[i].StackSize;
+                    if (roomLeft > 0)
+                    {
+                        remainingAmount -= roomLeft;
+                    }
+                }
+
+                // The moment remainingAmount hits 0 or less, the ENTIRE amount fits!
+                if (remainingAmount <= 0)
+                {
+                    return true;
+                }
+            }
+
+            // If we finished checking every slot and there's still leftover amount, it cannot fully fit
+            return false;
+        }
+
     }
-    
+
     [Serializable]
     public class InventorySlot
     {
@@ -112,7 +145,20 @@ namespace OceanGame
         public int StackSize { get; private set; } = 0;
 
         public bool IsEmpty => ItemId == -1 || StackSize <= 0;
+        
+        public InventorySlot(ItemSO itemSO, int amount)
+        {
+            Clear();
 
+            AssignItem(GameDataRegistry.Instance.GetItemId(itemSO), amount);
+        }
+
+        public InventorySlot(int id, int amount)
+        {
+            Clear();
+            AssignItem(id, amount);
+        }
+        
         public InventorySlot()
         {
             Clear();

@@ -59,7 +59,6 @@ namespace OceanGame
         {
             if (context.phase == InputActionPhase.Started)
             {
-                Debug.Log($"prim");
                 OnPrimaryActionPressed?.Invoke();
             }
         }
@@ -68,7 +67,6 @@ namespace OceanGame
         {
             if (context.phase == InputActionPhase.Started)
             {
-                Debug.Log($"sec");
                 OnSecondaryActionPressed?.Invoke();
             }
         }

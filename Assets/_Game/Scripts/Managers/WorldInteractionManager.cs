@@ -9,7 +9,7 @@ namespace OceanGame
     {
         public static WorldInteractionManager Instance { get; private set; }
         
-        [SerializeField] private TileBase _grassTile;
+        [SerializeField] private TileSO _grassTile;
         
         public static Vector2Int MouseWorldTilePosition { get; private set; }
         public static Vector2 MouseWorldPosition { get; private set; }
@@ -39,17 +39,19 @@ namespace OceanGame
 
         private void OnPrimaryActionPressed()
         {
-            Debug.Log($"1");
             if(WorldManager.Instance.ForegroundLayer[MouseWorldTilePosition.x, MouseWorldTilePosition.y] > TileLayer.AIR_ID)
             {
                 Debug.Log($"Clearing {MouseWorldTilePosition} to empty");
+                TileSO tileBeingDestroy = GameDataRegistry.Instance.GetTileFromId(WorldManager.Instance.ForegroundLayer[MouseWorldTilePosition.x, MouseWorldTilePosition.y]);
                 WorldManager.Instance.ForegroundLayer[MouseWorldTilePosition.x, MouseWorldTilePosition.y] = TileLayer.AIR_ID;
+                
+                Vector2 spawnPosition = new(MouseWorldTilePosition.x + 0.5f, MouseWorldTilePosition.y + 0.5f);
+                GameManager.Instance.SpawnItem(tileBeingDestroy.DropItem, tileBeingDestroy.GetDrops(), spawnPosition);
             }
         }
 
         private void OnSecondaryActionPressed()
         {
-            Debug.Log($"2");
             if (WorldManager.Instance.ForegroundLayer[MouseWorldTilePosition.x, MouseWorldTilePosition.y] == TileLayer.AIR_ID)
             {
                 Debug.Log($"Setting {MouseWorldTilePosition} to grass");

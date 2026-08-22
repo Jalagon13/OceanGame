@@ -12,7 +12,6 @@ namespace OceanGame
         public readonly PlayerAirborneState Airborne;
         public readonly PlayerSwimmingState Swimming;
 
-
         private readonly PlayerContext _ctx;
 
         public PlayerRootState(StateMachine m, PlayerContext ctx) : base(m, null)

@@ -16,8 +16,8 @@ namespace OceanGame
         [field: SerializeField] public int SeaLevel { get; private set; } = 40;
 
         [Header("World References")]
-        [SerializeField] private TileBase _grassTile;
-        [SerializeField] private TileBase _dirtBgTile;
+        [SerializeField] private TileSO _grassTile;
+        [SerializeField] private TileSO _dirtBgTile;
         [SerializeField] private Tilemap _foregroundTilemap;
         [SerializeField] private Tilemap _backgroundTilemap;
 
