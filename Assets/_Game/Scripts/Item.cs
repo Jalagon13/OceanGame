@@ -104,7 +104,7 @@ namespace OceanGame
                 if (currentCollider.TryGetComponent(out Player player))
                 {
                     // Only detect players who can accept this item. In the future, query each player for can accept item somehow
-                    bool canThisPlayerAcceptThisItem = InventoryManager.Instance.CanAcceptItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.StackSize);
+                    bool canThisPlayerAcceptThisItem = InventoryManager.Instance.CanAcceptItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.CurrentAmount);
                     
                     if(canThisPlayerAcceptThisItem)
                     {
@@ -124,7 +124,7 @@ namespace OceanGame
         
         public void OnItemCollected()
         {
-            int remainder = InventoryManager.Instance.AddItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.StackSize);
+            int remainder = InventoryManager.Instance.AddItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.CurrentAmount);
 
             if (remainder <= 0)
             {
