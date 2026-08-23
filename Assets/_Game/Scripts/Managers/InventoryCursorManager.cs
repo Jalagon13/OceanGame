@@ -18,56 +18,64 @@ namespace OceanGame
 
         public void HandleSlotLeftClick(int clickedIndex)
         {
-            if(CursorSlot.IsEmpty && InventoryManager.Instance.PlayerInventory[clickedIndex].IsEmpty) return;
-            
-            // At least one of the 2 are not empty
-            
-            if(CursorSlot.IsEmpty) // Cursor slot is empty and clicked slot has an item
+            InventorySlot[] inventory = InventoryManager.Instance.PlayerInventory;
+
+            if (CursorSlot.IsEmpty && inventory[clickedIndex].IsEmpty) return; // Garentees there is at least 1 non empty slot
+
+            if (CursorSlot.IsEmpty) // Cursor is empty and clicked slot has an item
             {
-                // Clicked Slot is not empty
-                CursorSlot = InventoryManager.Instance.PlayerInventory[clickedIndex].Clone();
-                InventoryManager.Instance.PlayerInventory[clickedIndex].Clear();
-                
-                InventoryManager.Instance.RefreshInventory();
-                OnCursorSlotChanged?.Invoke();
-                return;
+                CursorSlot = inventory[clickedIndex].Clone();
+                inventory[clickedIndex].Clear();
             }
-            
-            if(InventoryManager.Instance.PlayerInventory[clickedIndex].IsEmpty) // Cursor slot has an item and clicked slot is empty
+            else if (inventory[clickedIndex].IsEmpty) // Clicked slot is empty and cursor has an item
             {
-                InventoryManager.Instance.PlayerInventory[clickedIndex] = CursorSlot.Clone();
+                inventory[clickedIndex] = CursorSlot.Clone();
                 CursorSlot.Clear();
-
-                InventoryManager.Instance.RefreshInventory();
-                OnCursorSlotChanged?.Invoke();
-                return;
             }
-
-            // If we get to here, both the clicked slot and cursor slot have some item
-            if (CanStacksMerge(InventoryManager.Instance.PlayerInventory[clickedIndex], CursorSlot))
+            else if (CanStacksMerge(inventory[clickedIndex], CursorSlot)) // Checks if they are both the same item
             {
-                int movedAmount = MoveAmount(CursorSlot, InventoryManager.Instance.PlayerInventory[clickedIndex], GetMaxStackSize(GameDataRegistry.Instance.GetItemFromId(InventoryManager.Instance.PlayerInventory[clickedIndex].ItemId)));
-                if (movedAmount > 0)
-                {
-                    InventoryManager.Instance.RefreshInventory();
-                    OnCursorSlotChanged?.Invoke();
-                }
-
-                return;
+                int maxStack = GetMaxStackSize(GameDataRegistry.Instance.GetItemFromId(inventory[clickedIndex].ItemId));
+                MoveAmount(CursorSlot, inventory[clickedIndex], maxStack);
             }
-
-            // If they both have a stack and both different items, swap them
-            InventorySlot swappedItem = InventoryManager.Instance.PlayerInventory[clickedIndex].Clone();
-            InventoryManager.Instance.PlayerInventory[clickedIndex] = CursorSlot.Clone();
-            CursorSlot = swappedItem;
+            else 
+            {
+                // Swap items safely using the cached array
+                InventorySlot swappedItem = inventory[clickedIndex].Clone();
+                inventory[clickedIndex] = CursorSlot.Clone();
+                CursorSlot = swappedItem;
+            }
 
             InventoryManager.Instance.RefreshInventory();
             OnCursorSlotChanged?.Invoke();
         }
 
-        public void HandleSlotRightClick(int slotIndex)
+
+        public void HandleSlotRightClick(int clickedIndex)
         {
-            
+            InventorySlot[] inventory = InventoryManager.Instance.PlayerInventory;
+
+            if (CursorSlot.IsEmpty && inventory[clickedIndex].IsEmpty) return; // Garentees there is at least 1 non empty slot
+
+            if (CursorSlot.IsEmpty) // Cursor is empty and clicked slot has an item
+            {
+                // split the stack in half
+                int cursorAmount = Mathf.CeilToInt(inventory[clickedIndex].CurrentAmount * 0.5f);
+                CursorSlot.AssignItem(inventory[clickedIndex].ItemId, cursorAmount);
+                inventory[clickedIndex].RemoveFromCurrentAmount(cursorAmount);
+            }
+            else if (inventory[clickedIndex].IsEmpty) // Clicked slot is empty and cursor has an item
+            {
+                inventory[clickedIndex].AssignItem(CursorSlot.ItemId, 1);
+                CursorSlot.RemoveFromCurrentAmount(1);
+            }
+            else if (CanStacksMerge(inventory[clickedIndex], CursorSlot)) // Checks if they are both the same item
+            {
+                inventory[clickedIndex].AddToCurrentAmount(1);
+                CursorSlot.RemoveFromCurrentAmount(1);
+            }
+
+            InventoryManager.Instance.RefreshInventory();
+            OnCursorSlotChanged?.Invoke();
         }
 
         private int MoveAmount(InventorySlot source, InventorySlot target, int maxTargetAmount, int requestedAmount = int.MaxValue)
