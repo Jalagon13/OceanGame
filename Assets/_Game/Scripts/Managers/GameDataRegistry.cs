@@ -68,7 +68,7 @@ namespace OceanGame
 
         #region Tile Functions
 
-        public int GetTileId(TileSO tile)
+        public int GetTileIdFromTileSO(TileSO tile)
         {
             if (tile == null) 
             {
@@ -85,7 +85,7 @@ namespace OceanGame
             return -3;
         }
 
-        public TileSO GetTileFromId(int id)
+        public TileSO GetTileSOFromTileId(int id)
         {
             if (id <= -3 || id >= _tileDatabase.Count) return null;
             return _tileDatabase[id];
@@ -95,7 +95,7 @@ namespace OceanGame
 
         #region Item Functions
 
-        public int GetItemId(ItemSO item)
+        public int GetItemIdFromItemSO(ItemSO item)
         {
             if (item == null) return InventorySlot.EMPTY_SLOT_ID; // -1 represents empty inventory slot
 
@@ -105,7 +105,7 @@ namespace OceanGame
             return InventorySlot.EMPTY_SLOT_ID;
         }
 
-        public ItemSO GetItemFromId(int id)
+        public ItemSO GetItemSOFromItemId(int id)
         {
             if (id < 0 || id >= _itemDatabase.Count) return null;
             return _itemDatabase[id];

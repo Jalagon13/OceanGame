@@ -17,7 +17,6 @@ namespace OceanGame
         [field: SerializeField] public int MaxStackSize { get; private set; } = 999;
 
         public InventorySlot[] PlayerInventory { get; private set; }
-       
         
         private void Awake() 
         {
@@ -158,8 +157,45 @@ namespace OceanGame
             // If we finished checking every slot and there's still leftover amount, it cannot fully fit
             return false;
         }
+        
+        public bool CanCraftRecipe(RecipeSO recipeSO)
+        {
+            var recipe = recipeSO.Recipe;
 
+            foreach (var ingredient in recipe)
+            {
+                var ingredientItem = ingredient.Item;
+                var amountNeeded = ingredient.Amount;
 
+                int iid = GameDataRegistry.Instance.GetItemIdFromItemSO(ingredientItem);
+                if (GetTotalItemCount(iid) < amountNeeded)
+                {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        public bool IsInventoryFull()
+        {
+            for (int i = 0; i < PlayerInventory.Length; i++)
+            {
+                var slot = PlayerInventory[i];
+                
+                if(slot.IsEmpty)
+                {
+                    return false;
+                }
+                else if(!slot.GetItemSO().IsStackable && slot.CurrentAmount < MaxStackSize)
+                {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
     }
 
     

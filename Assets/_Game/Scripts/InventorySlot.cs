@@ -17,7 +17,7 @@ namespace OceanGame
         {
             Clear();
 
-            AssignItem(GameDataRegistry.Instance.GetItemId(itemSO), amount);
+            AssignItem(GameDataRegistry.Instance.GetItemIdFromItemSO(itemSO), amount);
         }
 
         public InventorySlot(int id, int amount)
@@ -29,6 +29,11 @@ namespace OceanGame
         public InventorySlot()
         {
             Clear();
+        }
+        
+        public ItemSO GetItemSO()
+        {
+            return GameDataRegistry.Instance.GetItemSOFromItemId(ItemId);
         }
 
         public void AssignItem(int itemId, int amount)

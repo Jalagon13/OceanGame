@@ -39,7 +39,7 @@ namespace OceanGame
             else
             {
                 _itemIcon.enabled = true;
-                _itemIcon.sprite = GameDataRegistry.Instance.GetItemFromId(slot.ItemId).DisplayIcon;
+                _itemIcon.sprite = GameDataRegistry.Instance.GetItemSOFromItemId(slot.ItemId).DisplayIcon;
                 _stackText.text = slot.CurrentAmount > 1 ? slot.CurrentAmount.ToString() : string.Empty;
             }
         }

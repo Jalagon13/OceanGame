@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace OceanGame
@@ -8,21 +9,35 @@ namespace OceanGame
         [SerializeField] private InventorySlotUI _inventorySlotPrefab;
         [SerializeField] private Transform _hotbarSlotsHolder;
         [SerializeField] private Transform _inventorySlotsHolder;
+        [SerializeField] private Transform _inventoryUI;
+        
+        [Header("Default Crafting Menu")]
+        [SerializeField] private CraftingSlotUI _craftingSlotPrefab;
+        [SerializeField] private Transform _craftingSlotsHolder;
+        [SerializeField] private List<RecipeSO> _defaultCraftingRecipes;
     
         private void Start()
         {
-            CloseInventoryUI();
-
             InventoryInputManager.Instance.OnInventoryOpenChanged += ToggleInventoryUI;
+
+            CloseInventoryUI();
+            InitializeSlots();
+        }
+
+        private void OnDestroy()
+        {
+            InventoryInputManager.Instance.OnInventoryOpenChanged -= ToggleInventoryUI;
+        }
         
-            if(_inventorySlotPrefab == null) return;
-        
+        private void InitializeSlots()
+        {
+            // Initialize Inventory and Hotbar slots
             var inventorySize = InventoryManager.Instance.InventorySize;
             var hotbarSize = InventoryManager.Instance.HotbarSize;
-            
+
             for (int i = 0; i < inventorySize; i++)
             {
-                if(i < hotbarSize)
+                if (i < hotbarSize)
                 {
                     // Initialize HotbarSlot
                     var slot = Instantiate(_inventorySlotPrefab, _hotbarSlotsHolder);
@@ -35,11 +50,13 @@ namespace OceanGame
                     slot.Initialize(i);
                 }
             }
-        }
 
-        private void OnDestroy()
-        {
-            InventoryInputManager.Instance.OnInventoryOpenChanged -= ToggleInventoryUI;
+            // Initalize Default Crafting Menu Crafing Slots
+            foreach (var recipe in _defaultCraftingRecipes)
+            {
+                var cSlot = Instantiate(_craftingSlotPrefab, _craftingSlotsHolder);
+                cSlot.Initialize(recipe);
+            }
         }
 
         private void ToggleInventoryUI(bool isInventoryOpen)
@@ -56,12 +73,12 @@ namespace OceanGame
 
         private void ShowInventoryUI()
         {
-            _inventorySlotsHolder.gameObject.SetActive(true);
+            _inventoryUI.gameObject.SetActive(true);
         }
 
         private void CloseInventoryUI()
         {
-            _inventorySlotsHolder.gameObject.SetActive(false); ;
+            _inventoryUI.gameObject.SetActive(false); ;
         }
     }
 }

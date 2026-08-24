@@ -27,6 +27,13 @@ namespace OceanGame
         {
             GameInput.Instance.OnPrimaryActionPressed -= TryToThrowCursorSlotItem;
         }
+        
+        public void AssignCursorSlot(int itemId, int amount)
+        {
+            CursorSlot.AssignItem(itemId, amount);
+            InventoryManager.Instance.RefreshInventory();
+            OnCursorSlotChanged?.Invoke();
+        }
 
         private void TryToThrowCursorSlotItem()
         {
@@ -36,7 +43,7 @@ namespace OceanGame
             aimDirection.Normalize();
             aimDirection *= _throwItemForce;
             
-            GameManager.Instance.SpawnItem(GameDataRegistry.Instance.GetItemFromId(CursorSlot.ItemId), CursorSlot.CurrentAmount, Player.Instance.transform.position, aimDirection);
+            GameManager.Instance.SpawnItem(GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId), CursorSlot.CurrentAmount, Player.Instance.transform.position, aimDirection);
             CursorSlot.Clear();
 
             InventoryManager.Instance.RefreshInventory();
@@ -61,7 +68,7 @@ namespace OceanGame
             }
             else if (CanStacksMerge(inventory[clickedIndex], CursorSlot)) // Checks if they are both the same item
             {
-                int maxStack = GetMaxStackSize(GameDataRegistry.Instance.GetItemFromId(inventory[clickedIndex].ItemId));
+                int maxStack = GetMaxStackSize(GameDataRegistry.Instance.GetItemSOFromItemId(inventory[clickedIndex].ItemId));
                 MoveAmount(CursorSlot, inventory[clickedIndex], maxStack);
             }
             else 
@@ -131,7 +138,7 @@ namespace OceanGame
                 !target.IsEmpty &&
                 !source.IsEmpty &&
                 target.ItemId == source.ItemId &&
-                target.CurrentAmount < GetMaxStackSize(GameDataRegistry.Instance.GetItemFromId(target.ItemId));
+                target.CurrentAmount < GetMaxStackSize(GameDataRegistry.Instance.GetItemSOFromItemId(target.ItemId));
         }
 
         private int GetMaxStackSize(ItemSO item)

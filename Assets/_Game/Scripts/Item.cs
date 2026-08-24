@@ -89,7 +89,7 @@ namespace OceanGame
             Ctx.Velocity = startingVelocity;
 
             // Visuals
-            _sprite.sprite = GameDataRegistry.Instance.GetItemFromId(item.ItemId).DisplayIcon;
+            _sprite.sprite = GameDataRegistry.Instance.GetItemSOFromItemId(item.ItemId).DisplayIcon;
         }
 
         private void DetectPlayer()

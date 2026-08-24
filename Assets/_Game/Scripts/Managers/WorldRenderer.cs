@@ -66,7 +66,7 @@ namespace OceanGame
                     int fgId = world.ForegroundLayer[x, y];
                     if (fgId > TileLayer.AIR_ID)
                     {
-                        var fgTileAsset = registry.GetTileFromId(fgId);
+                        var fgTileAsset = registry.GetTileSOFromTileId(fgId);
                         if (fgTileAsset != null)
                         {
                             world.ForegroundLayer.Tilemap.SetTile(tilePos, fgTileAsset);
@@ -81,7 +81,7 @@ namespace OceanGame
                     int bgId = world.BackgroundLayer[x, y];
                     if (bgId > TileLayer.AIR_ID)
                     {
-                        var bgTileAsset = registry.GetTileFromId(bgId);
+                        var bgTileAsset = registry.GetTileSOFromTileId(bgId);
                         if (bgTileAsset != null)
                         {
                             world.BackgroundLayer.Tilemap.SetTile(tilePos, bgTileAsset);

@@ -49,7 +49,7 @@ namespace OceanGame
             if(WorldManager.Instance.ForegroundLayer[MouseWorldTilePosition.x, MouseWorldTilePosition.y] > TileLayer.AIR_ID)
             {
                 Debug.Log($"Clearing {MouseWorldTilePosition} to empty");
-                TileSO tileBeingDestroy = GameDataRegistry.Instance.GetTileFromId(WorldManager.Instance.ForegroundLayer[MouseWorldTilePosition.x, MouseWorldTilePosition.y]);
+                TileSO tileBeingDestroy = GameDataRegistry.Instance.GetTileSOFromTileId(WorldManager.Instance.ForegroundLayer[MouseWorldTilePosition.x, MouseWorldTilePosition.y]);
                 WorldManager.Instance.ForegroundLayer[MouseWorldTilePosition.x, MouseWorldTilePosition.y] = TileLayer.AIR_ID;
                 
                 Vector2 spawnPosition = new(MouseWorldTilePosition.x + 0.5f, MouseWorldTilePosition.y + 0.5f);
@@ -64,7 +64,7 @@ namespace OceanGame
             if (WorldManager.Instance.ForegroundLayer[MouseWorldTilePosition.x, MouseWorldTilePosition.y] == TileLayer.AIR_ID)
             {
                 Debug.Log($"Setting {MouseWorldTilePosition} to grass");
-                WorldManager.Instance.ForegroundLayer[MouseWorldTilePosition.x, MouseWorldTilePosition.y] = GameDataRegistry.Instance.GetTileId(_grassTile);
+                WorldManager.Instance.ForegroundLayer[MouseWorldTilePosition.x, MouseWorldTilePosition.y] = GameDataRegistry.Instance.GetTileIdFromTileSO(_grassTile);
             }
         }
 

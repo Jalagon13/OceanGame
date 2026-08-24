@@ -41,8 +41,8 @@ namespace OceanGame
                     if(y > _tempY /* && y < _tempY + 4 */) continue;
                     if(x > _tempX) continue;
                 
-                    ForegroundLayer[x, y] = GameDataRegistry.Instance.GetTileId(_grassTile);
-                    BackgroundLayer[x, y] = GameDataRegistry.Instance.GetTileId(_dirtBgTile);
+                    ForegroundLayer[x, y] = GameDataRegistry.Instance.GetTileIdFromTileSO(_grassTile);
+                    BackgroundLayer[x, y] = GameDataRegistry.Instance.GetTileIdFromTileSO(_dirtBgTile);
                 }
             }
         }
