@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace OceanGame
 {
@@ -10,25 +12,32 @@ namespace OceanGame
         [SerializeField] private Transform _hotbarSlotsHolder;
         [SerializeField] private Transform _inventorySlotsHolder;
         [SerializeField] private Transform _inventoryUI;
+        [SerializeField] private Image _hotbarSelectionImage;
         
         [Header("Default Crafting Menu")]
         [SerializeField] private CraftingSlotUI _craftingSlotPrefab;
         [SerializeField] private Transform _craftingSlotsHolder;
         [SerializeField] private List<RecipeSO> _defaultCraftingRecipes;
     
-        private void Start()
+        private IEnumerator Start()
         {
             InventoryInputManager.Instance.OnInventoryOpenChanged += ToggleInventoryUI;
+            InventoryInputManager.Instance.OnActiveHotbarIndexChanged += UpdateHotbarUI;
 
             CloseInventoryUI();
             InitializeSlots();
+            
+            yield return null;
+
+            UpdateHotbarUI(InventoryInputManager.Instance.ActiveHotbarIndex);
         }
 
         private void OnDestroy()
         {
             InventoryInputManager.Instance.OnInventoryOpenChanged -= ToggleInventoryUI;
+            InventoryInputManager.Instance.OnActiveHotbarIndexChanged -= UpdateHotbarUI;
         }
-        
+
         private void InitializeSlots()
         {
             // Initialize Inventory and Hotbar slots
@@ -57,6 +66,14 @@ namespace OceanGame
                 var cSlot = Instantiate(_craftingSlotPrefab, _craftingSlotsHolder);
                 cSlot.Initialize(recipe);
             }
+            
+            
+        }
+
+        private void UpdateHotbarUI(int activeHotbarIndex)
+        {
+            Transform child = _hotbarSlotsHolder.GetChild(activeHotbarIndex);
+            _hotbarSelectionImage.transform.position = child.transform.position;
         }
 
         private void ToggleInventoryUI(bool isInventoryOpen)

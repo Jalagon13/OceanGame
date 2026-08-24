@@ -8,6 +8,8 @@ namespace OceanGame
     {
         public static Player Instance { get; private set; }
         
+        [field: SerializeField] public float PlayerInteractRange { get; private set; } = 4.5f;
+        
         public PlayerContext Ctx = new();
         
         private StateMachine _machine;

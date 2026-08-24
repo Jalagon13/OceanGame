@@ -10,11 +10,11 @@ namespace OceanGame
     public class TileSO : RuleTile
     {
         [field: Header("Tile Settings")]
-        [field: SerializeField] public ItemSO DropItem { get; private set; }
-    
-        public int GetDrops() // Gets amount of item to spawn
+        [field: SerializeField] public TileItemSO TileItemSO { get; private set; }
+        
+        public int GetId()
         {
-            return 1;
+            return GameDataRegistry.Instance.GetTileIdFromTileSO(this);
         }
     }
 }

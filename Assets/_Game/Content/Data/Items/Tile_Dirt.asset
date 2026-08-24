@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a420d73f53b79404f9078d4ebe9d53e7, type: 3}
+  m_Name: Tile_Dirt
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.TileItemSO
+  <ItemName>k__BackingField: Dirt
+  <Description>k__BackingField: 
+  <DisplayIcon>k__BackingField: {fileID: -6329558204935823425, guid: 2f87ce7e588154a76acbf2c4eda5fff0, type: 3}
+  <IsStackable>k__BackingField: 1
+  <Tile>k__BackingField: {fileID: 11400000, guid: ac1de6a6f08164a80a3edcffdf473437, type: 2}

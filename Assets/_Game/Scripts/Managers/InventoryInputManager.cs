@@ -10,6 +10,7 @@ namespace OceanGame
         public static InventoryInputManager Instance { get; private set; }
         
         public event Action<bool> OnInventoryOpenChanged;
+        public event Action<int> OnActiveHotbarIndexChanged;
         
         public int ActiveHotbarIndex { get; private set; }
         public bool IsInventoryOpen { get; private set; }
@@ -24,8 +25,9 @@ namespace OceanGame
             GameInput.Instance.OnScrollWheel += OnScrollWheel;
             GameInput.Instance.OnSelectSlot += OnSelectSlot;
             GameInput.Instance.OnToggleInventory += OnToggleInventory;
-            
-            // Get Input for Item usage in here in the future
+            GameInput.Instance.OnPrimaryActionPressed += OnPrimaryActionPressed;
+            GameInput.Instance.OnSecondaryActionPressed += OnSecondaryActionPressed;
+
         }
 
         private void OnDestroy()
@@ -33,9 +35,29 @@ namespace OceanGame
             GameInput.Instance.OnScrollWheel -= OnScrollWheel;
             GameInput.Instance.OnSelectSlot -= OnSelectSlot;
             GameInput.Instance.OnToggleInventory -= OnToggleInventory;
+            GameInput.Instance.OnPrimaryActionPressed -= OnPrimaryActionPressed;
+            GameInput.Instance.OnSecondaryActionPressed -= OnSecondaryActionPressed;
         }
 
-        public InventorySlot GetActiveItem()
+        private void OnPrimaryActionPressed()
+        {
+            var activeSlot = GetActiveInvSlot();
+            if(!activeSlot.IsEmpty && !WorldManager.Instance.MouseOverUI)
+            {
+                activeSlot.GetItemSO().OnPrimaryActionPressed();
+            }
+        }
+
+        private void OnSecondaryActionPressed()
+        {
+            var activeSlot = GetActiveInvSlot();
+            if (!activeSlot.IsEmpty && !WorldManager.Instance.MouseOverUI)
+            {
+                activeSlot.GetItemSO().OnSecondaryActionPressed();
+            }
+        }
+
+        public InventorySlot GetActiveInvSlot()
         {
             var cursorSlot = InventoryCursorManager.Instance.CursorSlot;
             if(cursorSlot != null && !cursorSlot.IsEmpty)
@@ -102,6 +124,7 @@ namespace OceanGame
             }
 
             ActiveHotbarIndex = newIndex;
+            OnActiveHotbarIndexChanged?.Invoke(ActiveHotbarIndex);
             Debug.Log($"Active Hotbar Index is: {newIndex}");
         }
     }

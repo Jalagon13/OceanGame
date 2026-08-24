@@ -653,6 +653,81 @@ MonoBehaviour:
   _camera: {fileID: 330585545}
   _padding: 4
   _smoothSpeed: 1
+--- !u!1 &431383499
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 431383500}
+  - component: {fileID: 431383502}
+  - component: {fileID: 431383501}
+  m_Layer: 5
+  m_Name: HotbarSelectionOverlay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &431383500
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431383499}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1663216233}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 45, y: 45}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &431383501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431383499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.36862746}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &431383502
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431383499}
+  m_CullTransparentMesh: 1
 --- !u!1 &624802488
 GameObject:
   m_ObjectHideFlags: 0
@@ -1119,9 +1194,11 @@ MonoBehaviour:
   _tileDatabase:
   - {fileID: 11400000, guid: ac1de6a6f08164a80a3edcffdf473437, type: 2}
   - {fileID: 11400000, guid: de790d75c4d7642e3810e3bbc47c7853, type: 2}
+  - {fileID: 11400000, guid: 01df45f836ac5496399a9414a0acb621, type: 2}
   _itemDatabase:
-  - {fileID: 11400000, guid: f32585c26cdce4c878d8639828e0e0c6, type: 2}
+  - {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
   - {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}
+  - {fileID: 11400000, guid: ba4a4e198c8a8407c86c4c4ae28df49a, type: 2}
 --- !u!114 &970924661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1319,6 +1396,11 @@ MonoBehaviour:
   <InventorySize>k__BackingField: 40
   <HotbarSize>k__BackingField: 10
   <MaxStackSize>k__BackingField: 999
+  _startingItems:
+  - _ingredient: {fileID: 11400000, guid: ba4a4e198c8a8407c86c4c4ae28df49a, type: 2}
+    _amount: 1
+  - _ingredient: {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
+    _amount: 12
 --- !u!114 &1178486984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1825,6 +1907,7 @@ RectTransform:
   m_Children:
   - {fileID: 2365804}
   - {fileID: 131684520}
+  - {fileID: 431383500}
   m_Father: {fileID: 1672959639}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
@@ -1887,6 +1970,7 @@ MonoBehaviour:
   _hotbarSlotsHolder: {fileID: 131684520}
   _inventorySlotsHolder: {fileID: 1409731336}
   _inventoryUI: {fileID: 1676416961}
+  _hotbarSelectionImage: {fileID: 431383501}
   _craftingSlotPrefab: {fileID: 203550622481330260, guid: 4140ee1e947a348499a044fd69cdf944, type: 3}
   _craftingSlotsHolder: {fileID: 996830789}
   _defaultCraftingRecipes:
@@ -1974,6 +2058,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 312f06ee138834a2bb001c3cbbc6ce3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.Player
+  <PlayerInteractRange>k__BackingField: 4.5
   Ctx:
     VisualsTransform: {fileID: 652389236}
     PlayerBodyCollider: {fileID: 1715237433}
@@ -2054,7 +2139,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2043979313}
-  - component: {fileID: 2043979316}
   - component: {fileID: 2043979315}
   - component: {fileID: 2043979314}
   m_Layer: 0
@@ -2093,11 +2177,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldManager
   _tempX: 60
   _tempY: 43
+  _grassTile: {fileID: 11400000, guid: ac1de6a6f08164a80a3edcffdf473437, type: 2}
+  _dirtBgTile: {fileID: 11400000, guid: de790d75c4d7642e3810e3bbc47c7853, type: 2}
   <WorldWidth>k__BackingField: 100
   <WorldHeight>k__BackingField: 100
   <SeaLevel>k__BackingField: 40
-  _grassTile: {fileID: 11400000, guid: ac1de6a6f08164a80a3edcffdf473437, type: 2}
-  _dirtBgTile: {fileID: 11400000, guid: de790d75c4d7642e3810e3bbc47c7853, type: 2}
   _foregroundTilemap: {fileID: 1420173610}
   _backgroundTilemap: {fileID: 1608990557}
 --- !u!114 &2043979315
@@ -2115,19 +2199,6 @@ MonoBehaviour:
   _mainCamera: {fileID: 330585545}
   _waterTilemap: {fileID: 2070694661}
   _waterTile: {fileID: 11400000, guid: 01df45f836ac5496399a9414a0acb621, type: 2}
---- !u!114 &2043979316
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2043979312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4bed4a711e9f4b6fb94e41e71facc38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldInteractionManager
-  _grassTile: {fileID: 11400000, guid: ac1de6a6f08164a80a3edcffdf473437, type: 2}
 --- !u!1 &2070694658
 GameObject:
   m_ObjectHideFlags: 0

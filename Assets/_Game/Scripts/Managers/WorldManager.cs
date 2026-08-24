@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
 namespace OceanGame
@@ -9,6 +11,8 @@ namespace OceanGame
         
         [SerializeField] private int _tempX = 45;
         [SerializeField] private int _tempY = 45;
+        [SerializeField] private TileSO _grassTile;
+        [SerializeField] private TileSO _dirtBgTile;
 
         [field: Header("World Settings")]
         [field: SerializeField] public int WorldWidth { get; private set; } = 100;
@@ -16,13 +20,14 @@ namespace OceanGame
         [field: SerializeField] public int SeaLevel { get; private set; } = 40;
 
         [Header("World References")]
-        [SerializeField] private TileSO _grassTile;
-        [SerializeField] private TileSO _dirtBgTile;
         [SerializeField] private Tilemap _foregroundTilemap;
         [SerializeField] private Tilemap _backgroundTilemap;
 
         public TileLayer ForegroundLayer { get; private set; }
         public TileLayer BackgroundLayer { get; private set; }
+        public static Vector2Int MouseWorldTilePosition { get; private set; }
+        public static Vector2 MouseWorldPosition { get; private set; }
+        public bool MouseOverUI { get; private set; }
 
         private void Awake()
         {
@@ -41,78 +46,23 @@ namespace OceanGame
                     if(y > _tempY /* && y < _tempY + 4 */) continue;
                     if(x > _tempX) continue;
                 
-                    ForegroundLayer[x, y] = GameDataRegistry.Instance.GetTileIdFromTileSO(_grassTile);
-                    BackgroundLayer[x, y] = GameDataRegistry.Instance.GetTileIdFromTileSO(_dirtBgTile);
+                    ForegroundLayer.SetTile(x, y, _grassTile.GetId());
+                    BackgroundLayer.SetTile(x, y, _dirtBgTile.GetId()); 
                 }
             }
+
+            PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
+        }
+
+        private void Update()
+        {
+            MouseOverUI = EventSystem.current.IsPointerOverGameObject();
+
+            MouseWorldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            MouseWorldTilePosition = new(Mathf.FloorToInt(MouseWorldPosition.x), Mathf.FloorToInt(MouseWorldPosition.y));
         }
     }
     
-    public class TileLayer
-    {
-        public static int OUT_OF_BOUNDS_ID { get; } = -2;
-        public static int AIR_ID { get; } = -1;
     
-        private readonly int[] _tiles;
-        private readonly int _width;
-        private readonly int _height;
-        
-        public Tilemap Tilemap { get; }
-        
-        public TileLayer(int width, int height, Tilemap tilemap)
-        {
-            _width = width;
-            _height = height;
-            Tilemap = tilemap;
-            
-            _tiles = new int[width * height];
-
-            // Overwrite the defaults so the world starts as empty Air (-1)
-            for (int i = 0; i < _tiles.Length; i++)
-            {
-                _tiles[i] = -1;
-            }
-        }
-        
-        public int this[int x, int y]
-        {
-            get
-            {
-                if (x < 0 || x >= _width || y < 0 || y >= _height) 
-                {
-                    return OUT_OF_BOUNDS_ID; // Return a special value indicating out-of-bounds access
-                }
-        
-                return _tiles[y * _width + x];
-            }
-            set
-            {
-                if (x < 0 || x >= _width || y < 0 || y >= _height)
-                {
-                    Debug.LogError($"{Tilemap.name}: Attempted to set tile at ({x}, {y}) which is out of bounds.");
-                    return;
-                }
-                
-                _tiles[y * _width + x] = value;
-                
-                // If its a change on screen, refresh the bounds to refresh the rendered tiles
-                if(PlayerCamera.Instance.PositionExistsInBounds(x, y))
-                {
-                    PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
-                }
-            }
-        }
-
-        // public bool IsInBounds(int x, int y)
-        // {
-        //     if (x < 0 || x >= _width || y < 0 || y >= _height)
-        //     {
-        //         return false;
-        //     }
-
-        //     // Checks if the tile gives back a real block/air code, or the out-of-bounds error code
-        //     return _tiles[y * _width + x] >= -1;
-        // }
-    }
 }
 

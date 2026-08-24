@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -15,6 +17,7 @@ namespace OceanGame
         [field: SerializeField] public int InventorySize { get; private set; } = 40;
         [field: SerializeField] public int HotbarSize { get; private set; } = 10;
         [field: SerializeField] public int MaxStackSize { get; private set; } = 999;
+        [SerializeField] private List<Ingredient> _startingItems = new();
 
         public InventorySlot[] PlayerInventory { get; private set; }
         
@@ -30,9 +33,20 @@ namespace OceanGame
             }
         }
         
+        private IEnumerator Start() 
+        {
+            yield return new WaitForSeconds(0.5f);
+            
+            foreach (var startItem in _startingItems)
+            {
+                AddItem(startItem.Item.GetId(), startItem.Amount);
+            }
+        }
+        
         public void RefreshInventory()
         {
             OnPlayerInventoryChanged?.Invoke();
+            InventoryCursorManager.Instance.RefreshCursorSlot();
         }
 
         public int AddItem(int itemId, int amount) // Returns remainder 

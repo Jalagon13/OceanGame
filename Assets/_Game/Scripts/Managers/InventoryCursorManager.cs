@@ -20,26 +20,30 @@ namespace OceanGame
         
         private void Start() 
         {
-            GameInput.Instance.OnPrimaryActionPressed += TryToThrowCursorSlotItem;
+            GameInput.Instance.OnSecondaryActionPressed += TryToThrowCursorSlotItem;
         }
         
         private void OnDestroy()
         {
-            GameInput.Instance.OnPrimaryActionPressed -= TryToThrowCursorSlotItem;
+            GameInput.Instance.OnSecondaryActionPressed -= TryToThrowCursorSlotItem;
         }
-        
+
+        public void RefreshCursorSlot()
+        {
+            OnCursorSlotChanged?.Invoke();
+        }
+
         public void AssignCursorSlot(int itemId, int amount)
         {
             CursorSlot.AssignItem(itemId, amount);
             InventoryManager.Instance.RefreshInventory();
-            OnCursorSlotChanged?.Invoke();
         }
 
         private void TryToThrowCursorSlotItem()
         {
-            if(CursorSlot.IsEmpty || WorldInteractionManager.Instance.MouseOverUI) return;
+            if(CursorSlot.IsEmpty || WorldManager.Instance.MouseOverUI) return;
             
-            Vector2 aimDirection = WorldInteractionManager.MouseWorldPosition - (Vector2)Player.Instance.transform.position;
+            Vector2 aimDirection = WorldManager.MouseWorldPosition - (Vector2)Player.Instance.transform.position;
             aimDirection.Normalize();
             aimDirection *= _throwItemForce;
             
@@ -47,7 +51,6 @@ namespace OceanGame
             CursorSlot.Clear();
 
             InventoryManager.Instance.RefreshInventory();
-            OnCursorSlotChanged?.Invoke();
         }
 
         public void HandleSlotLeftClick(int clickedIndex)
@@ -80,7 +83,6 @@ namespace OceanGame
             }
 
             InventoryManager.Instance.RefreshInventory();
-            OnCursorSlotChanged?.Invoke();
         }
 
 
@@ -109,7 +111,6 @@ namespace OceanGame
             }
 
             InventoryManager.Instance.RefreshInventory();
-            OnCursorSlotChanged?.Invoke();
         }
 
         private int MoveAmount(InventorySlot source, InventorySlot target, int maxTargetAmount, int requestedAmount = int.MaxValue)
@@ -151,5 +152,6 @@ namespace OceanGame
             return item.IsStackable ? InventoryManager.Instance.MaxStackSize : 1;
         }
 
+        
     }
 }
