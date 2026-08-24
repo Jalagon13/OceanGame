@@ -348,6 +348,16 @@ namespace OceanGame
                     ""interactions"": """",
                     ""initialStateCheck"": true,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""ToggleInventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""c05a701d-7fac-4e92-a841-60461743ca5d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -471,6 +481,17 @@ namespace OceanGame
                     ""action"": ""SelectSlot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a8523ae5-9f6f-4e48-9096-7893fa61a2f1"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleInventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -548,6 +569,7 @@ namespace OceanGame
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
             m_UI_SelectSlot = m_UI.FindAction("SelectSlot", throwIfNotFound: true);
+            m_UI_ToggleInventory = m_UI.FindAction("ToggleInventory", throwIfNotFound: true);
         }
 
         ~@PlayerInput()
@@ -760,6 +782,7 @@ namespace OceanGame
         private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
         private readonly InputAction m_UI_ScrollWheel;
         private readonly InputAction m_UI_SelectSlot;
+        private readonly InputAction m_UI_ToggleInventory;
         /// <summary>
         /// Provides access to input actions defined in input action map "UI".
         /// </summary>
@@ -779,6 +802,10 @@ namespace OceanGame
             /// Provides access to the underlying input action "UI/SelectSlot".
             /// </summary>
             public InputAction @SelectSlot => m_Wrapper.m_UI_SelectSlot;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/ToggleInventory".
+            /// </summary>
+            public InputAction @ToggleInventory => m_Wrapper.m_UI_ToggleInventory;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -811,6 +838,9 @@ namespace OceanGame
                 @SelectSlot.started += instance.OnSelectSlot;
                 @SelectSlot.performed += instance.OnSelectSlot;
                 @SelectSlot.canceled += instance.OnSelectSlot;
+                @ToggleInventory.started += instance.OnToggleInventory;
+                @ToggleInventory.performed += instance.OnToggleInventory;
+                @ToggleInventory.canceled += instance.OnToggleInventory;
             }
 
             /// <summary>
@@ -828,6 +858,9 @@ namespace OceanGame
                 @SelectSlot.started -= instance.OnSelectSlot;
                 @SelectSlot.performed -= instance.OnSelectSlot;
                 @SelectSlot.canceled -= instance.OnSelectSlot;
+                @ToggleInventory.started -= instance.OnToggleInventory;
+                @ToggleInventory.performed -= instance.OnToggleInventory;
+                @ToggleInventory.canceled -= instance.OnToggleInventory;
             }
 
             /// <summary>
@@ -983,6 +1016,13 @@ namespace OceanGame
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnSelectSlot(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "ToggleInventory" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnToggleInventory(InputAction.CallbackContext context);
         }
     }
 }

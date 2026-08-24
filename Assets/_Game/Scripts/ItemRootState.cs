@@ -24,6 +24,11 @@ namespace OceanGame
         }
 
         protected override State GetInitialState() => Grounded;
+
+        protected override void OnFixedUpdate(float fixedDeltaTime)
+        {
+            _ctx.Velocity.x = Mathf.Lerp(_ctx.Velocity.x, 0, fixedDeltaTime * _ctx.ThrowAirResistance);
+        }
     }
     
     #endregion

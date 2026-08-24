@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace OceanGame
@@ -10,6 +11,10 @@ namespace OceanGame
     
         private void Start()
         {
+            CloseInventoryUI();
+
+            InventoryInputManager.Instance.OnInventoryOpenChanged += ToggleInventoryUI;
+        
             if(_inventorySlotPrefab == null) return;
         
             var inventorySize = InventoryManager.Instance.InventorySize;
@@ -31,6 +36,32 @@ namespace OceanGame
                 }
             }
         }
-        
+
+        private void OnDestroy()
+        {
+            InventoryInputManager.Instance.OnInventoryOpenChanged -= ToggleInventoryUI;
+        }
+
+        private void ToggleInventoryUI(bool isInventoryOpen)
+        {
+            if(isInventoryOpen)
+            {
+                ShowInventoryUI();
+            }
+            else
+            {
+                CloseInventoryUI();
+            }
+        }
+
+        private void ShowInventoryUI()
+        {
+            _inventorySlotsHolder.gameObject.SetActive(true);
+        }
+
+        private void CloseInventoryUI()
+        {
+            _inventorySlotsHolder.gameObject.SetActive(false); ;
+        }
     }
 }

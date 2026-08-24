@@ -14,6 +14,7 @@ namespace OceanGame
         public event Action OnSecondaryActionPressed;
         public event Action<InputAction.CallbackContext> OnScrollWheel;
         public event Action<InputAction.CallbackContext> OnSelectSlot;
+        public event Action OnToggleInventory;
 
         public Vector2 MoveInput { get; private set; }
         public bool JumpHold { get; private set; }
@@ -39,6 +40,8 @@ namespace OceanGame
 
             _playerInput.UI.ScrollWheel.performed += PlayerInput_OnScrollWheel;
             _playerInput.UI.SelectSlot.started += PlayerInput_OnSelectSlot;
+            
+            _playerInput.UI.ToggleInventory.started += PlayerInput_OnToggleInventory;
         }
 
         private void OnDestroy()
@@ -60,8 +63,18 @@ namespace OceanGame
 
             _playerInput.UI.ScrollWheel.performed -= PlayerInput_OnScrollWheel;
             _playerInput.UI.SelectSlot.started -= PlayerInput_OnSelectSlot;
-            
+
+            _playerInput.UI.ToggleInventory.started -= PlayerInput_OnToggleInventory;
+
             _playerInput.Disable();
+        }
+
+        private void PlayerInput_OnToggleInventory(InputAction.CallbackContext context)
+        {
+            if(context.phase == InputActionPhase.Started)
+            {
+                OnToggleInventory?.Invoke();
+            }
         }
 
         private void PlayerInput_OnScrollWheel(InputAction.CallbackContext context)

@@ -8,12 +8,39 @@ namespace OceanGame
         public static InventoryCursorManager Instance { get; private set; }
         
         public event Action OnCursorSlotChanged;
+        
+        [SerializeField] private float _throwItemForce = 15;
 
         public InventorySlot CursorSlot { get; private set; } = new();
 
         private void Awake()
         {
             Instance = this;
+        }
+        
+        private void Start() 
+        {
+            GameInput.Instance.OnPrimaryActionPressed += TryToThrowCursorSlotItem;
+        }
+        
+        private void OnDestroy()
+        {
+            GameInput.Instance.OnPrimaryActionPressed -= TryToThrowCursorSlotItem;
+        }
+
+        private void TryToThrowCursorSlotItem()
+        {
+            if(CursorSlot.IsEmpty || WorldInteractionManager.Instance.MouseOverUI) return;
+            
+            Vector2 aimDirection = WorldInteractionManager.MouseWorldPosition - (Vector2)Player.Instance.transform.position;
+            aimDirection.Normalize();
+            aimDirection *= _throwItemForce;
+            
+            GameManager.Instance.SpawnItem(GameDataRegistry.Instance.GetItemFromId(CursorSlot.ItemId), CursorSlot.CurrentAmount, Player.Instance.transform.position, aimDirection);
+            CursorSlot.Clear();
+
+            InventoryManager.Instance.RefreshInventory();
+            OnCursorSlotChanged?.Invoke();
         }
 
         public void HandleSlotLeftClick(int clickedIndex)

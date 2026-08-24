@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -7,8 +8,11 @@ namespace OceanGame
     public class InventoryInputManager : MonoBehaviour
     {
         public static InventoryInputManager Instance { get; private set; }
-
+        
+        public event Action<bool> OnInventoryOpenChanged;
+        
         public int ActiveHotbarIndex { get; private set; }
+        public bool IsInventoryOpen { get; private set; }
 
         private void Awake()
         {
@@ -19,6 +23,7 @@ namespace OceanGame
         {
             GameInput.Instance.OnScrollWheel += OnScrollWheel;
             GameInput.Instance.OnSelectSlot += OnSelectSlot;
+            GameInput.Instance.OnToggleInventory += OnToggleInventory;
             
             // Get Input for Item usage in here in the future
         }
@@ -27,8 +32,9 @@ namespace OceanGame
         {
             GameInput.Instance.OnScrollWheel -= OnScrollWheel;
             GameInput.Instance.OnSelectSlot -= OnSelectSlot;
+            GameInput.Instance.OnToggleInventory -= OnToggleInventory;
         }
-        
+
         public InventorySlot GetActiveItem()
         {
             var cursorSlot = InventoryCursorManager.Instance.CursorSlot;
@@ -38,6 +44,13 @@ namespace OceanGame
             }
             
             return InventoryManager.Instance.PlayerInventory[ActiveHotbarIndex];
+        }
+
+        private void OnToggleInventory()
+        {
+            IsInventoryOpen = !IsInventoryOpen;
+
+            OnInventoryOpenChanged?.Invoke(IsInventoryOpen);
         }
 
         private void OnScrollWheel(InputAction.CallbackContext context)

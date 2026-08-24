@@ -188,17 +188,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _ableToCollectTimer: 0.5
-  _detectRange: 4
+  _detectRange: 3.25
   Ctx:
     CollectRange: 0.5
     AttractSpeed: 12
     TurnSharpness: 10
-    GravityForce: 30
-    TerminalVelocity: -40
+    ThrowAirResistance: 3
+    GravityForce: 25
+    TerminalVelocity: -30
     Transform: {fileID: 0}
     DesiredDirection: {x: 0, y: 0}
     Velocity: {x: 0, y: 0}
     ItemCollider: {fileID: 0}
     ClosestPlayer: {fileID: 0}
     CanBeCollected: 0
+    HasBeenCollected: 0
+    IgnoreCollisions: 0
     Item: {fileID: 0}

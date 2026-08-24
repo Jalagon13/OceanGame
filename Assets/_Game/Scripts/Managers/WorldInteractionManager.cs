@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
@@ -13,6 +14,8 @@ namespace OceanGame
         
         public static Vector2Int MouseWorldTilePosition { get; private set; }
         public static Vector2 MouseWorldPosition { get; private set; }
+        
+        public bool MouseOverUI { get; private set; }
         
         private void Awake() 
         {
@@ -33,12 +36,16 @@ namespace OceanGame
         
         private void Update() 
         {
+            MouseOverUI = EventSystem.current.IsPointerOverGameObject();
+
             MouseWorldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             MouseWorldTilePosition = new(Mathf.FloorToInt(MouseWorldPosition.x), Mathf.FloorToInt(MouseWorldPosition.y));
         }
 
         private void OnPrimaryActionPressed()
         {
+            if(MouseOverUI) return;
+        
             if(WorldManager.Instance.ForegroundLayer[MouseWorldTilePosition.x, MouseWorldTilePosition.y] > TileLayer.AIR_ID)
             {
                 Debug.Log($"Clearing {MouseWorldTilePosition} to empty");
@@ -52,6 +59,8 @@ namespace OceanGame
 
         private void OnSecondaryActionPressed()
         {
+            if (MouseOverUI) return;
+
             if (WorldManager.Instance.ForegroundLayer[MouseWorldTilePosition.x, MouseWorldTilePosition.y] == TileLayer.AIR_ID)
             {
                 Debug.Log($"Setting {MouseWorldTilePosition} to grass");

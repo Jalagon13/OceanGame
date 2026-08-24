@@ -83,9 +83,10 @@ namespace OceanGame
             transform.position = Ctx.CollisionResult.NewPosition;
         }
         
-        public void InitializeItem(InventorySlot item)
+        public void InitializeItem(InventorySlot item, Vector2 startingVelocity = default)
         {
             Ctx.ItemSlot = item;
+            Ctx.Velocity = startingVelocity;
 
             // Visuals
             _sprite.sprite = GameDataRegistry.Instance.GetItemFromId(item.ItemId).DisplayIcon;
@@ -154,6 +155,7 @@ namespace OceanGame
         public float CollectRange = 0.2f;
         public float AttractSpeed = 20f;
         public float TurnSharpness = 20f;
+        public float ThrowAirResistance = 5;
         
         [Header("Gravity")]
         public float GravityForce = 25f;

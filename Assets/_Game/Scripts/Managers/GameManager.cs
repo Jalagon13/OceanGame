@@ -13,10 +13,10 @@ namespace OceanGame
             Instance = this; 
        }
        
-       public void SpawnItem(ItemSO itemSO, int amount, Vector2 position)
+       public void SpawnItem(ItemSO itemSO, int amount, Vector2 position, Vector2 startingVector = default)
        {
            Item itemToSpawn = Instantiate(_itemPrefab, position, Quaternion.identity);
-           itemToSpawn.InitializeItem(new(itemSO, amount));
+           itemToSpawn.InitializeItem(new(itemSO, amount), startingVector);
        }
     }
 }
