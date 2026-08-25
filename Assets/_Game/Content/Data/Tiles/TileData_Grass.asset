@@ -17,3 +17,4 @@ MonoBehaviour:
   m_DefaultColliderType: 1
   m_TilingRules: []
   <TileItemSO>k__BackingField: {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
+  <Size>k__BackingField: {x: 1, y: 1}

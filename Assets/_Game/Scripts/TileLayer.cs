@@ -66,7 +66,6 @@ namespace OceanGame
         public byte OffsetY;      // 1 byte  (multi-tile height up to 0 -> 255)
         public byte State;        // 1 byte  (0 -> 255 state variants)
         public byte LightLevel;   // 1 byte  (0 -> 255 light emission/block light)
-        public ushort Flags;      // 2 bytes (extra flags like flipped, active, etc.) MIGHT NOT NEED
 
         public const ushort AIR_ID = 0;
         public const ushort OUT_OF_BOUNDS_ID = ushort.MaxValue;
@@ -85,7 +84,6 @@ namespace OceanGame
             OffsetY = offsetY;
             State = state;
             LightLevel = 0;
-            Flags = 0;
         }
     }
 }

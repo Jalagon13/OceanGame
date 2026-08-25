@@ -7,9 +7,7 @@
   <Project Path="FMODUnityEditor.csproj" />
   <Project Path="Assembly-CSharp-firstpass.csproj" />
   <Project Path="FMODUnity.csproj" />
-  <Project Path="Unity.AI.Navigation.Samples.csproj" />
   <Project Path="SingularityGroup.HotReload.Runtime.Public.csproj" />
-  <Project Path="Unity.AI.Navigation.Samples.Initialization.Editor.csproj" />
   <Project Path="FMODUnityResonance.csproj" />
   <Project Path="Sirenix.OdinInspector.Modules.UnityMathematics.csproj" />
 </Solution>

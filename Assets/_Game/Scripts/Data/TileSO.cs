@@ -11,6 +11,7 @@ namespace OceanGame
     {
         [field: Header("Tile Settings")]
         [field: SerializeField] public TileItemSO TileItemSO { get; private set; }
+        [field: SerializeField] public Vector2Int Size { get; private set; } = new(1, 1);
         
         public ushort GetId()
         {

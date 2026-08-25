@@ -7,7 +7,6 @@ namespace OceanGame
     {
         [field: Header("Tile Settings")]
         [field: SerializeField] public TileSO Tile { get; private set; }
-        [field: SerializeField] public ItemSO Drop { get; private set; }
 
         public override void OnPrimaryActionPressed()
         {
@@ -19,7 +18,8 @@ namespace OceanGame
 
             if (!world.ForegroundLayer.GetTileData(mouseTilePos.x, mouseTilePos.y).HasTile)
             {
-                world.ForegroundLayer.SetTile(mouseTilePos.x, mouseTilePos.y, new(Tile.GetId()), true);
+                var tileToPlace = new TileData(Tile.GetId());
+                world.ForegroundLayer.SetTile(mouseTilePos.x, mouseTilePos.y, tileToPlace, true);
                 InventoryInputManager.Instance.GetActiveInvSlot().RemoveFromCurrentAmount(1);
                 InventoryManager.Instance.RefreshInventory();
             }
