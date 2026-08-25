@@ -16,10 +16,10 @@ namespace OceanGame
 
             if (!playerInRange) return;
 
-            if (world.ForegroundLayer.GetTileData(mouseTilePos.x, mouseTilePos.y).HasTile)
+            if (world.FgLayer.GetTileData(mouseTilePos.x, mouseTilePos.y).HasTile)
             {
-                var tileBroken = world.ForegroundLayer.GetItemSO(mouseTilePos.x, mouseTilePos.y);
-                world.ForegroundLayer.SetTile(mouseTilePos.x, mouseTilePos.y, TileData.Air, true);
+                var tileBroken = world.FgLayer.GetItemSO(mouseTilePos.x, mouseTilePos.y);
+                world.FgLayer.DestroyTile(mouseTilePos.x, mouseTilePos.y, true);
                 GameManager.Instance.SpawnItem(tileBroken, 1, mouseTilePos + new Vector2(0.5f, 0.5f));
             }
 

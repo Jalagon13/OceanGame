@@ -13,6 +13,8 @@ namespace OceanGame
         [field: SerializeField] public TileItemSO TileItemSO { get; private set; }
         [field: SerializeField] public Vector2Int Size { get; private set; } = new(1, 1);
         
+        public bool IsMultiTile => Size != new Vector2Int(1, 1);
+        
         public ushort GetId()
         {
             return GameDataRegistry.Instance.GetTileIdFromTileSO(this);

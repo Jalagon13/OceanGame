@@ -23,8 +23,8 @@ namespace OceanGame
         [SerializeField] private Tilemap _foregroundTilemap;
         [SerializeField] private Tilemap _backgroundTilemap;
 
-        public TileLayer ForegroundLayer { get; private set; }
-        public TileLayer BackgroundLayer { get; private set; }
+        public TileLayer FgLayer { get; private set; }
+        public TileLayer BgLayer { get; private set; }
         public static Vector2Int MouseWorldTilePosition { get; private set; }
         public static Vector2 MouseWorldPosition { get; private set; }
         public bool MouseOverUI { get; private set; }
@@ -33,8 +33,8 @@ namespace OceanGame
         {
             Instance = this;
             
-            ForegroundLayer = new TileLayer(WorldWidth, WorldHeight, _foregroundTilemap);
-            BackgroundLayer = new TileLayer(WorldWidth, WorldHeight, _backgroundTilemap);
+            FgLayer = new TileLayer(WorldWidth, WorldHeight, _foregroundTilemap);
+            BgLayer = new TileLayer(WorldWidth, WorldHeight, _backgroundTilemap);
         }
 
         private void Start() 
@@ -46,8 +46,8 @@ namespace OceanGame
                     if(y > _tempY /* && y < _tempY + 4 */) continue;
                     if(x > _tempX) continue;
                 
-                    ForegroundLayer.SetTile(x, y, new TileData(_grassTile.GetId()));
-                    BackgroundLayer.SetTile(x, y, new TileData(_dirtBgTile.GetId())); 
+                    FgLayer.SetTile(x, y, new TileData(_grassTile.GetId()));
+                    BgLayer.SetTile(x, y, new TileData(_dirtBgTile.GetId())); 
                 }
             }
 

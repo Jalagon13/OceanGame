@@ -1195,10 +1195,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ac1de6a6f08164a80a3edcffdf473437, type: 2}
   - {fileID: 11400000, guid: de790d75c4d7642e3810e3bbc47c7853, type: 2}
   - {fileID: 11400000, guid: 01df45f836ac5496399a9414a0acb621, type: 2}
+  - {fileID: 11400000, guid: e6b0c6133e8a7483d94ed0abacbc2c1d, type: 2}
   _itemDatabase:
   - {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
   - {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}
   - {fileID: 11400000, guid: ba4a4e198c8a8407c86c4c4ae28df49a, type: 2}
+  - {fileID: 11400000, guid: 65bb729b1380b4cdd8a0eb42938640a9, type: 2}
 --- !u!114 &970924661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1400,7 +1402,9 @@ MonoBehaviour:
   - _ingredient: {fileID: 11400000, guid: ba4a4e198c8a8407c86c4c4ae28df49a, type: 2}
     _amount: 1
   - _ingredient: {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
-    _amount: 12
+    _amount: 20
+  - _ingredient: {fileID: 11400000, guid: 65bb729b1380b4cdd8a0eb42938640a9, type: 2}
+    _amount: 10
 --- !u!114 &1178486984
 MonoBehaviour:
   m_ObjectHideFlags: 0

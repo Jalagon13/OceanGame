@@ -52,7 +52,7 @@ namespace OceanGame
                 {
                     for (int y = sMinY; y <= sMaxY; y++)
                     {
-                        var fgTd = world.ForegroundLayer.GetTileData(x, y);
+                        var fgTd = world.FgLayer.GetTileData(x, y);
                     
                         if (fgTd.HasTile || fgTd.IsOutOfBounds)
                         {
@@ -102,7 +102,7 @@ namespace OceanGame
                         for (int tileY = minY; tileY <= maxY; tileY++)
                         {
                             // If the tile is solid or out of bounds
-                            var fgTd = world.ForegroundLayer.GetTileData(tileX, tileY);
+                            var fgTd = world.FgLayer.GetTileData(tileX, tileY);
                     
                             if (fgTd.HasTile || fgTd.IsOutOfBounds)
                             {
@@ -160,7 +160,7 @@ namespace OceanGame
                     {
                         for (int tileY = minY; tileY <= maxY; tileY++)
                         {
-                            var fgTd = world.ForegroundLayer.GetTileData(tileX, tileY);
+                            var fgTd = world.FgLayer.GetTileData(tileX, tileY);
                     
                             if (fgTd.HasTile || fgTd.IsOutOfBounds)
                             {
@@ -209,7 +209,7 @@ namespace OceanGame
                 int bTileY = Mathf.FloorToInt(finalBottom - SKIN_SIZE);
                 for (int x = bMinX; x <= bMaxX; x++)
                 {
-                    var fgTd = world.ForegroundLayer.GetTileData(x, bTileY);
+                    var fgTd = world.FgLayer.GetTileData(x, bTileY);
                     
                     if (fgTd.HasTile || fgTd.IsOutOfBounds) result.TouchingBottom = true;
                 }
@@ -220,7 +220,7 @@ namespace OceanGame
                 int tTileY = Mathf.FloorToInt(finalTop + SKIN_SIZE);
                 for (int x = tMinX; x <= tMaxX; x++)
                 {
-                    var fgTd = world.ForegroundLayer.GetTileData(x, tTileY);
+                    var fgTd = world.FgLayer.GetTileData(x, tTileY);
 
                     if (fgTd.HasTile || fgTd.IsOutOfBounds) result.TouchingTop = true;
                 }
@@ -231,7 +231,7 @@ namespace OceanGame
                 int lMaxY = Mathf.FloorToInt(finalTop - inset);
                 for (int y = lMinY; y <= lMaxY; y++)
                 {
-                    var fgTd = world.ForegroundLayer.GetTileData(lTileX, y);
+                    var fgTd = world.FgLayer.GetTileData(lTileX, y);
 
                     if (fgTd.HasTile || fgTd.IsOutOfBounds) result.TouchingLeft = true;
                 }
@@ -242,7 +242,7 @@ namespace OceanGame
                 int rMaxY = Mathf.FloorToInt(finalTop - inset);
                 for (int y = rMinY; y <= rMaxY; y++)
                 {
-                    var fgTd = world.ForegroundLayer.GetTileData(rTileX, y);
+                    var fgTd = world.FgLayer.GetTileData(rTileX, y);
 
                     if (fgTd.HasTile || fgTd.IsOutOfBounds) result.TouchingRight = true;
                 }

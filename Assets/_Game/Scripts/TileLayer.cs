@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -27,11 +28,90 @@ namespace OceanGame
             return _tiles[y * _width + x];
         }
 
-        public void SetTile(int x, int y, TileData tileData, bool refreshCurrentBounds = false)
+        public void DestroyTile(int x, int y, bool refreshCurrentBounds = false)
         {
             if (!IsInBounds(x, y)) return;
 
-            _tiles[y * _width + x] = tileData;
+            TileData targetTile = _tiles[y * _width + x];
+            if (targetTile.IsAir) return; // Nothing to destroy if it's air
+
+            TileSO tso = targetTile.GetTileSO();
+
+            if (tso != null && tso.IsMultiTile)
+            {
+                // Calculate Root position by subtracting local offsets
+                int rootX = x - targetTile.OffsetX;
+                int rootY = y - targetTile.OffsetY;
+
+                Vector2Int size = tso.Size;
+
+                // Loop through all cells belonging to this multi-tile structure and clear them
+                for (int ox = 0; ox < size.x; ox++)
+                {
+                    for (int oy = 0; oy < size.y; oy++)
+                    {
+                        int tileX = rootX + ox;
+                        int tileY = rootY + oy;
+
+                        if (IsInBounds(tileX, tileY))
+                        {
+                            _tiles[tileY * _width + tileX] = TileData.Air;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // Single 1x1 tile destruction
+                _tiles[y * _width + x] = TileData.Air;
+            }
+
+            if (refreshCurrentBounds)
+            {
+                // If it's a change on screen, refresh the bounds to refresh rendered tiles
+                if (PlayerCamera.Instance.PositionExistsInBounds(x, y))
+                {
+                    PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
+                }
+            }
+        }
+
+        public void SetTile(int x, int y, TileData tileData, bool refreshCurrentBounds = false)
+        {
+            if (!IsInBounds(x, y)) return;
+            
+            var tso = tileData.GetTileSO();
+            
+            if(tso.IsMultiTile)
+            {
+                // If multi tile, see if it can fit in this space, if not return
+                if(CanMultiTileFit(x, y, tso))
+                {
+                    // Loop through and set the tile data for the space
+                    var size = tso.Size;
+
+                    for (int ox = 0; ox < size.x; ox++)
+                    {
+                        for (int oy = 0; oy < size.y; oy++)
+                        {
+                            int targetWorldX = x + ox;
+                            int targetWorldY = y + oy;
+
+                            // Pass local offsets 'ox' and 'oy' (not world positions)
+                            var td = new TileData(tso.GetId(), (byte)ox, (byte)oy);
+                            _tiles[targetWorldY * _width + targetWorldX] = td;
+                        }
+                    }
+                }
+                else
+                {
+                    return; // If mt cannot fit do nothing
+                }
+            }
+            else
+            {
+                _tiles[y * _width + x] = tileData;
+            }
 
             if (refreshCurrentBounds)
             {
@@ -41,6 +121,27 @@ namespace OceanGame
                     PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
                 }
             }
+        }
+
+        private bool CanMultiTileFit(int x, int y, TileSO tileSO)
+        {
+            var size = tileSO.Size;
+            
+            for (int ox = 0; ox < size.x; ox++)
+            {
+                for (int oy = 0; oy < size.y; oy++)
+                {
+                    int offSetX = x + ox;
+                    int offSetY = y + oy;
+                    
+                    if(!IsInBounds(offSetX, offSetY) || _tiles[offSetY * _width + offSetX].HasTile)
+                    {
+                        return false;
+                    }
+                }
+            }
+            
+            return true;
         }
 
         public TileItemSO GetItemSO(int x, int y)
@@ -76,6 +177,7 @@ namespace OceanGame
         public bool IsAir => TileId == AIR_ID;
         public bool IsOutOfBounds => TileId == OUT_OF_BOUNDS_ID;
         public bool HasTile => TileId > AIR_ID && TileId < OUT_OF_BOUNDS_ID;
+        public bool IsMultiTileRoot => GetTileSO().IsMultiTile && OffsetX == 0 && OffsetY == 0;
 
         public TileData(ushort tileId, byte offsetX = 0, byte offsetY = 0, byte state = 0)
         {
@@ -84,6 +186,11 @@ namespace OceanGame
             OffsetY = offsetY;
             State = state;
             LightLevel = 0;
+        }
+        
+        public TileSO GetTileSO()
+        {
+            return GameDataRegistry.Instance.GetTileSOFromTileId(TileId);
         }
     }
 }
