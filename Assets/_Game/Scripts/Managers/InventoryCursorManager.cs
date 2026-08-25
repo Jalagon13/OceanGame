@@ -33,7 +33,7 @@ namespace OceanGame
             OnCursorSlotChanged?.Invoke();
         }
 
-        public void AssignCursorSlot(int itemId, int amount)
+        public void AssignCursorSlot(ushort itemId, int amount)
         {
             CursorSlot.AssignItem(itemId, amount);
             InventoryManager.Instance.RefreshInventory();

@@ -12,7 +12,7 @@ namespace OceanGame
         [field: Header("Tile Settings")]
         [field: SerializeField] public TileItemSO TileItemSO { get; private set; }
         
-        public int GetId()
+        public ushort GetId()
         {
             return GameDataRegistry.Instance.GetTileIdFromTileSO(this);
         }

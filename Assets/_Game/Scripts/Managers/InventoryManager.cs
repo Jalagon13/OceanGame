@@ -49,7 +49,7 @@ namespace OceanGame
             InventoryCursorManager.Instance.RefreshCursorSlot();
         }
 
-        public int AddItem(int itemId, int amount) // Returns remainder 
+        public int AddItem(ushort itemId, int amount) // Returns remainder 
         {
             // Search for existing matching stacks
             for (int i = 0; i < PlayerInventory.Length; i++)

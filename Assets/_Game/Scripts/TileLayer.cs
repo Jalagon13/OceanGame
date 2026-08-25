@@ -5,10 +5,7 @@ namespace OceanGame
 {
     public class TileLayer
     {
-        public static int OUT_OF_BOUNDS_ID { get; } = -2;
-        public static int AIR_ID { get; } = -1;
-
-        private readonly int[] _tiles;
+        private readonly TileData[] _tiles;
         private readonly int _width;
         private readonly int _height;
 
@@ -20,38 +17,21 @@ namespace OceanGame
             _height = height;
             Tilemap = tilemap;
 
-            _tiles = new int[width * height];
-
-            // Overwrite the defaults so the world starts as empty Air (-1)
-            for (int i = 0; i < _tiles.Length; i++)
-            {
-                _tiles[i] = -1;
-            }
+            _tiles = new TileData[width * height];
         }
-
-        public int this[int x, int y]
+        
+        public TileData GetTileData(int x, int y)
         {
-            get
-            {
-                if (!IsInBounds(x, y))
-                {
-                    return OUT_OF_BOUNDS_ID; // Return a special value indicating out-of-bounds access
-                }
-
-                return _tiles[y * _width + x];
-            }
+            if(!IsInBounds(x, y)) return TileData.OutOfBounds;
+        
+            return _tiles[y * _width + x];
         }
 
-        public TileItemSO GetItemSO(int x, int y)
-        {
-            return GameDataRegistry.Instance.GetTileSOFromTileId(_tiles[y * _width + x]).TileItemSO;
-        }
-
-        public void SetTile(int x, int y, int tileId, bool refreshCurrentBounds = false)
+        public void SetTile(int x, int y, TileData tileData, bool refreshCurrentBounds = false)
         {
             if (!IsInBounds(x, y)) return;
 
-            _tiles[y * _width + x] = tileId;
+            _tiles[y * _width + x] = tileData;
 
             if (refreshCurrentBounds)
             {
@@ -63,11 +43,9 @@ namespace OceanGame
             }
         }
 
-        public bool HasTileAt(int x, int y)
+        public TileItemSO GetItemSO(int x, int y)
         {
-            if (!IsInBounds(x, y)) return false;
-
-            return _tiles[y * _width + x] > AIR_ID;
+            return GameDataRegistry.Instance.GetTileSOFromTileId(_tiles[y * _width + x].TileId).TileItemSO;
         }
 
         public bool IsInBounds(int x, int y)
@@ -78,6 +56,36 @@ namespace OceanGame
             }
 
             return true;
+        }
+    }
+
+    public struct TileData
+    {
+        public ushort TileId;     // 2 bytes (0 -> 65,535 tile types)
+        public byte OffsetX;      // 1 byte  (multi-tile width up to 0 -> 255)
+        public byte OffsetY;      // 1 byte  (multi-tile height up to 0 -> 255)
+        public byte State;        // 1 byte  (0 -> 255 state variants)
+        public byte LightLevel;   // 1 byte  (0 -> 255 light emission/block light)
+        public ushort Flags;      // 2 bytes (extra flags like flipped, active, etc.) MIGHT NOT NEED
+
+        public const ushort AIR_ID = 0;
+        public const ushort OUT_OF_BOUNDS_ID = ushort.MaxValue;
+        
+        public static readonly TileData OutOfBounds = new TileData { TileId = OUT_OF_BOUNDS_ID };
+        public static readonly TileData Air = new TileData { TileId = AIR_ID };
+        
+        public bool IsAir => TileId == AIR_ID;
+        public bool IsOutOfBounds => TileId == OUT_OF_BOUNDS_ID;
+        public bool HasTile => TileId > AIR_ID && TileId < OUT_OF_BOUNDS_ID;
+
+        public TileData(ushort tileId, byte offsetX = 0, byte offsetY = 0, byte state = 0)
+        {
+            TileId = tileId;
+            OffsetX = offsetX;
+            OffsetY = offsetY;
+            State = state;
+            LightLevel = 0;
+            Flags = 0;
         }
     }
 }

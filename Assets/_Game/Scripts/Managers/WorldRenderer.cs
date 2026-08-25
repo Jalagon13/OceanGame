@@ -63,31 +63,31 @@ namespace OceanGame
                     Vector3Int tilePos = new(x, y, 0);
 
                     // Process Foreground Layer
-                    int fgId = world.ForegroundLayer[x, y];
-                    if (fgId > TileLayer.AIR_ID)
+                    var fgTd = world.ForegroundLayer.GetTileData(x, y);
+                    if (fgTd.HasTile)
                     {
-                        var fgTileAsset = registry.GetTileSOFromTileId(fgId);
+                        var fgTileAsset = registry.GetTileSOFromTileId(fgTd.TileId);
                         if (fgTileAsset != null)
                         {
                             world.ForegroundLayer.Tilemap.SetTile(tilePos, fgTileAsset);
                         }
                     }
-                    else if( fgId == TileLayer.AIR_ID) // If we are setting it to air
+                    else if(fgTd.IsAir) // If we are setting it to air
                     {
                         world.ForegroundLayer.Tilemap.SetTile(tilePos, null);
                     }
 
                     // Process Background Layer
-                    int bgId = world.BackgroundLayer[x, y];
-                    if (bgId > TileLayer.AIR_ID)
+                    var bgTd = world.BackgroundLayer.GetTileData(x, y);
+                    if (bgTd.HasTile)
                     {
-                        var bgTileAsset = registry.GetTileSOFromTileId(bgId);
+                        var bgTileAsset = registry.GetTileSOFromTileId(bgTd.TileId);
                         if (bgTileAsset != null)
                         {
                             world.BackgroundLayer.Tilemap.SetTile(tilePos, bgTileAsset);
                         }
                     }
-                    else if(bgId == TileLayer.AIR_ID) // If we are setting it to air
+                    else if(bgTd.IsAir) // If we are setting it to air
                     {
                         world.BackgroundLayer.Tilemap.SetTile(tilePos, null);
                     }
@@ -95,7 +95,7 @@ namespace OceanGame
                     // Process Sea Layer
                     if(y <= WorldManager.Instance.SeaLevel)
                     {
-                        if (/* fgId <= TileLayer.AIR_ID &&  */world.ForegroundLayer[x, y] != TileLayer.OUT_OF_BOUNDS_ID)
+                        if (/* fgId <= TileLayer.AIR_ID &&  */!world.ForegroundLayer.GetTileData(x, y).IsOutOfBounds)
                         {
                             _waterTilemap.SetTile(tilePos, _waterTile);
                         }

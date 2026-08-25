@@ -17,9 +17,9 @@ namespace OceanGame
             
             if(!playerInRange) return;
 
-            if (!world.ForegroundLayer.HasTileAt(mouseTilePos.x, mouseTilePos.y))
+            if (!world.ForegroundLayer.GetTileData(mouseTilePos.x, mouseTilePos.y).HasTile)
             {
-                world.ForegroundLayer.SetTile(mouseTilePos.x, mouseTilePos.y, Tile.GetId(), true);
+                world.ForegroundLayer.SetTile(mouseTilePos.x, mouseTilePos.y, new(Tile.GetId()), true);
                 InventoryInputManager.Instance.GetActiveInvSlot().RemoveFromCurrentAmount(1);
                 InventoryManager.Instance.RefreshInventory();
             }

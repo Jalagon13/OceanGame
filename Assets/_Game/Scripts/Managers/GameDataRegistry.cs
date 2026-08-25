@@ -9,11 +9,10 @@ namespace OceanGame
         public static GameDataRegistry Instance { get; private set; }
 
         [SerializeField] private List<TileSO> _tileDatabase = new();
-        [Space(25)]
         [SerializeField] private List<ItemSO> _itemDatabase = new();
 
-        private Dictionary<TileSO, int> _tileToIdMap = new();
-        private Dictionary<ItemSO, int> _itemToIdMap = new();
+        private Dictionary<TileSO, ushort> _tileToIdMap = new();
+        private Dictionary<ItemSO, ushort> _itemToIdMap = new();
 
         private void Awake()
         {
@@ -24,91 +23,81 @@ namespace OceanGame
         private void InitializeRegistry()
         {
             _tileToIdMap.Clear();
-
-            // Loop through the tile list and map each tile asset to its list index (ID)
             for (int i = 0; i < _tileDatabase.Count; i++)
             {
                 if (_tileDatabase[i] != null)
                 {
-                    // If a tile is accidentally added twice, log a warning
-                    if (_tileToIdMap.ContainsKey(_tileDatabase[i]))
-                    {
-                        Debug.LogError($"Duplicate tile found in registry: {_tileDatabase[i].name} at index {i}");
-                        continue;
-                    }
-
-                    _tileToIdMap.Add(_tileDatabase[i], i);
-                }
-                else
-                {
-                    Debug.LogError($"Null tile found in registry at index {i}");
+                    // +1 Offset: Index 0 gets ID 1, Index 1 gets ID 2, etc.
+                    ushort id = (ushort)(i + 1);
+                    _tileToIdMap.Add(_tileDatabase[i], id);
                 }
             }
 
-            // Loop through the item list and map each item asset to its list index (ID)
+            _itemToIdMap.Clear();
             for (int i = 0; i < _itemDatabase.Count; i++)
             {
                 if (_itemDatabase[i] != null)
                 {
-                    // If a tile is accidentally added twice, log a warning
-                    if (_itemToIdMap.ContainsKey(_itemDatabase[i]))
-                    {
-                        Debug.LogError($"Duplicate item found in registry: {_itemDatabase[i].name} at index {i}");
-                        continue;
-                    }
-
-                    _itemToIdMap.Add(_itemDatabase[i], i);
-                }
-                else
-                {
-                    Debug.LogError($"Null item found in registry at index {i}");
+                    // +1 Offset: Index 0 gets ID 1, Index 1 gets ID 2, etc.
+                    ushort id = (ushort)(i + 1);
+                    _itemToIdMap.Add(_itemDatabase[i], id);
                 }
             }
         }
 
         #region Tile Functions
 
-        public int GetTileIdFromTileSO(TileSO tile)
+        public ushort GetTileIdFromTileSO(TileSO tile)
         {
-            if (tile == null) 
-            {
-                Debug.LogError("Attempted to get ID for a null tile.");
-                return -3;
-            }
+            if (tile == null) return TileData.AIR_ID; // Returns 0
 
-            if (_tileToIdMap.TryGetValue(tile, out int id))
+            if (_tileToIdMap.TryGetValue(tile, out ushort id))
             {
                 return id;
             }
 
-            Debug.LogError($"Tile '{tile.name}' is not registered in the GameDataRegistry!");
-            return -3;
+            Debug.LogError($"Tile '{tile.name}' is not registered in GameDataRegistry!");
+            return TileData.AIR_ID;
         }
 
-        public TileSO GetTileSOFromTileId(int id)
+        public TileSO GetTileSOFromTileId(ushort id)
         {
-            if (id <= -3 || id >= _tileDatabase.Count) return null;
-            return _tileDatabase[id];
+            // ID 0 (AIR) or OUT_OF_BOUNDS returns null
+            if (id == TileData.AIR_ID || id >= TileData.OUT_OF_BOUNDS_ID) return null;
+
+            int databaseIndex = id - 1; // Convert 1-based ID back to 0-based List Index
+
+            if (databaseIndex < 0 || databaseIndex >= _tileDatabase.Count) return null;
+
+            return _tileDatabase[databaseIndex];
         }
 
         #endregion
 
         #region Item Functions
 
-        public int GetItemIdFromItemSO(ItemSO item)
+        public ushort GetItemIdFromItemSO(ItemSO item)
         {
-            if (item == null) return InventorySlot.EMPTY_SLOT_ID; // -1 represents empty inventory slot
+            if (item == null) return 0; // Returns 0 for empty slot
 
-            if (_itemToIdMap.TryGetValue(item, out int id)) return id;
+            if (_itemToIdMap.TryGetValue(item, out ushort id))
+            {
+                return id;
+            }
 
-            Debug.LogError($"Item '{item.ItemName}' is not registered in the GameDataRegistry!");
-            return InventorySlot.EMPTY_SLOT_ID;
+            Debug.LogError($"Item '{item.ItemName}' is not registered in GameDataRegistry!");
+            return 0;
         }
 
-        public ItemSO GetItemSOFromItemId(int id)
+        public ItemSO GetItemSOFromItemId(ushort id)
         {
-            if (id < 0 || id >= _itemDatabase.Count) return null;
-            return _itemDatabase[id];
+            if (id == 0) return null; // ID 0 represents an empty slot
+
+            int databaseIndex = id - 1; // Convert 1-based ID back to 0-based List Index
+
+            if (databaseIndex < 0 || databaseIndex >= _itemDatabase.Count) return null;
+
+            return _itemDatabase[databaseIndex];
         }
 
         #endregion

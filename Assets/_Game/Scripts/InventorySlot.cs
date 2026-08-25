@@ -6,12 +6,10 @@ namespace OceanGame
     [Serializable]
     public class InventorySlot
     {
-        public static int EMPTY_SLOT_ID { get; } = -1;
-
-        public int ItemId { get; private set; } = EMPTY_SLOT_ID;
+        public ushort ItemId { get; private set; } 
         public int CurrentAmount { get; private set; } = 0;
 
-        public bool IsEmpty => ItemId == -1 || CurrentAmount <= 0;
+        public bool IsEmpty => CurrentAmount <= 0;
 
         public InventorySlot(ItemSO itemSO, int amount)
         {
@@ -20,7 +18,7 @@ namespace OceanGame
             AssignItem(GameDataRegistry.Instance.GetItemIdFromItemSO(itemSO), amount);
         }
 
-        public InventorySlot(int id, int amount)
+        public InventorySlot(ushort id, int amount)
         {
             Clear();
             AssignItem(id, amount);
@@ -36,7 +34,7 @@ namespace OceanGame
             return GameDataRegistry.Instance.GetItemSOFromItemId(ItemId);
         }
 
-        public void AssignItem(int itemId, int amount)
+        public void AssignItem(ushort itemId, int amount)
         {
             ItemId = itemId;
             CurrentAmount = amount;
@@ -58,7 +56,7 @@ namespace OceanGame
 
         public void Clear()
         {
-            ItemId = EMPTY_SLOT_ID;
+            ItemId = 0;
             CurrentAmount = 0;
         }
         

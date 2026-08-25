@@ -46,8 +46,8 @@ namespace OceanGame
                     if(y > _tempY /* && y < _tempY + 4 */) continue;
                     if(x > _tempX) continue;
                 
-                    ForegroundLayer.SetTile(x, y, _grassTile.GetId());
-                    BackgroundLayer.SetTile(x, y, _dirtBgTile.GetId()); 
+                    ForegroundLayer.SetTile(x, y, new TileData(_grassTile.GetId()));
+                    BackgroundLayer.SetTile(x, y, new TileData(_dirtBgTile.GetId())); 
                 }
             }
 

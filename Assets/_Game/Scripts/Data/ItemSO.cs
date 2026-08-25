@@ -11,7 +11,7 @@ namespace OceanGame
         [field: SerializeField] public Sprite DisplayIcon { get; private set; }
         [field: SerializeField] public bool IsStackable { get; private set; } = true;
         
-        public int GetId()
+        public ushort GetId()
         {
             return GameDataRegistry.Instance.GetItemIdFromItemSO(this);
         }
