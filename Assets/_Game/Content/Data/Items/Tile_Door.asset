@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.TileItemSO
   <ItemName>k__BackingField: Door
   <Description>k__BackingField: 
-  <DisplayIcon>k__BackingField: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  <DisplayIcon>k__BackingField: {fileID: 2103766653744169134, guid: 2f87ce7e588154a76acbf2c4eda5fff0, type: 3}
   <IsStackable>k__BackingField: 1
-  <Tile>k__BackingField: {fileID: 11400000, guid: e6b0c6133e8a7483d94ed0abacbc2c1d, type: 2}
+  <PlaceTileDataSO>k__BackingField: {fileID: 11400000, guid: ba3aad1cd917f45aea3a6204b86df04e, type: 2}

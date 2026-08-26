@@ -807,7 +807,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1141,8 +1141,8 @@ GameObject:
   m_Component:
   - component: {fileID: 970924654}
   - component: {fileID: 970924655}
-  - component: {fileID: 970924657}
   - component: {fileID: 970924661}
+  - component: {fileID: 970924657}
   m_Layer: 0
   m_Name: GAME_MANAGERS
   m_TagString: Untagged
@@ -1192,15 +1192,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.GameDataRegistry
   _tileDatabase:
-  - {fileID: 11400000, guid: ac1de6a6f08164a80a3edcffdf473437, type: 2}
-  - {fileID: 11400000, guid: de790d75c4d7642e3810e3bbc47c7853, type: 2}
-  - {fileID: 11400000, guid: 01df45f836ac5496399a9414a0acb621, type: 2}
-  - {fileID: 11400000, guid: e6b0c6133e8a7483d94ed0abacbc2c1d, type: 2}
+  - {fileID: 11400000, guid: c05cf26c0c6a34a5abbd9e4f8aa70df3, type: 2}
+  - {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
+  - {fileID: 11400000, guid: 2e31d17edd4654120875362ed74dbe93, type: 2}
+  - {fileID: 11400000, guid: ba3aad1cd917f45aea3a6204b86df04e, type: 2}
   _itemDatabase:
   - {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
   - {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}
   - {fileID: 11400000, guid: ba4a4e198c8a8407c86c4c4ae28df49a, type: 2}
-  - {fileID: 11400000, guid: 65bb729b1380b4cdd8a0eb42938640a9, type: 2}
+  - {fileID: 11400000, guid: ed13bde50d6d54218b3be409d52464f5, type: 2}
 --- !u!114 &970924661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1403,7 +1403,7 @@ MonoBehaviour:
     _amount: 1
   - _ingredient: {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
     _amount: 20
-  - _ingredient: {fileID: 11400000, guid: 65bb729b1380b4cdd8a0eb42938640a9, type: 2}
+  - _ingredient: {fileID: 11400000, guid: ed13bde50d6d54218b3be409d52464f5, type: 2}
     _amount: 10
 --- !u!114 &1178486984
 MonoBehaviour:
@@ -2181,8 +2181,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldManager
   _tempX: 60
   _tempY: 43
-  _grassTile: {fileID: 11400000, guid: ac1de6a6f08164a80a3edcffdf473437, type: 2}
-  _dirtBgTile: {fileID: 11400000, guid: de790d75c4d7642e3810e3bbc47c7853, type: 2}
+  _grassTdSo: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
+  _dirtTdSo: {fileID: 11400000, guid: c05cf26c0c6a34a5abbd9e4f8aa70df3, type: 2}
   <WorldWidth>k__BackingField: 100
   <WorldHeight>k__BackingField: 100
   <SeaLevel>k__BackingField: 40
@@ -2202,7 +2202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldRenderer
   _mainCamera: {fileID: 330585545}
   _waterTilemap: {fileID: 2070694661}
-  _waterTile: {fileID: 11400000, guid: 01df45f836ac5496399a9414a0acb621, type: 2}
+  _waterTile: {fileID: 11400000, guid: e40dc918111c04817b800659a09ce7f7, type: 2}
 --- !u!1 &2070694658
 GameObject:
   m_ObjectHideFlags: 0

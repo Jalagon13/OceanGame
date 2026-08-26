@@ -35,7 +35,7 @@ namespace OceanGame
             TileData targetTile = _tiles[y * _width + x];
             if (targetTile.IsAir) return; // Nothing to destroy if it's air
 
-            TileSO tso = targetTile.GetTileSO();
+            TileDataSO tso = targetTile.GetTileDataSO();
 
             if (tso != null && tso.IsMultiTile)
             {
@@ -80,7 +80,7 @@ namespace OceanGame
         {
             if (!IsInBounds(x, y)) return;
             
-            var tso = tileData.GetTileSO();
+            var tso = tileData.GetTileDataSO();
             
             if(tso.IsMultiTile)
             {
@@ -130,7 +130,7 @@ namespace OceanGame
             TileData tileData = GetTileData(x, y);
             if (tileData.IsAir) return;
 
-            TileSO tso = tileData.GetTileSO();
+            TileDataSO tso = tileData.GetTileDataSO();
             if (tso == null) return;
 
             // Find the Root position
@@ -160,9 +160,9 @@ namespace OceanGame
             }
         }
 
-        private bool CanMultiTileFit(int x, int y, TileSO tileSO)
+        private bool CanMultiTileFit(int x, int y, TileDataSO tdSo)
         {
-            var size = tileSO.Size;
+            var size = tdSo.Size;
             
             for (int ox = 0; ox < size.x; ox++)
             {
@@ -179,11 +179,6 @@ namespace OceanGame
             }
             
             return true;
-        }
-
-        public TileItemSO GetItemSO(int x, int y)
-        {
-            return GameDataRegistry.Instance.GetTileSOFromTileId(_tiles[y * _width + x].TileId).TileItemSO;
         }
 
         public bool IsInBounds(int x, int y)
@@ -214,7 +209,7 @@ namespace OceanGame
         public bool IsAir => TileId == AIR_ID;
         public bool IsOutOfBounds => TileId == OUT_OF_BOUNDS_ID;
         public bool HasTile => TileId > AIR_ID && TileId < OUT_OF_BOUNDS_ID;
-        public bool IsMultiTileRoot => GetTileSO().IsMultiTile && OffsetX == 0 && OffsetY == 0;
+        public bool IsMultiTileRoot => GetTileDataSO().IsMultiTile && OffsetX == 0 && OffsetY == 0;
 
         public TileData(ushort tileId, byte offsetX = 0, byte offsetY = 0, byte state = 0)
         {
@@ -225,9 +220,9 @@ namespace OceanGame
             LightLevel = 0;
         }
         
-        public TileSO GetTileSO()
+        public TileDataSO GetTileDataSO()
         {
-            return GameDataRegistry.Instance.GetTileSOFromTileId(TileId);
+            return GameDataRegistry.Instance.GetTileDataSOFromTileId(TileId);
         }
     }
 }

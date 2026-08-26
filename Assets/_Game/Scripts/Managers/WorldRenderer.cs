@@ -67,17 +67,21 @@ namespace OceanGame
                     
                     if (fgTd.HasTile)
                     {
-                        var fgTso = fgTd.GetTileSO();
+                        var fgTdSo = fgTd.GetTileDataSO();
                         
-                        if (fgTso != null)
+                        if (fgTdSo != null)
                         {
-                            if (fgTso.IsMultiTile)
+                            if (fgTdSo.IsMultiTile)
                             {
                                 // Render the sprite ONLY on the root cell.
                                 // Non-root cells set 'null' to ensure old tiles underneath are cleared.
                                 if (fgTd.IsMultiTileRoot)
                                 {
-                                    world.FgLayer.Tilemap.SetTile(tilePos, fgTso);
+                                    // Before it draws the multi tile, it needs to fetch the interpretation of the tile depending on the state
+                                    byte state = fgTd.State;
+                                    TileBase interpretedTile = fgTdSo.GetStateInterpretedTileForRendering(state);
+
+                                    world.FgLayer.Tilemap.SetTile(tilePos, interpretedTile);
                                 }
                                 else
                                 {
@@ -87,7 +91,11 @@ namespace OceanGame
                             else
                             {
                                 // Standard 1x1 tile
-                                world.FgLayer.Tilemap.SetTile(tilePos, fgTso);
+                                // Before it draws the tile, it needs to fetch the interpretation of the tile depending on the state
+                                byte state = fgTd.State;
+                                TileBase interpretedTile = fgTdSo.GetStateInterpretedTileForRendering(state);
+
+                                world.FgLayer.Tilemap.SetTile(tilePos, interpretedTile);
                             }
                         }
                     }
@@ -95,17 +103,19 @@ namespace OceanGame
                     {
                         world.FgLayer.Tilemap.SetTile(tilePos, null);
                     }
+                    
+                    
 
                     // Process Background Layer
                     var bgTd = world.BgLayer.GetTileData(x, y);
                     
                     if (bgTd.HasTile)
                     {
-                        var bgTso = bgTd.GetTileSO();
+                        var bgTdSo = bgTd.GetTileDataSO();
                         
-                        if (bgTso != null)
+                        if (bgTdSo != null)
                         {
-                            world.BgLayer.Tilemap.SetTile(tilePos, bgTso);
+                            world.BgLayer.Tilemap.SetTile(tilePos, bgTdSo.DrawTile);
                         }
                     }
                     else if(bgTd.IsAir) // If we are setting it to air

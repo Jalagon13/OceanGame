@@ -1,12 +1,13 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace OceanGame
 {
     [CreateAssetMenu(fileName = "New TileitemSO", menuName = "OceanGame/Item/TileItemSO")]
     public class TileItemSO : ItemSO
     {
-        [field: Header("Tile Settings")]
-        [field: SerializeField] public TileSO Tile { get; private set; }
+        [field: Header("Tile Item Settings")]
+        [field: SerializeField] public TileDataSO PlaceTileDataSO { get; private set; }
 
         public override void OnPrimaryActionPressed()
         {
@@ -18,12 +19,13 @@ namespace OceanGame
 
             if (!world.FgLayer.GetTileData(mouseTilePos.x, mouseTilePos.y).HasTile)
             {
-                var tileToPlace = new TileData(Tile.GetId());
+                var tileToPlace = new TileData(PlaceTileDataSO.GetId());
                 world.FgLayer.SetTile(mouseTilePos.x, mouseTilePos.y, tileToPlace, true);
                 InventoryInputManager.Instance.GetActiveInvSlot().RemoveFromCurrentAmount(1);
                 InventoryManager.Instance.RefreshInventory();
             }
 
         }
+        
     }
 }

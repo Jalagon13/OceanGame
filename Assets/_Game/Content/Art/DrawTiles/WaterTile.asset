@@ -9,10 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b6c2ed1460eb4b29944a3229debcb74, type: 3}
-  m_Name: TileData_Water
-  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.TileSO
+  m_Script: {fileID: 11500000, guid: b08ceb78e3b2495b8d808a5860e66794, type: 3}
+  m_Name: WaterTile
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AutoTile
   m_DefaultSprite: {fileID: 8936441401932967152, guid: 2f87ce7e588154a76acbf2c4eda5fff0, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
-  m_TilingRules: []
+  m_MaskType: 0
+  m_Random: 0
+  m_PhysicsShapeCheck: 0
+  m_AutoTileDictionary:
+    keyData: 
+    valueData: []
+  m_TextureList: []
+  m_TextureScaleList: []

@@ -12,8 +12,8 @@ namespace OceanGame
         
         [SerializeField] private int _tempX = 45;
         [SerializeField] private int _tempY = 45;
-        [SerializeField] private TileSO _grassTile;
-        [SerializeField] private TileSO _dirtBgTile;
+        [SerializeField] private TileDataSO _grassTdSo;
+        [SerializeField] private TileDataSO _dirtTdSo;
 
         [field: Header("World Settings")]
         [field: SerializeField] public int WorldWidth { get; private set; } = 100;
@@ -73,8 +73,8 @@ namespace OceanGame
                     if (y > _tempY /* && y < _tempY + 4 */) continue;
                     if (x > _tempX) continue;
 
-                    FgLayer.SetTile(x, y, new TileData(_grassTile.GetId()));
-                    BgLayer.SetTile(x, y, new TileData(_dirtBgTile.GetId()));
+                    FgLayer.SetTile(x, y, new TileData(_grassTdSo.GetId()));
+                    BgLayer.SetTile(x, y, new TileData(_dirtTdSo.GetId()));
                 }
             }
 

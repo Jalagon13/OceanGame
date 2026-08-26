@@ -212,10 +212,10 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: tile_door
+  - name: tile_door _closed
     originalName: 
-    pivot: {x: 0, y: 0}
-    alignment: 6
+    pivot: {x: 0.5, y: 0.25}
+    alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
@@ -254,6 +254,27 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
+  - name: tile_door_open_right
+    originalName: 
+    pivot: {x: 0.25, y: 0.25}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 48
+      y: 0
+      width: 32
+      height: 32
+    spriteID: 4802a2e715e81445c9dc68bbd21039ac
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
   tileSetImportData: []
   asepriteLayers:
   - layerIndex: 0
@@ -274,7 +295,7 @@ ScriptedImporter:
       cellRect:
         x: 0
         y: 0
-        width: 45
+        width: 71
         height: 32
       spriteId: 29e30dac0e8574e0bb07847e539baa65
     linkedCells: []
@@ -322,5 +343,5 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 48, y: 32}
-  previousTextureSize: {x: 64, y: 32}
+  canvasSize: {x: 80, y: 32}
+  previousTextureSize: {x: 128, y: 32}
