@@ -18,7 +18,7 @@ namespace OceanGame
 
             if (world.FgLayer.GetTileData(mouseTilePos.x, mouseTilePos.y).HasTile)
             {
-                var droppedItem = world.FgLayer.GetTileData(mouseTilePos.x, mouseTilePos.y).GetTileDataSO().DroppedItem;
+                var droppedItem = world.FgLayer.GetTileData(mouseTilePos.x, mouseTilePos.y).TileConfig.DroppedItem;
                 world.FgLayer.DestroyTile(mouseTilePos.x, mouseTilePos.y, true);
                 
                 if(droppedItem != null)

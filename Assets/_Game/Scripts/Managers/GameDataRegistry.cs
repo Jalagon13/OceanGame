@@ -8,10 +8,10 @@ namespace OceanGame
     {
         public static GameDataRegistry Instance { get; private set; }
 
-        [SerializeField] private List<TileDataSO> _tileDatabase = new();
+        [SerializeField] private List<TileConfigSO> _tileDatabase = new();
         [SerializeField] private List<ItemSO> _itemDatabase = new();
 
-        private Dictionary<TileDataSO, ushort> _tileToIdMap = new();
+        private Dictionary<TileConfigSO, ushort> _tileToIdMap = new();
         private Dictionary<ItemSO, ushort> _itemToIdMap = new();
 
         private void Awake()
@@ -47,7 +47,7 @@ namespace OceanGame
 
         #region Tile Functions
 
-        public ushort GetTileIdFromTileDataSO(TileDataSO tile)
+        public ushort GetTileIdFromTileDataSO(TileConfigSO tile)
         {
             if (tile == null) return TileData.AIR_ID; // Returns 0
 
@@ -60,7 +60,7 @@ namespace OceanGame
             return TileData.AIR_ID;
         }
 
-        public TileDataSO GetTileDataSOFromTileId(ushort id)
+        public TileConfigSO GetTileConfigSOFromTileId(ushort id)
         {
             // ID 0 (AIR) or OUT_OF_BOUNDS returns null
             if (id == TileData.AIR_ID || id >= TileData.OUT_OF_BOUNDS_ID) return null;

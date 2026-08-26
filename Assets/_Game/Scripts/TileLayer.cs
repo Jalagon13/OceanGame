@@ -35,15 +35,15 @@ namespace OceanGame
             TileData targetTile = _tiles[y * _width + x];
             if (targetTile.IsAir) return; // Nothing to destroy if it's air
 
-            TileDataSO tso = targetTile.GetTileDataSO();
+            TileConfigSO tc = targetTile.TileConfig;
 
-            if (tso != null && tso.IsMultiTile)
+            if (tc != null && tc.IsMultiTile)
             {
                 // Calculate Root position by subtracting local offsets
                 int rootX = x - targetTile.OffsetX;
                 int rootY = y - targetTile.OffsetY;
 
-                Vector2Int size = tso.Size;
+                Vector2Int size = tc.Size;
 
                 // Loop through all cells belonging to this multi-tile structure and clear them
                 for (int ox = 0; ox < size.x; ox++)
@@ -75,81 +75,46 @@ namespace OceanGame
                 }
             }
         }
-
-        public void SetTile(int x, int y, TileData tileData, bool refreshCurrentBounds = false)
+        
+        public void SetTileData(int x, int y, TileData newTileData, bool refreshCurrentBounds = false)
         {
             if (!IsInBounds(x, y)) return;
-            
-            var tso = tileData.GetTileDataSO();
-            
-            if(tso.IsMultiTile)
-            {
-                // If multi tile, see if it can fit in this space, if not return
-                if(CanMultiTileFit(x, y, tso))
-                {
-                    // Loop through and set the tile data for the space
-                    var size = tso.Size;
 
-                    for (int ox = 0; ox < size.x; ox++)
-                    {
-                        for (int oy = 0; oy < size.y; oy++)
-                        {
-                            int targetWorldX = x + ox;
-                            int targetWorldY = y + oy;
+            _tiles[y * _width + x] = newTileData;
 
-                            // Pass local offsets 'ox' and 'oy' (not world positions)
-                            var td = new TileData(tso.GetId(), (byte)ox, (byte)oy);
-                            _tiles[targetWorldY * _width + targetWorldX] = td;
-                        }
-                    }
-                }
-                else
-                {
-                    return; // If mt cannot fit do nothing
-                }
-            }
-            else
+            if (refreshCurrentBounds && PlayerCamera.Instance.PositionExistsInBounds(x, y))
             {
-                _tiles[y * _width + x] = tileData;
-            }
-
-            if (refreshCurrentBounds)
-            {
-                // If its a change on screen, refresh the bounds to refresh the rendered tiles
-                if (PlayerCamera.Instance.PositionExistsInBounds(x, y))
-                {
-                    PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
-                }
+                PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
             }
         }
 
-        public void SetMultiTileState(int x, int y, byte newState, bool refreshCurrentBounds = false)
+        public void SetMultiTileData(int x, int y, TileData newTileData, bool refreshCurrentBounds = false)
         {
             if (!IsInBounds(x, y)) return;
-
-            TileData tileData = GetTileData(x, y);
-            if (tileData.IsAir) return;
-
-            TileDataSO tso = tileData.GetTileDataSO();
-            if (tso == null) return;
+            
+            // TileData currentTd = GetTileData(x, y);
+            TileConfigSO newTc = newTileData.TileConfig;
+            
+            if(!newTc.IsMultiTile) return;
+            if(!CanMultiTileFit(x, y, newTc)) return;
 
             // Find the Root position
-            int rootX = x - tileData.OffsetX;
-            int rootY = y - tileData.OffsetY;
+            // int rootX = x - newTileData.OffsetX;
+            // int rootY = y - newTileData.OffsetY;
 
-            Vector2Int size = tso.IsMultiTile ? tso.Size : new Vector2Int(1, 1);
+            Vector2Int size = newTc.Size;
 
             // Update the State on ALL cells of the multi-tile
             for (int ox = 0; ox < size.x; ox++)
             {
                 for (int oy = 0; oy < size.y; oy++)
                 {
-                    int targetX = rootX + ox;
-                    int targetY = rootY + oy;
+                    int targetX = x + ox;
+                    int targetY = y + oy;
 
                     if (IsInBounds(targetX, targetY))
                     {
-                        _tiles[targetY * _width + targetX].State = newState;
+                        _tiles[targetY * _width + targetX] = newTileData;
                     }
                 }
             }
@@ -160,9 +125,9 @@ namespace OceanGame
             }
         }
 
-        private bool CanMultiTileFit(int x, int y, TileDataSO tdSo)
+        private bool CanMultiTileFit(int x, int y, TileConfigSO tc)
         {
-            var size = tdSo.Size;
+            var size = tc.Size;
             
             for (int ox = 0; ox < size.x; ox++)
             {
@@ -199,6 +164,7 @@ namespace OceanGame
         public byte OffsetY; // 1 byte  (multi-tile height up to 0 -> 255)
         public byte State; // 1 byte  (0 -> 255 state variants)
         public byte LightLevel; // 1 byte  (0 -> 255 light emission/block light)
+        public bool IsSolid; // 1 byte
 
         public const ushort AIR_ID = 0;
         public const ushort OUT_OF_BOUNDS_ID = ushort.MaxValue;
@@ -209,20 +175,17 @@ namespace OceanGame
         public bool IsAir => TileId == AIR_ID;
         public bool IsOutOfBounds => TileId == OUT_OF_BOUNDS_ID;
         public bool HasTile => TileId > AIR_ID && TileId < OUT_OF_BOUNDS_ID;
-        public bool IsMultiTileRoot => GetTileDataSO().IsMultiTile && OffsetX == 0 && OffsetY == 0;
+        public bool IsMultiTileRoot => TileConfig.IsMultiTile && OffsetX == 0 && OffsetY == 0;
+        public TileConfigSO TileConfig => GameDataRegistry.Instance.GetTileConfigSOFromTileId(TileId);
 
-        public TileData(ushort tileId, byte offsetX = 0, byte offsetY = 0, byte state = 0)
+        public TileData(ushort tileId, byte offsetX = 0, byte offsetY = 0, byte state = 0, bool isSolid = true)
         {
             TileId = tileId;
             OffsetX = offsetX;
             OffsetY = offsetY;
             State = state;
             LightLevel = 0;
-        }
-        
-        public TileDataSO GetTileDataSO()
-        {
-            return GameDataRegistry.Instance.GetTileDataSOFromTileId(TileId);
+            IsSolid = isSolid;
         }
     }
 }

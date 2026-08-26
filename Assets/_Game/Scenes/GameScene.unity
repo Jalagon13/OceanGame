@@ -2181,8 +2181,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldManager
   _tempX: 60
   _tempY: 43
-  _grassTdSo: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
-  _dirtTdSo: {fileID: 11400000, guid: c05cf26c0c6a34a5abbd9e4f8aa70df3, type: 2}
+  _grassTc: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
+  _dirtTc: {fileID: 11400000, guid: c05cf26c0c6a34a5abbd9e4f8aa70df3, type: 2}
   <WorldWidth>k__BackingField: 100
   <WorldHeight>k__BackingField: 100
   <SeaLevel>k__BackingField: 40

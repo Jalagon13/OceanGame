@@ -67,11 +67,11 @@ namespace OceanGame
                     
                     if (fgTd.HasTile)
                     {
-                        var fgTdSo = fgTd.GetTileDataSO();
+                        var fgtc = fgTd.TileConfig;
                         
-                        if (fgTdSo != null)
+                        if (fgtc != null)
                         {
-                            if (fgTdSo.IsMultiTile)
+                            if (fgtc.IsMultiTile)
                             {
                                 // Render the sprite ONLY on the root cell.
                                 // Non-root cells set 'null' to ensure old tiles underneath are cleared.
@@ -79,7 +79,7 @@ namespace OceanGame
                                 {
                                     // Before it draws the multi tile, it needs to fetch the interpretation of the tile depending on the state
                                     byte state = fgTd.State;
-                                    TileBase interpretedTile = fgTdSo.GetStateInterpretedTileForRendering(state);
+                                    TileBase interpretedTile = fgtc.GetStateInterpretedTileForRendering(state);
 
                                     world.FgLayer.Tilemap.SetTile(tilePos, interpretedTile);
                                 }
@@ -93,7 +93,7 @@ namespace OceanGame
                                 // Standard 1x1 tile
                                 // Before it draws the tile, it needs to fetch the interpretation of the tile depending on the state
                                 byte state = fgTd.State;
-                                TileBase interpretedTile = fgTdSo.GetStateInterpretedTileForRendering(state);
+                                TileBase interpretedTile = fgtc.GetStateInterpretedTileForRendering(state);
 
                                 world.FgLayer.Tilemap.SetTile(tilePos, interpretedTile);
                             }
@@ -111,11 +111,11 @@ namespace OceanGame
                     
                     if (bgTd.HasTile)
                     {
-                        var bgTdSo = bgTd.GetTileDataSO();
+                        var bgtc = bgTd.TileConfig;
                         
-                        if (bgTdSo != null)
+                        if (bgtc != null)
                         {
-                            world.BgLayer.Tilemap.SetTile(tilePos, bgTdSo.DrawTile);
+                            world.BgLayer.Tilemap.SetTile(tilePos, bgtc.DrawTile);
                         }
                     }
                     else if(bgTd.IsAir) // If we are setting it to air

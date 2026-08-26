@@ -53,8 +53,8 @@ namespace OceanGame
                     for (int y = sMinY; y <= sMaxY; y++)
                     {
                         var fgTd = world.FgLayer.GetTileData(x, y);
-                    
-                        if (fgTd.HasTile || fgTd.IsOutOfBounds)
+
+                        if ((fgTd.HasTile || fgTd.IsOutOfBounds) && fgTd.IsSolid)
                         {
                             // Check if we overlap this solid tile
                             if (IsOverlapping(startLeft, startRight, startBottom, startTop, x, x + 1, y, y + 1))
@@ -103,8 +103,8 @@ namespace OceanGame
                         {
                             // If the tile is solid or out of bounds
                             var fgTd = world.FgLayer.GetTileData(tileX, tileY);
-                    
-                            if (fgTd.HasTile || fgTd.IsOutOfBounds)
+
+                            if ((fgTd.HasTile || fgTd.IsOutOfBounds) && fgTd.IsSolid)
                             {
                                 // Check if the player's box overlaps this specific tile's AABB
                                 if (IsOverlapping(playerLeft, playerRight, playerBottom, playerTop, tileX, tileX + 1, tileY, tileY + 1))
@@ -161,8 +161,8 @@ namespace OceanGame
                         for (int tileY = minY; tileY <= maxY; tileY++)
                         {
                             var fgTd = world.FgLayer.GetTileData(tileX, tileY);
-                    
-                            if (fgTd.HasTile || fgTd.IsOutOfBounds)
+
+                            if ((fgTd.HasTile || fgTd.IsOutOfBounds) && fgTd.IsSolid)
                             {
                                 if (IsOverlapping(playerLeft, playerRight, playerBottom, playerTop, tileX, tileX + 1, tileY, tileY + 1))
                                 {
@@ -210,8 +210,8 @@ namespace OceanGame
                 for (int x = bMinX; x <= bMaxX; x++)
                 {
                     var fgTd = world.FgLayer.GetTileData(x, bTileY);
-                    
-                    if (fgTd.HasTile || fgTd.IsOutOfBounds) result.TouchingBottom = true;
+
+                    if ((fgTd.HasTile || fgTd.IsOutOfBounds) && fgTd.IsSolid) result.TouchingBottom = true;
                 }
 
                 // Check Top Contact (Ceiling Check)
@@ -222,7 +222,7 @@ namespace OceanGame
                 {
                     var fgTd = world.FgLayer.GetTileData(x, tTileY);
 
-                    if (fgTd.HasTile || fgTd.IsOutOfBounds) result.TouchingTop = true;
+                    if ((fgTd.HasTile || fgTd.IsOutOfBounds) && fgTd.IsSolid) result.TouchingTop = true;
                 }
 
                 // Check Left Contact (Left Wall Check)
@@ -233,7 +233,7 @@ namespace OceanGame
                 {
                     var fgTd = world.FgLayer.GetTileData(lTileX, y);
 
-                    if (fgTd.HasTile || fgTd.IsOutOfBounds) result.TouchingLeft = true;
+                    if ((fgTd.HasTile || fgTd.IsOutOfBounds) && fgTd.IsSolid) result.TouchingLeft = true;
                 }
 
                 // Check Right Contact (Right Wall Check)
@@ -244,7 +244,7 @@ namespace OceanGame
                 {
                     var fgTd = world.FgLayer.GetTileData(rTileX, y);
 
-                    if (fgTd.HasTile || fgTd.IsOutOfBounds) result.TouchingRight = true;
+                    if ((fgTd.HasTile || fgTd.IsOutOfBounds) && fgTd.IsSolid) result.TouchingRight = true;
                 }
 
                 // If the entity is entombed, force their contact indicators to true natively

@@ -12,8 +12,8 @@ namespace OceanGame
         
         [SerializeField] private int _tempX = 45;
         [SerializeField] private int _tempY = 45;
-        [SerializeField] private TileDataSO _grassTdSo;
-        [SerializeField] private TileDataSO _dirtTdSo;
+        [SerializeField] private TileConfigSO _grassTc;
+        [SerializeField] private TileConfigSO _dirtTc;
 
         [field: Header("World Settings")]
         [field: SerializeField] public int WorldWidth { get; private set; } = 100;
@@ -61,6 +61,16 @@ namespace OceanGame
         private void InteractWithObject()
         {
             // Interact with interactable logic here
+            if(MouseOverUI || !InventoryCursorManager.Instance.CursorSlot.IsEmpty) return; 
+            
+            var pos = MouseWorldTilePosition;
+            var fgtd = FgLayer.GetTileData(pos.x, pos.y);
+            
+            if(fgtd.TileConfig is DoorTileConfigSO dtc) // TEMP
+            {
+                dtc.SetTileData(pos.x, pos.y, true);
+            }
+
             
         }
 
@@ -73,8 +83,8 @@ namespace OceanGame
                     if (y > _tempY /* && y < _tempY + 4 */) continue;
                     if (x > _tempX) continue;
 
-                    FgLayer.SetTile(x, y, new TileData(_grassTdSo.GetId()));
-                    BgLayer.SetTile(x, y, new TileData(_dirtTdSo.GetId()));
+                    FgLayer.SetTileData(x, y, new TileData(_grassTc.GetId(), isSolid: _grassTc.IsSolid));
+                    BgLayer.SetTileData(x, y, new TileData(_dirtTc.GetId(), isSolid: _dirtTc.IsSolid));
                 }
             }
 
