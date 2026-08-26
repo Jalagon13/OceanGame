@@ -30,34 +30,24 @@ namespace OceanGame
             }
         }
         
-        public void SetTileData(int x, int y, bool refreshCurrentBounds = false)
+        public void OnInteract(int x, int y)
         {
-            var fgLayer = WorldManager.Instance.FgLayer;
-            var currentTileData = fgLayer.GetTileData(x, y);
-            var newTileData = currentTileData;
+            var doorTd = WorldManager.Instance.FgLayer.GetTileData(x, y);
             
-            if(currentTileData.State == 0) // 0 is closed so turn it to open
+            if(doorTd.State == 0)
             {
-                newTileData.State = 1;
-                newTileData.IsSolid = false;
+                Debug.Log($"Opening door");
+                doorTd.State = 1;
+                doorTd.IsSolid = false;
             }
-            else if(currentTileData.State == 1) // 1 is open so close it
+            else if (doorTd.State == 1)
             {
-                newTileData.State = 0;
-                newTileData.IsSolid = true;
+                Debug.Log($"Closing door");
+                doorTd.State = 0;
+                doorTd.IsSolid = true;   
             }
             
-            fgLayer.SetMultiTileData(x, y, newTileData, refreshCurrentBounds);
+            WorldManager.Instance.FgLayer.ChangeMultiTileData(x, y, doorTd, true);
         }
-
-        // public void OnInteract(TileData td)
-        // {
-        //     Debug.Log($"Interacting with door");
-        //     if(td.State == 0) 
-        //     {
-        //         WorldManager.Instance.FgLayer.SetMultiTileState()
-        //     }
-        //     else if(td.State == 1) td.State = 0;
-        // }
     }
 }

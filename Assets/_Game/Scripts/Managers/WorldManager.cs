@@ -68,7 +68,7 @@ namespace OceanGame
             
             if(fgtd.TileConfig is DoorTileConfigSO dtc) // TEMP
             {
-                dtc.SetTileData(pos.x, pos.y, true);
+                dtc.OnInteract(pos.x, pos.y);
             }
 
             

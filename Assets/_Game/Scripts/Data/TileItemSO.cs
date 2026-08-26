@@ -12,22 +12,22 @@ namespace OceanGame
         public override void OnPrimaryActionPressed()
         {
             var world = WorldManager.Instance;
-            var mouseTilePos = WorldManager.MouseWorldTilePosition;
+            var pos = WorldManager.MouseWorldTilePosition;
             var playerInRange = Vector2.Distance(Player.Instance.transform.position, WorldManager.MouseWorldPosition) < Player.Instance.PlayerInteractRange;
             
             if(!playerInRange) return;
 
-            if (!world.FgLayer.GetTileData(mouseTilePos.x, mouseTilePos.y).HasTile)
+            if (!world.FgLayer.GetTileData(pos.x, pos.y).HasTile)
             {
                 var tileToPlaceTd = new TileData(PlaceTileDataSO.GetId(), isSolid: PlaceTileDataSO.IsSolid);
                 
                 if(tileToPlaceTd.TileConfig.IsMultiTile)
                 {
-                    world.FgLayer.SetMultiTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, true);    
+                    world.FgLayer.PlaceMultiTileData(pos.x, pos.y, tileToPlaceTd, true);    
                 }
                 else
                 {
-                    world.FgLayer.SetTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, true);
+                    world.FgLayer.SetTileData(pos.x, pos.y, tileToPlaceTd, true);
                 }
                 
                 InventoryInputManager.Instance.GetActiveInvSlot().RemoveFromCurrentAmount(1);

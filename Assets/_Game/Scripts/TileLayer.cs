@@ -88,19 +88,55 @@ namespace OceanGame
             }
         }
 
-        public void SetMultiTileData(int x, int y, TileData newTileData, bool refreshCurrentBounds = false)
+        public void ChangeMultiTileData(int x, int y, TileData newTileData, bool refreshCurrentBounds = false)
         {
             if (!IsInBounds(x, y)) return;
+
+            TileConfigSO newTc = newTileData.TileConfig;
+
+            if (!newTc.IsMultiTile) return;
+
+            Vector2Int size = newTc.Size;
             
-            // TileData currentTd = GetTileData(x, y);
+            int rootX = x - newTileData.OffsetX;
+            int rootY = y - newTileData.OffsetY;
+
+            // Update the State on ALL cells of the multi-tile
+            for (int ox = 0; ox < size.x; ox++)
+            {
+                for (int oy = 0; oy < size.y; oy++)
+                {
+                    int targetX = rootX + ox;
+                    int targetY = rootY + oy;
+
+                    if (IsInBounds(targetX, targetY))
+                    {
+                        newTileData.OffsetX = (byte)ox;
+                        newTileData.OffsetY = (byte)oy;
+                        _tiles[targetY * _width + targetX] = newTileData;
+                    }
+                }
+            }
+
+            if (refreshCurrentBounds && PlayerCamera.Instance.PositionExistsInBounds(x, y))
+            {
+                PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
+            }
+        }
+
+        public void PlaceMultiTileData(int x, int y, TileData newTileData, bool refreshCurrentBounds = false)
+        {
+            Debug.Log($"1");
+            if (!IsInBounds(x, y)) return;
+            Debug.Log($"2");
+            
             TileConfigSO newTc = newTileData.TileConfig;
             
             if(!newTc.IsMultiTile) return;
+            Debug.Log($"3");
+            
             if(!CanMultiTileFit(x, y, newTc)) return;
-
-            // Find the Root position
-            // int rootX = x - newTileData.OffsetX;
-            // int rootY = y - newTileData.OffsetY;
+            Debug.Log($"4");
 
             Vector2Int size = newTc.Size;
 
@@ -114,6 +150,8 @@ namespace OceanGame
 
                     if (IsInBounds(targetX, targetY))
                     {
+                        newTileData.OffsetX = (byte)ox;
+                        newTileData.OffsetY = (byte)oy;
                         _tiles[targetY * _width + targetX] = newTileData;
                     }
                 }
