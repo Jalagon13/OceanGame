@@ -66,12 +66,10 @@ namespace OceanGame
             var pos = MouseWorldTilePosition;
             var fgtd = FgLayer.GetTileData(pos.x, pos.y);
             
-            if(fgtd.TileConfig is DoorTileConfigSO dtc) // TEMP
+            if(fgtd.TileConfig is IInteractable i)
             {
-                dtc.OnInteract(pos.x, pos.y);
+                i.OnInteract(pos.x, pos.y);
             }
-
-            
         }
 
         private void InitializeWorld()

@@ -13,7 +13,7 @@ namespace OceanGame
         {
             var world = WorldManager.Instance;
             var pos = WorldManager.MouseWorldTilePosition;
-            var playerInRange = Vector2.Distance(Player.Instance.transform.position, WorldManager.MouseWorldPosition) < Player.Instance.PlayerInteractRange;
+            var playerInRange = Vector2.Distance(Player.Instance.transform.position, WorldManager.MouseWorldPosition) < Player.Instance.InteractRange;
             
             if(!playerInRange) return;
 

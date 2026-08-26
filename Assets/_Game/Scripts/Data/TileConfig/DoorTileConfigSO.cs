@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 namespace OceanGame
 {
     [CreateAssetMenu(fileName = "New DoorTileConfigSO", menuName = "OceanGame/TileConfig/DoorTileConfigSO")]
-    public class DoorTileConfigSO : TileConfigSO
+    public class DoorTileConfigSO : TileConfigSO, IInteractable
     {
         [field: Header("Door Tile Settings")]
         [field: SerializeField] public Sprite ClosedDoorSprite { get; private set; }

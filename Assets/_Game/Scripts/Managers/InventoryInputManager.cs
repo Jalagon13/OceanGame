@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -10,6 +11,7 @@ namespace OceanGame
         public static InventoryInputManager Instance { get; private set; }
         
         public event Action<bool> OnInventoryOpenChanged;
+        public event Action<List<RecipeSO>, int, int> OnCraftTableInteract;
         public event Action<int> OnActiveHotbarIndexChanged;
         
         public int ActiveHotbarIndex { get; private set; }
@@ -66,6 +68,16 @@ namespace OceanGame
             }
             
             return InventoryManager.Instance.PlayerInventory[ActiveHotbarIndex];
+        }
+
+        public void OnInteractWithCraftingTable(List<RecipeSO> recipes, int x, int y)
+        {
+            if(!IsInventoryOpen)
+            {
+                OnToggleInventory();
+            }
+        
+            OnCraftTableInteract?.Invoke(recipes, x, y);
         }
 
         private void OnToggleInventory()
@@ -127,5 +139,7 @@ namespace OceanGame
             OnActiveHotbarIndexChanged?.Invoke(ActiveHotbarIndex);
             Debug.Log($"Active Hotbar Index is: {newIndex}");
         }
+
+        
     }
 }

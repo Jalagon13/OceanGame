@@ -158,7 +158,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 0
-      y: 16
+      y: 32
       width: 16
       height: 16
     spriteID: 093be86fc2fb14c159f0702228bf019b
@@ -179,7 +179,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 0
-      y: 0
+      y: 16
       width: 16
       height: 16
     spriteID: 96b840d5a2a59420a8742c364383cea3
@@ -200,7 +200,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 16
-      y: 16
+      y: 32
       width: 16
       height: 16
     spriteID: f8ebbc5e6ebd4470b869e4a1f5b0a405
@@ -221,7 +221,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 32
-      y: 0
+      y: 16
       width: 16
       height: 32
     spriteID: 05b44a64c43134447b76b6b63227c95b
@@ -242,7 +242,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 16
-      y: 0
+      y: 16
       width: 16
       height: 16
     spriteID: f93194a0a0bb948b4aca744865559f4c
@@ -263,10 +263,31 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 48
-      y: 0
+      y: 16
       width: 32
       height: 32
     spriteID: 4802a2e715e81445c9dc68bbd21039ac
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  - name: tile_crafting_table
+    originalName: 
+    pivot: {x: 0.25, y: 0.5}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 32
+      height: 16
+    spriteID: c424259eb75fd4b08ad9e59b5383fb58
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -296,7 +317,7 @@ ScriptedImporter:
         x: 0
         y: 0
         width: 70
-        height: 32
+        height: 48
       spriteId: 29e30dac0e8574e0bb07847e539baa65
     linkedCells: []
     tileCells: []
@@ -343,5 +364,5 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 80, y: 32}
-  previousTextureSize: {x: 128, y: 32}
+  canvasSize: {x: 80, y: 48}
+  previousTextureSize: {x: 128, y: 64}

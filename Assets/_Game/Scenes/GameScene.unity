@@ -1131,6 +1131,141 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &861973270
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 861973271}
+  - component: {fileID: 861973273}
+  - component: {fileID: 861973272}
+  m_Layer: 5
+  m_Name: Bg
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &861973271
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 861973270}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1832764448}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -0.000030517578, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &861973272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 861973270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.10671058, g: 0.11532531, b: 0.20754719, a: 0.392}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &861973273
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 861973270}
+  m_CullTransparentMesh: 1
+--- !u!1 &901591089
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 901591090}
+  - component: {fileID: 901591091}
+  m_Layer: 5
+  m_Name: ExternalCraftingSlotsHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &901591090
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 901591089}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1832764448}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &901591091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 901591089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GridLayoutGroup
+  m_Padding:
+    m_Left: 10
+    m_Right: 10
+    m_Top: 10
+    m_Bottom: 10
+  m_ChildAlignment: 0
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 45, y: 45}
+  m_Spacing: {x: 5, y: 5}
+  m_Constraint: 1
+  m_ConstraintCount: 10
 --- !u!1 &970924653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1196,11 +1331,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
   - {fileID: 11400000, guid: 2e31d17edd4654120875362ed74dbe93, type: 2}
   - {fileID: 11400000, guid: ba3aad1cd917f45aea3a6204b86df04e, type: 2}
+  - {fileID: 11400000, guid: 3a59c7f25e99945a28b4d3a54aea23bc, type: 2}
   _itemDatabase:
   - {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
   - {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}
   - {fileID: 11400000, guid: ba4a4e198c8a8407c86c4c4ae28df49a, type: 2}
   - {fileID: 11400000, guid: ed13bde50d6d54218b3be409d52464f5, type: 2}
+  - {fileID: 11400000, guid: 7c88a6e8135fd491198a7ef38abd39b0, type: 2}
 --- !u!114 &970924661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1225,7 +1362,7 @@ GameObject:
   - component: {fileID: 996830789}
   - component: {fileID: 996830790}
   m_Layer: 5
-  m_Name: CraftingSlotsHolder
+  m_Name: DefaultCraftSlotsHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1404,6 +1541,8 @@ MonoBehaviour:
   - _ingredient: {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
     _amount: 20
   - _ingredient: {fileID: 11400000, guid: ed13bde50d6d54218b3be409d52464f5, type: 2}
+    _amount: 10
+  - _ingredient: {fileID: 11400000, guid: 7c88a6e8135fd491198a7ef38abd39b0, type: 2}
     _amount: 10
 --- !u!114 &1178486984
 MonoBehaviour:
@@ -1976,7 +2115,9 @@ MonoBehaviour:
   _inventoryUI: {fileID: 1676416961}
   _hotbarSelectionImage: {fileID: 431383501}
   _craftingSlotPrefab: {fileID: 203550622481330260, guid: 4140ee1e947a348499a044fd69cdf944, type: 3}
-  _craftingSlotsHolder: {fileID: 996830789}
+  _externalCraftMenuUI: {fileID: 1832764448}
+  _externalCraftingSlotsHolder: {fileID: 901591090}
+  _defaultCraftSlotsHolder: {fileID: 996830789}
   _defaultCraftingRecipes:
   - {fileID: 11400000, guid: 32f2a8d6efd894ce7a9cd6e0ac408b05, type: 2}
 --- !u!1 &1676416960
@@ -2008,6 +2149,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 784709634}
+  - {fileID: 1832764448}
   - {fileID: 211677277}
   m_Father: {fileID: 1672959639}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2134,6 +2276,43 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.6, y: 1.7}
   m_EdgeRadius: 0
+--- !u!1 &1832764447
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1832764448}
+  m_Layer: 5
+  m_Name: ExternalCraftingMenuUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1832764448
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832764447}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 861973271}
+  - {fileID: 901591090}
+  m_Father: {fileID: 1676416961}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -238}
+  m_SizeDelta: {x: 515, y: 160}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &2043979312
 GameObject:
   m_ObjectHideFlags: 0

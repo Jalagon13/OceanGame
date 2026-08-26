@@ -126,17 +126,12 @@ namespace OceanGame
 
         public void PlaceMultiTileData(int x, int y, TileData newTileData, bool refreshCurrentBounds = false)
         {
-            Debug.Log($"1");
             if (!IsInBounds(x, y)) return;
-            Debug.Log($"2");
             
             TileConfigSO newTc = newTileData.TileConfig;
             
             if(!newTc.IsMultiTile) return;
-            Debug.Log($"3");
-            
             if(!CanMultiTileFit(x, y, newTc)) return;
-            Debug.Log($"4");
 
             Vector2Int size = newTc.Size;
 
