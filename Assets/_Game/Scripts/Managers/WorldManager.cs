@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -39,19 +40,14 @@ namespace OceanGame
 
         private void Start() 
         {
-            for (int x = 0; x < WorldWidth; x++)
-            {
-                for (int y = 0; y < WorldHeight; y++)
-                {
-                    if(y > _tempY /* && y < _tempY + 4 */) continue;
-                    if(x > _tempX) continue;
-                
-                    FgLayer.SetTile(x, y, new TileData(_grassTile.GetId()));
-                    BgLayer.SetTile(x, y, new TileData(_dirtBgTile.GetId())); 
-                }
-            }
+            GameInput.Instance.OnSecondaryActionPressed += InteractWithObject;
+        
+            InitializeWorld();
+        }
 
-            PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
+        private void OnDestroy()
+        {
+            GameInput.Instance.OnSecondaryActionPressed -= InteractWithObject;
         }
 
         private void Update()
@@ -60,6 +56,29 @@ namespace OceanGame
 
             MouseWorldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             MouseWorldTilePosition = new(Mathf.FloorToInt(MouseWorldPosition.x), Mathf.FloorToInt(MouseWorldPosition.y));
+        }
+
+        private void InteractWithObject()
+        {
+            // Interact with interactable logic here
+            
+        }
+
+        private void InitializeWorld()
+        {
+            for (int x = 0; x < WorldWidth; x++)
+            {
+                for (int y = 0; y < WorldHeight; y++)
+                {
+                    if (y > _tempY /* && y < _tempY + 4 */) continue;
+                    if (x > _tempX) continue;
+
+                    FgLayer.SetTile(x, y, new TileData(_grassTile.GetId()));
+                    BgLayer.SetTile(x, y, new TileData(_dirtBgTile.GetId()));
+                }
+            }
+
+            PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
         }
     }
     

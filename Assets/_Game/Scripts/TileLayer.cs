@@ -123,6 +123,43 @@ namespace OceanGame
             }
         }
 
+        public void SetMultiTileState(int x, int y, byte newState, bool refreshCurrentBounds = false)
+        {
+            if (!IsInBounds(x, y)) return;
+
+            TileData tileData = GetTileData(x, y);
+            if (tileData.IsAir) return;
+
+            TileSO tso = tileData.GetTileSO();
+            if (tso == null) return;
+
+            // Find the Root position
+            int rootX = x - tileData.OffsetX;
+            int rootY = y - tileData.OffsetY;
+
+            Vector2Int size = tso.IsMultiTile ? tso.Size : new Vector2Int(1, 1);
+
+            // Update the State on ALL cells of the multi-tile
+            for (int ox = 0; ox < size.x; ox++)
+            {
+                for (int oy = 0; oy < size.y; oy++)
+                {
+                    int targetX = rootX + ox;
+                    int targetY = rootY + oy;
+
+                    if (IsInBounds(targetX, targetY))
+                    {
+                        _tiles[targetY * _width + targetX].State = newState;
+                    }
+                }
+            }
+
+            if (refreshCurrentBounds && PlayerCamera.Instance.PositionExistsInBounds(x, y))
+            {
+                PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
+            }
+        }
+
         private bool CanMultiTileFit(int x, int y, TileSO tileSO)
         {
             var size = tileSO.Size;
@@ -162,11 +199,11 @@ namespace OceanGame
 
     public struct TileData
     {
-        public ushort TileId;     // 2 bytes (0 -> 65,535 tile types)
-        public byte OffsetX;      // 1 byte  (multi-tile width up to 0 -> 255)
-        public byte OffsetY;      // 1 byte  (multi-tile height up to 0 -> 255)
-        public byte State;        // 1 byte  (0 -> 255 state variants)
-        public byte LightLevel;   // 1 byte  (0 -> 255 light emission/block light)
+        public ushort TileId; // 2 bytes (0 -> 65,535 tile types)
+        public byte OffsetX; // 1 byte  (multi-tile width up to 0 -> 255)
+        public byte OffsetY; // 1 byte  (multi-tile height up to 0 -> 255)
+        public byte State; // 1 byte  (0 -> 255 state variants)
+        public byte LightLevel; // 1 byte  (0 -> 255 light emission/block light)
 
         public const ushort AIR_ID = 0;
         public const ushort OUT_OF_BOUNDS_ID = ushort.MaxValue;
