@@ -2546,13 +2546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8431fdc10daf14f0381d4b3de900b7ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldManager
-  _tempX: 60
-  _tempY: 43
-  _grassTc: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
-  _dirtTc: {fileID: 11400000, guid: c05cf26c0c6a34a5abbd9e4f8aa70df3, type: 2}
-  <WorldWidth>k__BackingField: 100
-  <WorldHeight>k__BackingField: 100
-  <SeaLevel>k__BackingField: 40
+  <WorldGen>k__BackingField: {fileID: 2043979316}
   _foregroundTilemap: {fileID: 1420173610}
   _backgroundTilemap: {fileID: 1608990557}
 --- !u!114 &2043979315
@@ -2592,7 +2586,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11f7e04754994b75887da7ad00ec52a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenerator
-  _currentWorldGenPreset: {fileID: 11400000, guid: d3d20f6db000145ff92d228fba002ba5, type: 2}
+  <CurrentWorldGenPreset>k__BackingField: {fileID: 11400000, guid: d3d20f6db000145ff92d228fba002ba5, type: 2}
 --- !u!1 &2070694658
 GameObject:
   m_ObjectHideFlags: 0

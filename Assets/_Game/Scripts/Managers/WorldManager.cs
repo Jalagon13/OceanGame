@@ -10,17 +10,8 @@ namespace OceanGame
     {
         public static WorldManager Instance { get; private set; }
         
-        [SerializeField] private int _tempX = 45;
-        [SerializeField] private int _tempY = 45;
-        [SerializeField] private TileConfigSO _grassTc;
-        [SerializeField] private TileConfigSO _dirtTc;
-
-        [field: Header("World Settings")]
-        [field: SerializeField] public int WorldWidth { get; private set; } = 100;
-        [field: SerializeField] public int WorldHeight { get; private set; } = 100;
-        [field: SerializeField] public int SeaLevel { get; private set; } = 40;
-
         [Header("World References")]
+        [field: SerializeField] public WorldGenerator WorldGen { get; private set; }
         [SerializeField] private Tilemap _foregroundTilemap;
         [SerializeField] private Tilemap _backgroundTilemap;
 
@@ -30,18 +21,12 @@ namespace OceanGame
         public static Vector2Int MouseWorldTilePosition { get; private set; }
         public static Vector2 MouseWorldPosition { get; private set; }
         public bool MouseOverUI { get; private set; }
+        public bool IsWorldReady { get; private set; } = false;
+        public event Action OnWorldReady;
 
         private void Awake()
         {
             Instance = this;
-            
-            FgLayer = new TileLayer(WorldWidth, WorldHeight, _foregroundTilemap);
-            BgLayer = new TileLayer(WorldWidth, WorldHeight, _backgroundTilemap);
-        }
-
-        private void Start() 
-        {
-            InitializeWorld();
         }
 
         private void Update()
@@ -52,20 +37,29 @@ namespace OceanGame
             MouseWorldTilePosition = new(Mathf.FloorToInt(MouseWorldPosition.x), Mathf.FloorToInt(MouseWorldPosition.y));
         }
 
-        private void InitializeWorld()
+        public void LoadGeneratedWorld(WorldGenContext context)
         {
-            for (int x = 0; x < WorldWidth; x++)
-            {
-                for (int y = 0; y < WorldHeight; y++)
-                {
-                    if (y > _tempY /* && y < _tempY + 4 */) continue;
-                    if (x > _tempX) continue;
+            var width = context.Width;
+            var height = context.Height;
 
-                    FgLayer.SetTileData(x, y, new TileData(_grassTc.GetId(), isSolid: _grassTc.IsSolid));
-                    BgLayer.SetTileData(x, y, new TileData(_dirtTc.GetId(), isSolid: _dirtTc.IsSolid));
+            // Create fresh layers matching generated dimensions
+            FgLayer = new TileLayer(width, height, _foregroundTilemap);
+            BgLayer = new TileLayer(width, height, _backgroundTilemap);
+
+            // Copy generated 2D tile arrays into layers
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    FgLayer.SetTileData(x, y, context.FgTiles[x, y]);
+                    BgLayer.SetTileData(x, y, context.BgTiles[x, y]);
                 }
             }
 
+            IsWorldReady = true;
+            OnWorldReady?.Invoke();
+
+            // Refresh rendering and camera bounds
             PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
         }
 

@@ -25,6 +25,8 @@ namespace OceanGame
 
         private void LateUpdate()
         {
+            if (WorldManager.Instance == null || !WorldManager.Instance.IsWorldReady) return;
+
             ClampCameraToWorld();
 
             int padding = _padding;
@@ -53,30 +55,31 @@ namespace OceanGame
         {
             Vector3 targetPos = new(_player.transform.position.x, _player.transform.position.y, transform.position.z);
 
-            var world = WorldManager.Instance;
+            int width = WorldManager.Instance.WorldGen.CurrentWorldGenPreset.Width;
+            int height = WorldManager.Instance.WorldGen.CurrentWorldGenPreset.Height;
 
             float camHeight = _camera.orthographicSize;
             float camWidth = camHeight * _camera.aspect;
 
             float minX = camWidth;
-            float maxX = world.WorldWidth - camWidth;
+            float maxX = width - camWidth;
 
             float minY = camHeight;
-            float maxY = world.WorldHeight - camHeight;
+            float maxY = height - camHeight;
 
             // Special case: If the world is smaller than the camera viewport, center it
-            if (world.WorldWidth <= camWidth * 2)
+            if (width <= camWidth * 2)
             {
-                targetPos.x = world.WorldWidth / 2f;
+                targetPos.x = width / 2f;
             }
             else
             {
                 targetPos.x = Mathf.Clamp(targetPos.x, minX, maxX);
             }
 
-            if (world.WorldHeight <= camHeight * 2)
+            if (height <= camHeight * 2)
             {
-                targetPos.y = world.WorldHeight / 2f;
+                targetPos.y = height / 2f;
             }
             else
             {

@@ -10,6 +10,7 @@ namespace OceanGame
         [Header("Dimensions")]
         public int Width = 100;
         public int Height = 100;
+        public int SeaLevel = 50;
         public int Seed = 0;
         public bool UseRandomSeed = true;
 

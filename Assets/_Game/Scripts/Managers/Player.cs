@@ -45,6 +45,8 @@ namespace OceanGame
 
         private void Update()
         {
+            if(!WorldManager.Instance.IsWorldReady) return;
+        
             if (Ctx.SwimDashCooldownTimer > 0f)
             {
                 Ctx.SwimDashCooldownTimer -= Time.deltaTime;
@@ -62,6 +64,8 @@ namespace OceanGame
         
         private void FixedUpdate()
         {
+            if (!WorldManager.Instance.IsWorldReady) return;
+
             _machine.FixedTick(Time.fixedDeltaTime);
 
             Vector2 boxSize = Ctx.PlayerBodyCollider.size; // Player's size
@@ -72,7 +76,7 @@ namespace OceanGame
         private void InteractWithObject(InputAction.CallbackContext context)
         {
             // Interact with interactable logic here
-            if (WorldManager.Instance.MouseOverUI || !InventoryCursorManager.Instance.CursorSlot.IsEmpty || context.phase != InputActionPhase.Started) return;
+            if (!WorldManager.Instance.IsWorldReady || WorldManager.Instance.MouseOverUI || !InventoryCursorManager.Instance.CursorSlot.IsEmpty || context.phase != InputActionPhase.Started) return;
 
             var pos = WorldManager.MouseWorldTilePosition;
             var fgtd = WorldManager.Instance.FgLayer.GetTileData(pos.x, pos.y);
@@ -85,6 +89,8 @@ namespace OceanGame
 
         private void OnJumpPressed()
         {
+            if(!WorldManager.Instance.IsWorldReady) return;
+        
             bool canJumpFromGround = Ctx.CollisionResult.TouchingBottom;
             bool canJumpFromWater = _machine.Root.Leaf() is PlayerSwimmingState && Ctx.IsHeadAboveWater();
 
@@ -96,6 +102,8 @@ namespace OceanGame
 
         private void OnMoveInputPressed(Vector2 rawMoveInput)
         {
+            if (!WorldManager.Instance.IsWorldReady) return;
+            
             Ctx.DesiredDirection = rawMoveInput;
         }
 
@@ -147,7 +155,7 @@ namespace OceanGame
         
         public bool IsHeadAboveWater()
         {
-            if (Transform.position.y + 1f >= WorldManager.Instance.SeaLevel)
+            if (Transform.position.y + 1f >= WorldManager.Instance.WorldGen.CurrentWorldGenPreset.SeaLevel)
             {
                 return true;
             }
@@ -157,7 +165,7 @@ namespace OceanGame
         
         public bool IsInOcean()
         {
-            if(Transform.position.y - 0.6f <= WorldManager.Instance.SeaLevel)
+            if(Transform.position.y - 0.6f <= WorldManager.Instance.WorldGen.CurrentWorldGenPreset.SeaLevel)
             {
                 return true;
             }

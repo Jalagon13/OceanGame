@@ -36,7 +36,7 @@ namespace OceanGame
             var world = WorldManager.Instance;
             var registry = GameDataRegistry.Instance;
 
-            if (world == null || registry == null) return;
+            if (world == null || !world.IsWorldReady || registry == null) return;
 
             // Find out if there are any old tiles left form the last visible bounds, if so clear the rendering of them
             if (oldBounds.width > 0 && oldBounds.height > 0)
@@ -151,7 +151,7 @@ namespace OceanGame
                     }
                     
                     // Process Sea Layer
-                    if(y <= WorldManager.Instance.SeaLevel)
+                    if(y <= WorldManager.Instance.WorldGen.CurrentWorldGenPreset.SeaLevel)
                     {
                         if (/* fgId <= TileLayer.AIR_ID &&  */!world.FgLayer.GetTileData(x, y).IsOutOfBounds)
                         {

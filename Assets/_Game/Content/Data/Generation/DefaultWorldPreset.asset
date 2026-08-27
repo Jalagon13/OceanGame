@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
   Width: 100
   Height: 100
+  SeaLevel: 50
   Seed: 0
   UseRandomSeed: 0
   Steps:
@@ -25,4 +26,4 @@ MonoBehaviour:
       type: {class: TestStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
         RunStep: 1
-        StepTimer: 3
+        StepTimer: 1

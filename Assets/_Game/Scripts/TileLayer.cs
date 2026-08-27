@@ -11,8 +11,7 @@ namespace OceanGame
         private readonly int _width;
         private readonly int _height;
 
-        // Stores accumulated damage only for tiles that have taken damage
-        public Dictionary<Vector2Int, int> DamagedTiles { get; private set; } = new();
+        public Dictionary<Vector2Int, int> DamagedTiles { get; private set; } = new(); // Stores accumulated damage only for tiles that have taken damage
         public Tilemap Tilemap { get; }
 
         public TileLayer(int width, int height, Tilemap tilemap)
