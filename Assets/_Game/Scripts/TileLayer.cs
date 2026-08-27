@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -10,6 +11,8 @@ namespace OceanGame
         private readonly int _width;
         private readonly int _height;
 
+        // Stores accumulated damage only for tiles that have taken damage
+        public Dictionary<Vector2Int, int> DamagedTiles { get; private set; } = new();
         public Tilemap Tilemap { get; }
 
         public TileLayer(int width, int height, Tilemap tilemap)
@@ -26,6 +29,57 @@ namespace OceanGame
             if(!IsInBounds(x, y)) return TileData.OutOfBounds;
         
             return _tiles[y * _width + x];
+        }
+
+        public void DamageTile(int x, int y, int damageAmount, bool refreshCurrentBounds = true)
+        {
+            if (!IsInBounds(x, y)) return;
+            
+            TileData targetTile = GetTileData(x, y);
+            
+            if (targetTile.IsAir) return;
+            
+            TileConfigSO tc = targetTile.TileConfig;
+            
+            if (tc == null || tc.Indestructible || tc.MaxHP <= 0) return;
+
+            // Handle Multi-Tiles: route damage to the root cell
+            int rootX = tc.IsMultiTile ? x - targetTile.OffsetX : x;
+            int rootY = tc.IsMultiTile ? y - targetTile.OffsetY : y;
+            Vector2Int rootPos = new(rootX, rootY);
+
+            // Try go get the value for it and increment damage
+            DamagedTiles.TryGetValue(rootPos, out int currentDamage);
+            currentDamage += damageAmount;
+
+            if (currentDamage >= tc.MaxHP)
+            {
+                // Destroy the tile and clear damage record
+                DamagedTiles.Remove(rootPos);
+                
+                DestroyTile(rootX, rootY, refreshCurrentBounds);
+                
+                GameManager.Instance.SpawnItem(targetTile.TileConfig.DroppedItem, 1, rootPos + new Vector2(0.5f, 0.5f));
+            }
+            else
+            {
+                // if not destroyed, store current damage done
+                DamagedTiles[rootPos] = currentDamage;
+
+                if (refreshCurrentBounds)
+                {
+                    // If it's a change on screen, refresh the bounds to refresh rendered tiles
+                    if (PlayerCamera.Instance.PositionExistsInBounds(x, y))
+                    {
+                        PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
+                    }
+                }
+            }
+        }
+
+        public void ClearDamage(int x, int y)
+        {
+            DamagedTiles.Remove(new Vector2Int(x, y));
         }
 
         public void DestroyTile(int x, int y, bool refreshCurrentBounds = false)

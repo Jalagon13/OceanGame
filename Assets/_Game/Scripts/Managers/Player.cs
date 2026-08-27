@@ -32,12 +32,14 @@ namespace OceanGame
         {
             GameInput.Instance.OnMoveInputPressed += OnMoveInputPressed;
             GameInput.Instance.OnJumpPressed += OnJumpPressed;
+            GameInput.Instance.OnSecondaryActionPressed += InteractWithObject;
         }
         
         private void OnDestroy() 
         {
             GameInput.Instance.OnMoveInputPressed -= OnMoveInputPressed;
             GameInput.Instance.OnJumpPressed -= OnJumpPressed;
+            GameInput.Instance.OnSecondaryActionPressed -= InteractWithObject;
         }
 
         private void Update()
@@ -64,6 +66,20 @@ namespace OceanGame
             Vector2 boxSize = Ctx.PlayerBodyCollider.size; // Player's size
             Ctx.CollisionResult = GridPhysics.MoveAndResolve(transform.position, Ctx.Velocity, boxSize, Time.fixedDeltaTime);
             transform.position = Ctx.CollisionResult.NewPosition;
+        }
+
+        private void InteractWithObject()
+        {
+            // Interact with interactable logic here
+            if (WorldManager.Instance.MouseOverUI || !InventoryCursorManager.Instance.CursorSlot.IsEmpty) return;
+
+            var pos = WorldManager.MouseWorldTilePosition;
+            var fgtd = WorldManager.Instance.FgLayer.GetTileData(pos.x, pos.y);
+
+            if (fgtd.TileConfig is IInteractable i)
+            {
+                i.OnInteract(pos.x, pos.y);
+            }
         }
 
         private void OnJumpPressed()

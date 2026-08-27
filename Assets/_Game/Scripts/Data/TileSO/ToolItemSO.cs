@@ -18,13 +18,7 @@ namespace OceanGame
 
             if (world.FgLayer.GetTileData(mouseTilePos.x, mouseTilePos.y).HasTile)
             {
-                var droppedItem = world.FgLayer.GetTileData(mouseTilePos.x, mouseTilePos.y).TileConfig.DroppedItem;
-                world.FgLayer.DestroyTile(mouseTilePos.x, mouseTilePos.y, true);
-                
-                if(droppedItem != null)
-                {
-                    GameManager.Instance.SpawnItem(droppedItem, 1, mouseTilePos + new Vector2(0.5f, 0.5f));
-                }
+                world.DamageTile(mouseTilePos, 10, WorldManager.LayerType.Foreground, true);
             }
 
         }

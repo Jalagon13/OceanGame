@@ -24,6 +24,7 @@ namespace OceanGame
         [SerializeField] private Tilemap _foregroundTilemap;
         [SerializeField] private Tilemap _backgroundTilemap;
 
+        public enum LayerType { Foreground, Background }
         public TileLayer FgLayer { get; private set; }
         public TileLayer BgLayer { get; private set; }
         public static Vector2Int MouseWorldTilePosition { get; private set; }
@@ -40,14 +41,7 @@ namespace OceanGame
 
         private void Start() 
         {
-            GameInput.Instance.OnSecondaryActionPressed += InteractWithObject;
-        
             InitializeWorld();
-        }
-
-        private void OnDestroy()
-        {
-            GameInput.Instance.OnSecondaryActionPressed -= InteractWithObject;
         }
 
         private void Update()
@@ -56,20 +50,6 @@ namespace OceanGame
 
             MouseWorldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             MouseWorldTilePosition = new(Mathf.FloorToInt(MouseWorldPosition.x), Mathf.FloorToInt(MouseWorldPosition.y));
-        }
-
-        private void InteractWithObject()
-        {
-            // Interact with interactable logic here
-            if(MouseOverUI || !InventoryCursorManager.Instance.CursorSlot.IsEmpty) return; 
-            
-            var pos = MouseWorldTilePosition;
-            var fgtd = FgLayer.GetTileData(pos.x, pos.y);
-            
-            if(fgtd.TileConfig is IInteractable i)
-            {
-                i.OnInteract(pos.x, pos.y);
-            }
         }
 
         private void InitializeWorld()
@@ -87,6 +67,12 @@ namespace OceanGame
             }
 
             PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
+        }
+
+        public void DamageTile(Vector2Int position, int damageAmount, LayerType layerType, bool refreshCurrentBounds = false)
+        {
+            TileLayer layer = layerType == LayerType.Foreground ? FgLayer : BgLayer;
+            layer.DamageTile(position.x, position.y, damageAmount, refreshCurrentBounds);
         }
     }
     
