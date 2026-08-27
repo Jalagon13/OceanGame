@@ -1300,6 +1300,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1178486982}
+  - {fileID: 1246345772}
   - {fileID: 2043979313}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1570,6 +1571,64 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.InventoryCursorManager
   _throwItemForce: 16
+--- !u!1 &1246345771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1246345772}
+  - component: {fileID: 1246345774}
+  - component: {fileID: 1246345773}
+  m_Layer: 0
+  m_Name: PLAYER
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1246345772
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1246345771}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 970924654}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1246345773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1246345771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30b17211ccef9498aaa4c9e832e73480, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.PlacingManager
+  _placementsPerSecond: 10
+--- !u!114 &1246345774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1246345771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cee38bf93c04442388dc6b615db8ef3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.MiningManager
 --- !u!1 &1268251165
 GameObject:
   m_ObjectHideFlags: 0
@@ -2453,7 +2512,6 @@ GameObject:
   - component: {fileID: 2043979315}
   - component: {fileID: 2043979314}
   - component: {fileID: 2043979316}
-  - component: {fileID: 2043979317}
   m_Layer: 0
   m_Name: WORLD
   m_TagString: Untagged
@@ -2531,22 +2589,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2043979312}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cee38bf93c04442388dc6b615db8ef3, type: 3}
+  m_Script: {fileID: 11500000, guid: b11f7e04754994b75887da7ad00ec52a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.MiningManager
---- !u!114 &2043979317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2043979312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30b17211ccef9498aaa4c9e832e73480, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.PlacingManager
-  _placementsPerSecond: 10
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenerator
+  _currentWorldGenPreset: {fileID: 11400000, guid: d3d20f6db000145ff92d228fba002ba5, type: 2}
 --- !u!1 &2070694658
 GameObject:
   m_ObjectHideFlags: 0
