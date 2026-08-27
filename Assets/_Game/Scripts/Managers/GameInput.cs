@@ -10,14 +10,16 @@ namespace OceanGame
 
         public event Action<Vector2> OnMoveInputPressed;
         public event Action OnJumpPressed;
-        public event Action OnPrimaryActionPressed;
-        public event Action OnSecondaryActionPressed;
+        public event Action<InputAction.CallbackContext> OnPrimaryActionPressed;
+        public event Action<InputAction.CallbackContext> OnSecondaryActionPressed;
         public event Action<InputAction.CallbackContext> OnScrollWheel;
         public event Action<InputAction.CallbackContext> OnSelectSlot;
         public event Action OnToggleInventory;
 
         public Vector2 MoveInput { get; private set; }
         public bool JumpHold { get; private set; }
+        public bool PrimaryActionHeld { get; private set; }
+        public bool SecondaryActionHeld { get; private set; }
 
         private PlayerInput _playerInput;
 
@@ -36,7 +38,9 @@ namespace OceanGame
             _playerInput.Player.Jump.canceled += GameInput_OnJump;
             
             _playerInput.Player.PrimaryAction.started += GameInput_OnPrimaryAction;
+            _playerInput.Player.PrimaryAction.canceled += GameInput_OnPrimaryAction;
             _playerInput.Player.SecondaryAction.started += GameInput_OnSecondaryAction;
+            _playerInput.Player.SecondaryAction.canceled += GameInput_OnSecondaryAction;
 
             _playerInput.UI.ScrollWheel.performed += PlayerInput_OnScrollWheel;
             _playerInput.UI.SelectSlot.started += PlayerInput_OnSelectSlot;
@@ -59,7 +63,9 @@ namespace OceanGame
             _playerInput.Player.Jump.canceled -= GameInput_OnJump;
 
             _playerInput.Player.PrimaryAction.started -= GameInput_OnPrimaryAction;
+            _playerInput.Player.PrimaryAction.canceled -= GameInput_OnPrimaryAction;
             _playerInput.Player.SecondaryAction.started -= GameInput_OnSecondaryAction;
+            _playerInput.Player.SecondaryAction.canceled -= GameInput_OnSecondaryAction;
 
             _playerInput.UI.ScrollWheel.performed -= PlayerInput_OnScrollWheel;
             _playerInput.UI.SelectSlot.started -= PlayerInput_OnSelectSlot;
@@ -97,7 +103,13 @@ namespace OceanGame
         {
             if (context.phase == InputActionPhase.Started)
             {
-                OnPrimaryActionPressed?.Invoke();
+                PrimaryActionHeld = true;
+                OnPrimaryActionPressed?.Invoke(context);
+            }
+            else if (context.phase == InputActionPhase.Canceled)
+            {
+                PrimaryActionHeld = false;
+                OnPrimaryActionPressed?.Invoke(context);
             }
         }
 
@@ -105,7 +117,13 @@ namespace OceanGame
         {
             if (context.phase == InputActionPhase.Started)
             {
-                OnSecondaryActionPressed?.Invoke();
+                SecondaryActionHeld = true;
+                OnSecondaryActionPressed?.Invoke(context);
+            }
+            else if (context.phase == InputActionPhase.Canceled)
+            {
+                SecondaryActionHeld = false;
+                OnSecondaryActionPressed?.Invoke(context);
             }
         }
 

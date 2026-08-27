@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace OceanGame
 {
@@ -39,9 +40,9 @@ namespace OceanGame
             InventoryManager.Instance.RefreshInventory();
         }
 
-        private void TryToThrowCursorSlotItem()
+        private void TryToThrowCursorSlotItem(InputAction.CallbackContext context)
         {
-            if(CursorSlot.IsEmpty || WorldManager.Instance.MouseOverUI) return;
+            if(CursorSlot.IsEmpty || WorldManager.Instance.MouseOverUI || context.phase != InputActionPhase.Started) return;
             
             Vector2 aimDirection = WorldManager.MouseWorldPosition - (Vector2)Player.Instance.transform.position;
             aimDirection.Normalize();

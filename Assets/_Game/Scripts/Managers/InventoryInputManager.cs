@@ -41,21 +41,56 @@ namespace OceanGame
             GameInput.Instance.OnSecondaryActionPressed -= OnSecondaryActionPressed;
         }
 
-        private void OnPrimaryActionPressed()
+        private void Update()
         {
             var activeSlot = GetActiveInvSlot();
-            if(!activeSlot.IsEmpty && !WorldManager.Instance.MouseOverUI)
+            if(activeSlot.IsEmpty) return;
+            
+            if(GameInput.Instance.PrimaryActionHeld)
             {
-                activeSlot.GetItemSO().OnPrimaryActionPressed();
+                activeSlot.GetItemSO().OnPrimaryActionHeld();
+            }
+            else if(GameInput.Instance.SecondaryActionHeld)
+            {
+                activeSlot.GetItemSO().OnSecondaryActionHeld();
             }
         }
 
-        private void OnSecondaryActionPressed()
+        private void OnPrimaryActionPressed(InputAction.CallbackContext context)
         {
             var activeSlot = GetActiveInvSlot();
-            if (!activeSlot.IsEmpty && !WorldManager.Instance.MouseOverUI)
+            if(!activeSlot.IsEmpty)
             {
-                activeSlot.GetItemSO().OnSecondaryActionPressed();
+                if(context.phase == InputActionPhase.Started)
+                {
+                    if(WorldManager.Instance.MouseOverUI) return;
+                    
+                    activeSlot.GetItemSO().OnPrimaryActionStarted();
+                }
+                else if(context.phase == InputActionPhase.Canceled)
+                {
+                    activeSlot.GetItemSO().OnPrimaryActionRelease();
+                }
+                
+            }
+        }
+
+        private void OnSecondaryActionPressed(InputAction.CallbackContext context)
+        {
+            var activeSlot = GetActiveInvSlot();
+            if (!activeSlot.IsEmpty)
+            {
+                if (context.phase == InputActionPhase.Started)
+                {
+                    if (WorldManager.Instance.MouseOverUI) return;
+
+                    activeSlot.GetItemSO().OnSecondaryActionStarted();
+                }
+                else if (context.phase == InputActionPhase.Canceled)
+                {
+                    activeSlot.GetItemSO().OnSecondaryActionRelease();
+                }
+
             }
         }
 

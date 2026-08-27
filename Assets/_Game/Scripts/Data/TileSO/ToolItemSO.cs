@@ -5,22 +5,24 @@ namespace OceanGame
     [CreateAssetMenu(fileName = "New ToolItemSO", menuName = "OceanGame/Item/ToolItemSO")]
     public class ToolItemSO : ItemSO
     {
-        // [field: Header("Tool Settings")]
-        // [field: SerializeField] public TileSO Tile { get; private set; }
+        [field: Header("Tool Settings")]
+        [field: SerializeField] public int MiningDamage { get; private set; } = 15;
+        [field: SerializeField] public float MineTicksPerSecond { get; private set; } = 4;
+        [field: SerializeField] public WorldManager.LayerType TargetLayer { get; private set; } = WorldManager.LayerType.Foreground;
 
-        public override void OnPrimaryActionPressed()
+        public override void OnPrimaryActionStarted()
         {
-            var world = WorldManager.Instance;
-            var mouseTilePos = WorldManager.MouseWorldTilePosition;
-            var playerInRange = Vector2.Distance(Player.Instance.transform.position, WorldManager.MouseWorldPosition) < Player.Instance.InteractRange;
+            MiningManager.Instance.StartMining(this);
+        }
 
-            if (!playerInRange) return;
+        public override void OnPrimaryActionHeld()
+        {
+            MiningManager.Instance.TickMining(this);
+        }
 
-            if (world.FgLayer.GetTileData(mouseTilePos.x, mouseTilePos.y).HasTile)
-            {
-                world.DamageTile(mouseTilePos, 10, WorldManager.LayerType.Foreground, true);
-            }
-
+        public override void OnPrimaryActionRelease()
+        {
+            MiningManager.Instance.StopMining();
         }
     }
 }

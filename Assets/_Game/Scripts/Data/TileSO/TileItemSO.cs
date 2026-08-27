@@ -9,7 +9,7 @@ namespace OceanGame
         [field: Header("Tile Item Settings")]
         [field: SerializeField] public TileConfigSO PlaceTileDataSO { get; private set; }
 
-        public override void OnPrimaryActionPressed()
+        public override void OnPrimaryActionStarted()
         {
             var world = WorldManager.Instance;
             var pos = WorldManager.MouseWorldTilePosition;

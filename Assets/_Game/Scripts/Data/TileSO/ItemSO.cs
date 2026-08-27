@@ -16,7 +16,12 @@ namespace OceanGame
             return GameDataRegistry.Instance.GetItemIdFromItemSO(this);
         }
         
-        public virtual void OnPrimaryActionPressed() { }
-        public virtual void OnSecondaryActionPressed() { }
+        public virtual void OnPrimaryActionStarted() { }
+        public virtual void OnPrimaryActionHeld() { }
+        public virtual void OnPrimaryActionRelease() { }
+        
+        public virtual void OnSecondaryActionStarted() { }
+        public virtual void OnSecondaryActionHeld() { }
+        public virtual void OnSecondaryActionRelease() { }
     }
 }

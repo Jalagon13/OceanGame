@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace OceanGame
 {
@@ -68,10 +69,10 @@ namespace OceanGame
             transform.position = Ctx.CollisionResult.NewPosition;
         }
 
-        private void InteractWithObject()
+        private void InteractWithObject(InputAction.CallbackContext context)
         {
             // Interact with interactable logic here
-            if (WorldManager.Instance.MouseOverUI || !InventoryCursorManager.Instance.CursorSlot.IsEmpty) return;
+            if (WorldManager.Instance.MouseOverUI || !InventoryCursorManager.Instance.CursorSlot.IsEmpty || context.phase != InputActionPhase.Started) return;
 
             var pos = WorldManager.MouseWorldTilePosition;
             var fgtd = WorldManager.Instance.FgLayer.GetTileData(pos.x, pos.y);
