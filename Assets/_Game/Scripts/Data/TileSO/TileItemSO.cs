@@ -11,29 +11,17 @@ namespace OceanGame
 
         public override void OnPrimaryActionStarted()
         {
-            var world = WorldManager.Instance;
-            var pos = WorldManager.MouseWorldTilePosition;
-            var playerInRange = Vector2.Distance(Player.Instance.transform.position, WorldManager.MouseWorldPosition) < Player.Instance.InteractRange;
-            
-            if(!playerInRange) return;
+            PlacingManager.Instance.StartPlacing(this);
+        }
 
-            if (!world.FgLayer.GetTileData(pos.x, pos.y).HasTile)
-            {
-                var tileToPlaceTd = new TileData(PlaceTileDataSO.GetId(), isSolid: PlaceTileDataSO.IsSolid);
-                
-                if(tileToPlaceTd.TileConfig.IsMultiTile)
-                {
-                    world.FgLayer.PlaceMultiTileData(pos.x, pos.y, tileToPlaceTd, true);    
-                }
-                else
-                {
-                    world.FgLayer.SetTileData(pos.x, pos.y, tileToPlaceTd, true);
-                }
-                
-                InventoryInputManager.Instance.GetActiveInvSlot().RemoveFromCurrentAmount(1);
-                InventoryManager.Instance.RefreshInventory();
-            }
+        public override void OnPrimaryActionHeld()
+        {
+            PlacingManager.Instance.TickPlacing(this);
+        }
 
+        public override void OnPrimaryActionRelease()
+        {
+            PlacingManager.Instance.StopPlacing();
         }
         
     }
