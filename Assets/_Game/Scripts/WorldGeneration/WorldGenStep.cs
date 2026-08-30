@@ -9,6 +9,6 @@ namespace OceanGame
     {
         public bool RunStep = true;
 
-        public abstract IEnumerator Execute(WorldGenContext context);
+        public abstract IEnumerator Execute(WorldGenContext ctx);
     }
 }

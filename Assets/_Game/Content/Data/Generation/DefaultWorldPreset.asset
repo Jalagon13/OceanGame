@@ -15,9 +15,11 @@ MonoBehaviour:
   Width: 250
   Height: 400
   Seed: 0
-  UseRandomSeed: 0
+  UseRandomSeed: 1
   Steps:
   - rid: 2688502313846308944
+  - rid: 2688502313846308994
+  - rid: 2688502313846308995
   references:
     version: 2
     RefIds:
@@ -26,10 +28,21 @@ MonoBehaviour:
       data:
         RunStep: 1
         _landTile: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
-        _biomeFrequency: 0.01
-        _approcLandLevel: 350
-        _landAmplitude: 6
-        _landFrequency: 0.035
-        _approxOceanFloorLevel: 285
-        _amplitude: 4
-        _frequency: 0.025
+        _baseHeight: 325
+        _largeShapeFrequency: 0.025
+        _largeShapeAmplitude: 22
+        _detailFrequency: 0.07
+        _detailAmplitude: 8
+    - rid: 2688502313846308994
+      type: {class: CaveGenStep, ns: OceanGame, asm: Assembly-CSharp}
+      data:
+        RunStep: 1
+        _minFillProb: 0.325
+        _maxFillProb: 0.45
+        _caveNoiseFrequency: 0.015
+        _smoothingPasses: 2
+    - rid: 2688502313846308995
+      type: {class: FillTerrainStep, ns: OceanGame, asm: Assembly-CSharp}
+      data:
+        RunStep: 1
+        _limestoneTile: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}

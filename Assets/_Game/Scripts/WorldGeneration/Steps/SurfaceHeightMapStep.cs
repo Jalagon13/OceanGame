@@ -8,46 +8,38 @@ namespace OceanGame
     public class SurfaceHeightMapStep : WorldGenStep
     {
         [SerializeField] private TileConfigSO _landTile;
+        [SerializeField] private int _baseHeight;
         
-        [Header("Biome")]
-        [SerializeField] private float _biomeFrequency = 0.01f;
-        
-        [Header("Land Settings")]
-        [SerializeField] private int _approcLandLevel;
-        [SerializeField] private int _landAmplitude = 25; // max height of height map
-        [SerializeField] private float _landFrequency = 0.02f; // how far we step along the x axis of the perlin noise
+        [Header("Main Terrain Shape")]
+        [SerializeField] private float _largeShapeFrequency = 0.03f;
+        [SerializeField] private float _largeShapeAmplitude = 6;
 
-        [Header("Ocean Floor Settings")]
-        [SerializeField] private int _approxOceanFloorLevel;
-        [SerializeField] private int _amplitude = 25; // max height of height map
-        [SerializeField] private float _frequency = 0.02f; // how far we step along the x axis of the perlin noise
-    
+        [Header("Main Terrain Detail")]
+        [SerializeField] private float _detailFrequency = 0.03f;
+        [SerializeField] private float _detailAmplitude = 6;
+
+
         public override IEnumerator Execute(WorldGenContext ctx)
         {
-            float seedOffset = 0;
+            float seedLarge = ctx.Random.Next(0, 100000);
+            float seedDetail = ctx.Random.Next(0, 100000);
         
             for(int x = 0; x < ctx.Width; x++)
             {
-                float biomeSampleX = (x * _biomeFrequency) + seedOffset;
-                float biomeNoise = Mathf.PerlinNoise1D(biomeSampleX); // 0 is ocean and 1 is land
-
-                float currentAmplitude = Mathf.Lerp(_amplitude, _landAmplitude, biomeNoise);
-                float currentFrequency = Mathf.Lerp(_frequency, _landFrequency, biomeNoise);
-
-                float terrainSample = (x * currentFrequency) + seedOffset;
-                float rawNoise = Mathf.PerlinNoise1D(terrainSample);
+                float largeSample = (x * _largeShapeFrequency) + seedLarge;
+                largeSample = Mathf.PerlinNoise(largeSample, 0);
+                float largeHeight = largeSample * _largeShapeAmplitude;
                 
-                float baseHeight = Mathf.Lerp(_approxOceanFloorLevel, _approcLandLevel, biomeNoise);
+                float detailSample = (x * _detailFrequency) + seedDetail;
+                detailSample = Mathf.PerlinNoise(detailSample, 0);
+                float detailHeight = detailSample * _detailAmplitude;
                 
-                float approxHeight = (rawNoise * currentAmplitude) + baseHeight;
-                int finalY = Mathf.RoundToInt(approxHeight);
-            
-                ctx.FgTiles[x, finalY] = new TileData(_landTile.GetId());
+                float combinedHeight = _baseHeight + largeHeight + detailHeight;
+                
+                ctx.SurfaceYValues[x] = Mathf.Clamp(Mathf.RoundToInt(combinedHeight), 0, ctx.Height);
 
-                if (x % 25 == 0) yield return null;
+                if (x % 32 == 0) yield return null;
             }
-            
-            yield return null;
         }
     }
 }
