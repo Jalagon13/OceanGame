@@ -36,7 +36,7 @@ namespace OceanGame
                 
                 float combinedHeight = _baseHeight + largeHeight + detailHeight;
                 
-                ctx.SurfaceYValues[x] = Mathf.Clamp(Mathf.RoundToInt(combinedHeight), 0, ctx.Height);
+                ctx.SurfaceHeightValues[x] = Mathf.Clamp(Mathf.RoundToInt(combinedHeight), 0, ctx.Height);
 
                 if (x % 32 == 0) yield return null;
             }

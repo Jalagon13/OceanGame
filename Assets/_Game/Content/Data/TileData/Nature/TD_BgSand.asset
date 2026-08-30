@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93c73fdc83b114b56a5d587022066f87, type: 3}
-  m_Name: TD_Dirt
+  m_Name: TD_BgSand
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.TileDataSO
   <Size>k__BackingField: {x: 1, y: 1}
   <DrawTile>k__BackingField: {fileID: 11400000, guid: 5964087ede5b94248bf7f236ce6f11eb, type: 2}

@@ -12,7 +12,7 @@ namespace OceanGame
         public TileData[,] FgTiles { get; set; }
         public TileData[,] BgTiles { get; set; }
         public bool[,] CaveGrid { get; } // True is air
-        public int[] SurfaceYValues { get; }
+        public int[] SurfaceHeightValues { get; }
 
         public WorldGenContext(int width, int height, int seed)
         {
@@ -22,7 +22,7 @@ namespace OceanGame
             FgTiles = new TileData[width, height];
             BgTiles = new TileData[width, height];
             CaveGrid = new bool[width, height];
-            SurfaceYValues = new int[width];
+            SurfaceHeightValues = new int[width];
             Random = new(Seed);
         }
     }

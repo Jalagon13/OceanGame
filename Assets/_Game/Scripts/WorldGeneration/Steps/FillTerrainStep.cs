@@ -11,7 +11,7 @@ namespace OceanGame
         {
             for (int x = 0; x < ctx.Width; x++)
             {
-                int currentSurfaceHeight = ctx.SurfaceYValues[x];
+                int currentSurfaceHeight = ctx.SurfaceHeightValues[x];
             
                 for (int y = 0; y < currentSurfaceHeight; y++)
                 {

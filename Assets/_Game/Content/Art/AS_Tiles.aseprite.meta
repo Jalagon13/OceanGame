@@ -191,7 +191,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  - name: tile_bg_dirt
+  - name: tile_bg_sand
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
