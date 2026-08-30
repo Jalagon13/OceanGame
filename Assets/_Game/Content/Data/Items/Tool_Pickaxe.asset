@@ -17,5 +17,5 @@ MonoBehaviour:
   <DisplayIcon>k__BackingField: {fileID: -5995761749628158258, guid: 2f87ce7e588154a76acbf2c4eda5fff0, type: 3}
   <IsStackable>k__BackingField: 0
   <MiningDamage>k__BackingField: 15
-  <MineTicksPerSecond>k__BackingField: 4
+  <MineTicksPerSecond>k__BackingField: 8
   <TargetLayer>k__BackingField: 0

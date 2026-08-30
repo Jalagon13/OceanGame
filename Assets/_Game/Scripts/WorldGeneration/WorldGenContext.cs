@@ -7,6 +7,7 @@ namespace OceanGame
         public int Width { get; }
         public int Height { get; }
         public int Seed { get; }
+        public int UndergroundBottomLevel { get; }
         public System.Random Random { get; }
 
         public TileData[,] FgTiles { get; set; }
@@ -14,11 +15,12 @@ namespace OceanGame
         public bool[,] CaveGrid { get; } // True is air
         public int[] SurfaceHeightValues { get; }
 
-        public WorldGenContext(int width, int height, int seed)
+        public WorldGenContext(int width, int height, int seed, int undergroundBottomLevel)
         {
             Width = width;
             Height = height;
             Seed = seed;
+            UndergroundBottomLevel = undergroundBottomLevel;
             FgTiles = new TileData[width, height];
             BgTiles = new TileData[width, height];
             CaveGrid = new bool[width, height];

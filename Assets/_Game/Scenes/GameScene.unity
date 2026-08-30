@@ -1334,6 +1334,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2e31d17edd4654120875362ed74dbe93, type: 2}
   - {fileID: 11400000, guid: ba3aad1cd917f45aea3a6204b86df04e, type: 2}
   - {fileID: 11400000, guid: 3a59c7f25e99945a28b4d3a54aea23bc, type: 2}
+  - {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
   _itemDatabase:
   - {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
   - {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}

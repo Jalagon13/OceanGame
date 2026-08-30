@@ -9,7 +9,6 @@ namespace OceanGame
     
         [Tooltip("How many tiles below the surface line should the background wall start appearing?")]
         [SerializeField] private int _belowSurfaceOffset;
-        [SerializeField] private int _undergroundBottomLevel = 250;
         [SerializeField] private int _undergroundBottomLevelOffset = 2;
 
         [Header("Deep Core Fill Cutoff")]
@@ -24,14 +23,14 @@ namespace OceanGame
             for (int x = 0; x < ctx.Width; x++)
             {
                 int surfaceHeight = ctx.SurfaceHeightValues[x];
-                int highestSolidTile = GetHighestSolidTile(x, surfaceHeight, ctx);
+                int highestSolidTile = GetHighestFlankedSolidTile(x, surfaceHeight, ctx);
                 surfaceHeight -= _belowSurfaceOffset;
 
                 int randomOffset = ctx.Random.Next(_minWallPlacementYOffset, _maxWallPlacementYOffset + 1);
                 int deepFillCutoffY = surfaceHeight - randomOffset;
 
                 int fillTopY = Mathf.Max(highestSolidTile, deepFillCutoffY);
-                int bottomLevel = _undergroundBottomLevel + ctx.Random.Next(-_undergroundBottomLevelOffset, _undergroundBottomLevelOffset);
+                int bottomLevel = ctx.UndergroundBottomLevel + ctx.Random.Next(-_undergroundBottomLevelOffset, _undergroundBottomLevelOffset);
 
                 for (int y = bottomLevel; y <= fillTopY; y++)
                 {
@@ -42,17 +41,29 @@ namespace OceanGame
             }
         }
         
-        private int GetHighestSolidTile(int x, int surfaceValue, WorldGenContext ctx)
+        private int GetHighestFlankedSolidTile(int x, int surfaceValue, WorldGenContext ctx)
         {
+            surfaceValue = Mathf.Clamp(surfaceValue, 0, ctx.Height - 1);
+
             for (int y = surfaceValue; y >= 0; y--)
             {
-                if(ctx.FgTiles[x, y].IsSolid)
+                if (ctx.FgTiles[x, y].IsSolid)
                 {
+                    if (!IsSolidTile(x - 1, y, ctx) || !IsSolidTile(x + 1, y, ctx)) continue;
+                
                     return y;
                 }
             }
             
             return 0;
+        }
+
+        private bool IsSolidTile(int x, int y, WorldGenContext ctx)
+        {
+            if (x < 0 || x >= ctx.Width || y < 0 || y >= ctx.Height)
+                return false;
+
+            return ctx.FgTiles[x, y].IsSolid;
         }
     }
 }

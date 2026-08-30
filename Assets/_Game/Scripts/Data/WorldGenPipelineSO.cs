@@ -11,6 +11,7 @@ namespace OceanGame
         public int Width = 100;
         public int Height = 100;
         public int Seed = 0;
+        public int UndergroundBottomLevel = 275;
         public bool UseRandomSeed = true;
 
         [Header("Steps (Sequential Execution)")]
@@ -22,7 +23,7 @@ namespace OceanGame
             Debug.Log($"[WorldGen] Generation Started");
         
             int actualSeed = UseRandomSeed ? Random.Range(0, 100000) : Seed;
-            var context = new WorldGenContext(Width, Height, actualSeed);
+            var context = new WorldGenContext(Width, Height, actualSeed, UndergroundBottomLevel);
 
             for (int i = 0; i < Steps.Count; i++)
             {
