@@ -12,18 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe0e4c828bd83465e82ab75a6c973b41, type: 3}
   m_Name: DefaultWorldPreset
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
-  Width: 100
-  Height: 100
-  SeaLevel: 50
+  Width: 250
+  Height: 400
+  SeaLevel: 325
   Seed: 0
   UseRandomSeed: 0
   Steps:
-  - rid: 2688502268538126454
+  - rid: 2688502313846308944
   references:
     version: 2
     RefIds:
-    - rid: 2688502268538126454
-      type: {class: TestStep, ns: OceanGame, asm: Assembly-CSharp}
+    - rid: 2688502313846308944
+      type: {class: SurfaceHeightMapStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
         RunStep: 1
-        StepTimer: 1
+        _landTile: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
+        _biomeFrequency: 0.0125
+        _approcLandLevel: 350
+        _landAmplitude: 6
+        _landFrequency: 0.035
+        _approxOceanFloorLevel: 285
+        _amplitude: 4
+        _frequency: 0.025
