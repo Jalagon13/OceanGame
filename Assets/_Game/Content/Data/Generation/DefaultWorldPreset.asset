@@ -37,10 +37,10 @@ MonoBehaviour:
       type: {class: CaveGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
         RunStep: 1
-        _minFillProb: 0.325
-        _maxFillProb: 0.45
-        _caveNoiseFrequency: 0.015
-        _smoothingPasses: 2
+        _minFillProb: 0.47
+        _maxFillProb: 0.63
+        _caveNoiseFrequency: 0.75
+        _smoothingPasses: 4
     - rid: 2688502313846308995
       type: {class: FillTerrainStep, ns: OceanGame, asm: Assembly-CSharp}
       data:

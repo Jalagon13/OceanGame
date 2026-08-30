@@ -27,7 +27,7 @@ namespace OceanGame
                 for (int y = 0; y < height; y++)
                 {
                     float sampleX = (x * _caveNoiseFrequency) + seedX;
-                    float sampleY = (x * _caveNoiseFrequency) + seedY;
+                    float sampleY = (y * _caveNoiseFrequency) + seedY;
                     float noise = Mathf.PerlinNoise(sampleX, sampleY);
                     float fillProb = Mathf.Lerp(_minFillProb, _maxFillProb, noise);
                     
@@ -74,7 +74,7 @@ namespace OceanGame
                     {
                         wallCount++;
                     }
-                    else if (map[neighborX, neighborY])
+                    else if (!map[neighborX, neighborY])
                     {
                         wallCount++;
                     }
