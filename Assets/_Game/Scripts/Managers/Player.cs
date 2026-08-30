@@ -47,11 +47,6 @@ namespace OceanGame
         {
             if(!WorldManager.Instance.IsWorldReady) return;
         
-            if (Ctx.SwimDashCooldownTimer > 0f)
-            {
-                Ctx.SwimDashCooldownTimer -= Time.deltaTime;
-            }
-
             _machine.Tick(Time.deltaTime);
             
             var path = StatePath(_machine.Root.Leaf());
@@ -92,9 +87,8 @@ namespace OceanGame
             if(!WorldManager.Instance.IsWorldReady) return;
         
             bool canJumpFromGround = Ctx.CollisionResult.TouchingBottom;
-            bool canJumpFromWater = _machine.Root.Leaf() is PlayerSwimmingState && Ctx.IsHeadAboveWater();
 
-            if (canJumpFromGround || canJumpFromWater)
+            if (canJumpFromGround)
             {
                 Ctx.JumpPressed = true;
             }
@@ -150,28 +144,26 @@ namespace OceanGame
         [HideInInspector] public Vector2 Velocity;
         [HideInInspector] public GridPhysics.CollisionResult CollisionResult;
         [HideInInspector] public bool JumpPressed = false;
-        [HideInInspector] public bool WaterJumpBuffered = false;
-        [HideInInspector] public float SwimDashCooldownTimer;
         
-        public bool IsHeadAboveWater()
-        {
-            if (Transform.position.y + 1f >= WorldManager.Instance.WorldGen.CurrentWorldGenPreset.SeaLevel)
-            {
-                return true;
-            }
+        // public bool IsHeadAboveWater()
+        // {
+        //     if (Transform.position.y + 1f >= WorldManager.Instance.WorldGen.CurrentWorldGenPreset.SeaLevel)
+        //     {
+        //         return true;
+        //     }
 
-            return false;
-        }
+        //     return false;
+        // }
         
-        public bool IsInOcean()
-        {
-            if(Transform.position.y - 0.6f <= WorldManager.Instance.WorldGen.CurrentWorldGenPreset.SeaLevel)
-            {
-                return true;
-            }
+        // public bool IsInOcean()
+        // {
+        //     if(Transform.position.y - 0.6f <= WorldManager.Instance.WorldGen.CurrentWorldGenPreset.SeaLevel)
+        //     {
+        //         return true;
+        //     }
             
-            return false;
-        }
+        //     return false;
+        // }
 
     }
 }

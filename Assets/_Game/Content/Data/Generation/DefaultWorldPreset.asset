@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
   Width: 250
   Height: 400
-  SeaLevel: 325
   Seed: 0
   UseRandomSeed: 0
   Steps:
@@ -27,7 +26,7 @@ MonoBehaviour:
       data:
         RunStep: 1
         _landTile: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
-        _biomeFrequency: 0.0125
+        _biomeFrequency: 0.01
         _approcLandLevel: 350
         _landAmplitude: 6
         _landFrequency: 0.035

@@ -150,13 +150,10 @@ namespace OceanGame
                         world.BgLayer.Tilemap.SetTile(tilePos3D, null);
                     }
                     
-                    // Process Sea Layer
-                    if(y <= WorldManager.Instance.WorldGen.CurrentWorldGenPreset.SeaLevel)
+                    // Process Sea Layer. Place water tile everywhere
+                    if(!world.FgLayer.GetTileData(x, y).IsOutOfBounds)
                     {
-                        if (/* fgId <= TileLayer.AIR_ID &&  */!world.FgLayer.GetTileData(x, y).IsOutOfBounds)
-                        {
-                            _waterTilemap.SetTile(tilePos3D, _waterTile);
-                        }
+                        _waterTilemap.SetTile(tilePos3D, _waterTile);
                     }
                 }
             }

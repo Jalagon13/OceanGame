@@ -10,7 +10,6 @@ namespace OceanGame
         [Header("Dimensions")]
         public int Width = 100;
         public int Height = 100;
-        public int SeaLevel = 50;
         public int Seed = 0;
         public bool UseRandomSeed = true;
 
@@ -23,7 +22,7 @@ namespace OceanGame
             Debug.Log($"[WorldGen] Generation Started");
         
             int actualSeed = UseRandomSeed ? Random.Range(0, 100000) : Seed;
-            var context = new WorldGenContext(Width, Height, SeaLevel, actualSeed);
+            var context = new WorldGenContext(Width, Height, actualSeed);
 
             for (int i = 0; i < Steps.Count; i++)
             {
