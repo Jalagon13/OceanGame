@@ -24,6 +24,7 @@ MonoBehaviour:
   - rid: 2688502313846308995
   - rid: 2688502313846309004
   - rid: 2688502313846309037
+  - rid: 2688502357985853566
   references:
     version: 2
     RefIds:
@@ -66,3 +67,15 @@ MonoBehaviour:
         _sandTile: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
         _depthOfSandLayer: 2
         _depthOfSandFromSurface: 25
+    - rid: 2688502357985853566
+      type: {class: OreGenStep, ns: OceanGame, asm: Assembly-CSharp}
+      data:
+        RunStep: 1
+        _ironOreTile: {fileID: 11400000, guid: 75d3adf13369b426cbdbcc99aabd6f3d, type: 2}
+        _chunkSize: 30
+        _veinsPerChunk: 6
+        _veinMinDistance: 6
+        _maxAttemptsPerVein: 15
+        _belowSurfaceHeightOffset: 4
+        _minVeinSize: 3
+        _maxVeinSize: 8

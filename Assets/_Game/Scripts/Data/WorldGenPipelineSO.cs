@@ -24,7 +24,7 @@ namespace OceanGame
             Debug.Log($"[WorldGen] Generation Started");
         
             int actualSeed = UseRandomSeed ? Random.Range(0, 100000) : Seed;
-            var context = new WorldGenContext(Width, Height, actualSeed, UndergroundBottomLevel);
+            var context = new WorldGenContext(Width, Height, actualSeed, UndergroundBottomLevel, SeaLevel);
 
             for (int i = 0; i < Steps.Count; i++)
             {
