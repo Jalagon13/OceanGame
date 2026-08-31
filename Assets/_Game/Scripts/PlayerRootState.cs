@@ -115,8 +115,8 @@ namespace OceanGame
 
                 return (Parent as PlayerRootState).Grounded;
             }
-
-            if (_ctx.IsInOcean())
+            
+            if(_ctx.IsInOcean())
             {
                 if (_jumpBufferTimer > 0f)
                 {
@@ -125,7 +125,7 @@ namespace OceanGame
 
                 return (Parent as PlayerRootState).Swimming;
             }
-
+            
             return null;
         }
 
@@ -232,6 +232,7 @@ namespace OceanGame
         private readonly PlayerContext _ctx;
 
         private Vector2 _desiredVisualRotation;
+        private int _turnDegreeThreshold = 90;
 
         public PlayerSwimmingState(StateMachine m, State parent, PlayerContext ctx) : base(m, parent)
         {
@@ -286,16 +287,22 @@ namespace OceanGame
 
         protected override void OnUpdate(float deltaTime)
         {
-            if (_ctx.Velocity.sqrMagnitude <= 1f && _ctx.DesiredDirection == Vector2.zero)
+            if (_ctx.Velocity.sqrMagnitude <= 10f && _ctx.DesiredDirection == Vector2.zero)
             {
                 _desiredVisualRotation = Vector2.up;
             }
             else
             {
-                _desiredVisualRotation = _ctx.DesiredDirection;
+                _desiredVisualRotation = _ctx.DesiredDirection.normalized;
             }
 
-            _ctx.VisualsTransform.up = Vector2.Lerp(_ctx.VisualsTransform.up, _desiredVisualRotation, 15f * deltaTime).normalized;
+            var angleDifference = Vector2.SignedAngle(_ctx.VisualsTransform.up, _desiredVisualRotation);
+
+            float lerpSpeed = Mathf.Abs(angleDifference) < _turnDegreeThreshold ? 10f : 40f;
+            float currentAngle = _ctx.VisualsTransform.eulerAngles.z;
+            float targetAngle = currentAngle + angleDifference;
+            float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, lerpSpeed * deltaTime);
+            _ctx.VisualsTransform.rotation = Quaternion.Euler(0, 0, newAngle);
         }
 
         private void ExecuteDash()

@@ -2396,8 +2396,8 @@ MonoBehaviour:
   Ctx:
     VisualsTransform: {fileID: 652389236}
     PlayerBodyCollider: {fileID: 1715237433}
-    WalkingBoxColliderSize: {x: 0.6, y: 1.7}
-    SwimmingBoxColliderSize: {x: 0.6, y: 0.6}
+    WalkingBoxColliderSize: {x: 0.75, y: 1.75}
+    SwimmingBoxColliderSize: {x: 0.75, y: 1.4}
     MoveSpeed: 7
     LandTurnSharpness: 5
     AirborneMoveSpeedMultiplier: 0.7
@@ -2462,7 +2462,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.6, y: 1.7}
+  m_Size: {x: 0.75, y: 1.75}
   m_EdgeRadius: 0
 --- !u!1 &1832764447
 GameObject:
