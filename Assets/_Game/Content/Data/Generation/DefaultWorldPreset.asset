@@ -15,7 +15,7 @@ MonoBehaviour:
   Width: 250
   Height: 400
   SeaLevel: 365
-  Seed: 1234
+  Seed: 0
   UndergroundBottomLevel: 275
   UseRandomSeed: 1
   Steps:
@@ -42,10 +42,17 @@ MonoBehaviour:
       type: {class: CaveGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
         RunStep: 1
-        _caveNoiseFrequency: 0.084
-        _botThresh: 0.237
-        _topThresh: 0.772
-        _detailFrequency: 0.128
+        _botThresh: 0.502
+        _topThresh: 0.604
+        _caveSurfaceFadeDistance: 5
+        _caveNoiseFrequency: 0.032
+        _baseNoiseInfluencePercentage: 0.9
+        _cheeseCaveNoiseFrequency: 0.096
+        _cheeseNoiseThresh: 0.833
+        _cheeseNoiseInfluencePercentage: 0.9
+        _cheeseStartDepth: 12
+        _cheeseFadeDistance: 7
+        _detailFrequency: 0.219
     - rid: 2688502313846308995
       type: {class: FillTerrainStep, ns: OceanGame, asm: Assembly-CSharp}
       data:

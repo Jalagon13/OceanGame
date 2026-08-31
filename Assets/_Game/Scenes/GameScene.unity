@@ -2377,7 +2377,7 @@ Transform:
   m_GameObject: {fileID: 1715237430}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 125, y: 355, z: 0}
+  m_LocalPosition: {x: 125, y: 350, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2397,6 +2397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.Player
   <InteractRange>k__BackingField: 4.5
+  _ignoreCollision: 1
   Ctx:
     VisualsTransform: {fileID: 652389236}
     PlayerBodyCollider: {fileID: 1715237433}
@@ -2407,7 +2408,7 @@ MonoBehaviour:
     AirborneMoveSpeedMultiplier: 0.7
     GravityForce: 30
     TerminalVelocity: -40
-    SwimSpeed: 13
+    SwimSpeed: 22
     SwimDashSpeed: 13
     SwimDashCooldown: 1.5
     SwimmingTurnSharpness: 5

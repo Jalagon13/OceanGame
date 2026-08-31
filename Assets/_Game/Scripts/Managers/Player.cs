@@ -10,6 +10,7 @@ namespace OceanGame
         public static Player Instance { get; private set; }
         
         [field: SerializeField] public float InteractRange { get; private set; } = 4.5f;
+        [SerializeField] private bool _ignoreCollision = false;
         
         public PlayerContext Ctx = new();
         
@@ -69,7 +70,7 @@ namespace OceanGame
             _machine.FixedTick(Time.fixedDeltaTime);
 
             Vector2 boxSize = Ctx.PlayerBodyCollider.size; // Player's size
-            Ctx.CollisionResult = GridPhysics.MoveAndResolve(transform.position, Ctx.Velocity, boxSize, Time.fixedDeltaTime);
+            Ctx.CollisionResult = GridPhysics.MoveAndResolve(transform.position, Ctx.Velocity, boxSize, Time.fixedDeltaTime, _ignoreCollision);
             transform.position = Ctx.CollisionResult.NewPosition;
         }
 
