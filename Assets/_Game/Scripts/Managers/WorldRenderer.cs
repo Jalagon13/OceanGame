@@ -151,7 +151,9 @@ namespace OceanGame
                     }
                     
                     // Process Sea Layer. Place water tile everywhere
-                    if(!world.FgLayer.GetTileData(x, y).IsOutOfBounds)
+                    int seaLevel = world.WorldGen.CurrentWorldGenPreset.SeaLevel;
+                    
+                    if (y <= seaLevel && !world.FgLayer.GetTileData(x, y).IsOutOfBounds)
                     {
                         _waterTilemap.SetTile(tilePos3D, _waterTile);
                     }

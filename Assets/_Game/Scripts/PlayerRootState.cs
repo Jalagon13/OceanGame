@@ -10,6 +10,7 @@ namespace OceanGame
     {
         public readonly PlayerGroundedState Grounded;
         public readonly PlayerAirborneState Airborne;
+        public readonly PlayerSwimmingState Swimming;
 
         private readonly PlayerContext _ctx;
 
@@ -18,6 +19,7 @@ namespace OceanGame
             _ctx = ctx;
             Grounded = new PlayerGroundedState(m, this, ctx);
             Airborne = new PlayerAirborneState(m, this, ctx);
+            Swimming = new PlayerSwimmingState(m, this, ctx);
         }
 
         protected override State GetInitialState() => Grounded;
@@ -113,7 +115,17 @@ namespace OceanGame
 
                 return (Parent as PlayerRootState).Grounded;
             }
-            
+
+            if (_ctx.IsInOcean())
+            {
+                if (_jumpBufferTimer > 0f)
+                {
+                    _ctx.WaterJumpBuffered = true;
+                }
+
+                return (Parent as PlayerRootState).Swimming;
+            }
+
             return null;
         }
 
@@ -209,6 +221,93 @@ namespace OceanGame
             _jumpBufferTimer = _ctx.JumpBufferDuration;
         }
 
+    }
+
+    #endregion
+
+    #region Swimming State
+
+    public class PlayerSwimmingState : State
+    {
+        private readonly PlayerContext _ctx;
+
+        private Vector2 _desiredVisualRotation;
+
+        public PlayerSwimmingState(StateMachine m, State parent, PlayerContext ctx) : base(m, parent)
+        {
+            _ctx = ctx;
+        }
+
+        protected override State GetTransition()
+        {
+            if (_ctx.IsHeadAboveWater() && (_ctx.JumpPressed || _ctx.WaterJumpBuffered))
+            {
+                _ctx.JumpPressed = false;
+                _ctx.WaterJumpBuffered = false;
+                _ctx.Velocity.y = _ctx.FromWaterJumpSpeed;
+
+                return (Parent as PlayerRootState).Airborne;
+            }
+
+            if (!_ctx.IsInOcean())
+            {
+                if (!_ctx.CollisionResult.TouchingBottom)
+                {
+                    return (Parent as PlayerRootState).Airborne;
+                }
+                else
+                {
+                    return (Parent as PlayerRootState).Grounded;
+                }
+            }
+
+            return null;
+        }
+
+        protected override void OnEnter()
+        {
+            _ctx.PlayerBodyCollider.size = _ctx.SwimmingBoxColliderSize;
+
+            GameInput.Instance.OnJumpPressed += ExecuteDash;
+        }
+
+        protected override void OnExit()
+        {
+            _ctx.VisualsTransform.up = Vector2.up;
+
+            GameInput.Instance.OnJumpPressed -= ExecuteDash;
+        }
+
+        protected override void OnFixedUpdate(float fixedDeltaTime)
+        {
+            var currentSpeed = _ctx.SwimSpeed;
+            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.SwimmingTurnSharpness);
+        }
+
+        protected override void OnUpdate(float deltaTime)
+        {
+            if (_ctx.Velocity.sqrMagnitude <= 1f && _ctx.DesiredDirection == Vector2.zero)
+            {
+                _desiredVisualRotation = Vector2.up;
+            }
+            else
+            {
+                _desiredVisualRotation = _ctx.DesiredDirection;
+            }
+
+            _ctx.VisualsTransform.up = Vector2.Lerp(_ctx.VisualsTransform.up, _desiredVisualRotation, 15f * deltaTime).normalized;
+        }
+
+        private void ExecuteDash()
+        {
+            if (_ctx.SwimDashCooldownTimer > 0f || _ctx.IsHeadAboveWater()) // If head is above water, do not execute dash only dash when i am underwater
+            {
+                return;
+            }
+
+            _ctx.Velocity = _ctx.DesiredDirection * _ctx.SwimDashSpeed;
+            _ctx.SwimDashCooldownTimer = _ctx.SwimDashCooldown;
+        }
     }
 
     #endregion

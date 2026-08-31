@@ -87,8 +87,9 @@ namespace OceanGame
             if(!WorldManager.Instance.IsWorldReady) return;
         
             bool canJumpFromGround = Ctx.CollisionResult.TouchingBottom;
+            bool canJumpFromWater = _machine.Root.Leaf() is PlayerSwimmingState && Ctx.IsHeadAboveWater();
 
-            if (canJumpFromGround)
+            if (canJumpFromGround || canJumpFromWater)
             {
                 Ctx.JumpPressed = true;
             }
@@ -144,26 +145,28 @@ namespace OceanGame
         [HideInInspector] public Vector2 Velocity;
         [HideInInspector] public GridPhysics.CollisionResult CollisionResult;
         [HideInInspector] public bool JumpPressed = false;
-        
-        // public bool IsHeadAboveWater()
-        // {
-        //     if (Transform.position.y + 1f >= WorldManager.Instance.WorldGen.CurrentWorldGenPreset.SeaLevel)
-        //     {
-        //         return true;
-        //     }
+        [HideInInspector] public bool WaterJumpBuffered = false;
+        [HideInInspector] public float SwimDashCooldownTimer;
 
-        //     return false;
-        // }
-        
-        // public bool IsInOcean()
-        // {
-        //     if(Transform.position.y - 0.6f <= WorldManager.Instance.WorldGen.CurrentWorldGenPreset.SeaLevel)
-        //     {
-        //         return true;
-        //     }
-            
-        //     return false;
-        // }
+        public bool IsHeadAboveWater()
+        {
+            if (Transform.position.y + 1f >= WorldManager.Instance.WorldGen.CurrentWorldGenPreset.SeaLevel)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool IsInOcean()
+        {
+            if (Transform.position.y - 0.6f <= WorldManager.Instance.WorldGen.CurrentWorldGenPreset.SeaLevel)
+            {
+                return true;
+            }
+
+            return false;
+        }
 
     }
 }

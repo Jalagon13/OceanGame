@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
   Width: 250
   Height: 400
-  Seed: 0
+  SeaLevel: 365
+  Seed: 1234
   UndergroundBottomLevel: 275
   UseRandomSeed: 1
   Steps:
@@ -63,5 +64,5 @@ MonoBehaviour:
       data:
         RunStep: 1
         _sandTile: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
-        _depthOfSandLayer: 1
+        _depthOfSandLayer: 2
         _depthOfSandFromSurface: 25
