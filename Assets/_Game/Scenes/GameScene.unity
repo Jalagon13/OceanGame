@@ -1335,12 +1335,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ba3aad1cd917f45aea3a6204b86df04e, type: 2}
   - {fileID: 11400000, guid: 3a59c7f25e99945a28b4d3a54aea23bc, type: 2}
   - {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
+  - {fileID: 11400000, guid: 75d3adf13369b426cbdbcc99aabd6f3d, type: 2}
   _itemDatabase:
   - {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
   - {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}
   - {fileID: 11400000, guid: ba4a4e198c8a8407c86c4c4ae28df49a, type: 2}
   - {fileID: 11400000, guid: ed13bde50d6d54218b3be409d52464f5, type: 2}
   - {fileID: 11400000, guid: 7c88a6e8135fd491198a7ef38abd39b0, type: 2}
+  - {fileID: 11400000, guid: 8f118cc58053c4854aa4b9cb6b928fa7, type: 2}
 --- !u!114 &970924661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1547,6 +1549,8 @@ MonoBehaviour:
     _amount: 10
   - _ingredient: {fileID: 11400000, guid: 7c88a6e8135fd491198a7ef38abd39b0, type: 2}
     _amount: 10
+  - _ingredient: {fileID: 11400000, guid: 8f118cc58053c4854aa4b9cb6b928fa7, type: 2}
+    _amount: 25
 --- !u!114 &1178486984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2398,12 +2402,12 @@ MonoBehaviour:
     PlayerBodyCollider: {fileID: 1715237433}
     WalkingBoxColliderSize: {x: 0.75, y: 1.75}
     SwimmingBoxColliderSize: {x: 0.75, y: 1.4}
-    MoveSpeed: 7
+    MoveSpeed: 6.5
     LandTurnSharpness: 5
     AirborneMoveSpeedMultiplier: 0.7
     GravityForce: 30
     TerminalVelocity: -40
-    SwimSpeed: 7
+    SwimSpeed: 6.5
     SwimDashSpeed: 13
     SwimDashCooldown: 1.5
     SwimmingTurnSharpness: 5

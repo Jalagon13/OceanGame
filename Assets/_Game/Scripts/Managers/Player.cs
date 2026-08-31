@@ -46,7 +46,12 @@ namespace OceanGame
         private void Update()
         {
             if(!WorldManager.Instance.IsWorldReady) return;
-        
+
+            if (Ctx.SwimDashCooldownTimer > 0f)
+            {
+                Ctx.SwimDashCooldownTimer -= Time.deltaTime;
+            }
+
             _machine.Tick(Time.deltaTime);
             
             var path = StatePath(_machine.Root.Leaf());
