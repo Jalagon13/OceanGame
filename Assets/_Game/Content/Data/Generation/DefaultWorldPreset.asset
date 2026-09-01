@@ -17,7 +17,7 @@ MonoBehaviour:
   SeaLevel: 365
   Seed: 0
   UndergroundBottomLevel: 275
-  UseRandomSeed: 1
+  UseRandomSeed: 0
   Steps:
   - rid: 2688502313846308944
   - rid: 2688502313846308994

@@ -647,7 +647,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -2782,9 +2782,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.LightManager
   _lightmapOverlay: {fileID: 328273112}
   _multiplyMaterial: {fileID: 2100000, guid: c9c44d8d34d4a42d59d850f4cc9d34f9, type: 2}
-  _lightmapFilterMode: 0
+  _lightmapFilterMode: 1
   _extraLightmapPadding: 4
   _fullBrightness: 10
+  _lightDecay: 4
+  _blurPasses: 1
 --- !u!1 &2070694658
 GameObject:
   m_ObjectHideFlags: 0

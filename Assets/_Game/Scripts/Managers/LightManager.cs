@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 namespace OceanGame
 {
+    // Next add attenuation for solid vs background tiles
+    // Next add a pre attenuation buffer zone when going through solid or background tiles before attenuation
+
     public class LightManager : MonoBehaviour
     {
         public static LightManager Instance { get; private set; }
@@ -18,9 +21,13 @@ namespace OceanGame
         [SerializeField, Min(1f)] private float _fullBrightness;
         [SerializeField] private float _lightDecay = 1f;
 
+        [Range(0, 4)]
+        [SerializeField] private int _blurPasses = 2; // Tweakable in the Inspector!
+
         private RectInt _lmBounds;
         private Texture2D _lightmapTexture;
         private float[,] _lightGrid;
+        private float[,] _blurGrid; // Caching a reusable scratchpad array for the blur math
         private Color32[] _colorBuffer;
 
         private Queue<Vector2Int> _lightQueue;
@@ -48,7 +55,7 @@ namespace OceanGame
         private void OnBoundsChanged(RectInt oldBounds, RectInt newBounds)
         {
             var world = WorldManager.Instance;
-            
+
             if (world == null || !world.IsWorldReady) return;
 
             // Initializations
@@ -75,14 +82,17 @@ namespace OceanGame
                 _lightmapTexture.Reinitialize(localWidth, localHeight);
             }
 
-            if (_lightGrid == null || _lightGrid.GetLength(0) != localWidth || _lightGrid.GetLength(1) != localHeight) // when size changes set them to new size if not just clear it
+            // Manage sizes for both the light and scratchpad blur grids safely
+            if (_lightGrid == null || _lightGrid.GetLength(0) != localWidth || _lightGrid.GetLength(1) != localHeight)
             {
                 _lightGrid = new float[localWidth, localHeight];
+                _blurGrid = new float[localWidth, localHeight];
                 _colorBuffer = new Color32[localWidth * localHeight];
             }
             else
             {
                 Array.Clear(_lightGrid, 0, _lightGrid.Length); // Clear existing frames rather than instantiating clean arrays
+                // Note: _blurGrid doesn't need explicit clearing because the pass algorithm explicitly overwrites its cells
             }
 
             _lightQueue.Clear();
@@ -131,16 +141,40 @@ namespace OceanGame
                 }
             }
 
+            // Apply Blur Pass (Happens after propagation completes, but before texturing color bytes)
+            if (_blurPasses > 0)
+            {
+                BlurLightGrid(localWidth, localHeight);
+
+                // FIX: Force open-air tiles back to full brightness so the blur doesn't dim the sky!
+                for (int localX = 0; localX < localWidth; localX++)
+                {
+                    for (int localY = 0; localY < localHeight; localY++)
+                    {
+                        int worldPosX = xMin + localX;
+                        int worldPosY = yMin + localY;
+
+                        var fgTd = world.FgLayer.GetTileData(worldPosX, worldPosY);
+                        var bgTd = world.BgLayer.GetTileData(worldPosX, worldPosY);
+
+                        if (fgTd.IsAir && bgTd.IsAir)
+                        {
+                            _lightGrid[localX, localY] = _fullBrightness;
+                        }
+                    }
+                }
+            }
+
             // Populate greyscale color buffer
             float fullBrightnessInv = 1f / _fullBrightness; // Multiplies are faster than division loops
-            
+
             for (int localY = 0; localY < localHeight; localY++)
             {
                 for (int localX = 0; localX < localWidth; localX++)
                 {
                     float lightValue = _lightGrid[localX, localY];
                     float lightFraction = lightValue * fullBrightnessInv;
-                    
+
                     if (lightFraction > 1f) lightFraction = 1f;
                     else if (lightFraction < 0f) lightFraction = 0f;
 
@@ -164,5 +198,60 @@ namespace OceanGame
             _lightmapOverlay.rectTransform.sizeDelta = size;
             _lightmapOverlay.rectTransform.localScale = Vector3.one;
         }
+
+        private void BlurLightGrid(int width, int height)
+        {
+            for (int pass = 0; pass < _blurPasses; pass++)
+            {
+                // 1. Horizontal Pass (_lightGrid -> _blurGrid)
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        float sum = _lightGrid[x, y]; int count = 1;
+                        if (x > 0) { sum += _lightGrid[x - 1, y]; count++; }
+                        if (x < width - 1) { sum += _lightGrid[x + 1, y]; count++; }
+                        _blurGrid[x, y] = sum / count;
+                    }
+                }
+
+                // 2. Vertical Pass (_blurGrid -> _lightGrid)
+                for (int x = 0; x < width; x++)
+                {
+                    for (int y = 0; y < height; y++)
+                    {
+                        float sum = _blurGrid[x, y]; int count = 1;
+                        if (y > 0) { sum += _blurGrid[x, y - 1]; count++; }
+                        if (y < height - 1) { sum += _blurGrid[x, y + 1]; count++; }
+                        _lightGrid[x, y] = sum / count;
+                    }
+                }
+
+                // 3. Diagonal Pass 1: Top-Left to Bottom-Right (_lightGrid -> _blurGrid)
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        float sum = _lightGrid[x, y]; int count = 1;
+                        if (x > 0 && y > 0) { sum += _lightGrid[x - 1, y - 1]; count++; } // Top-Left
+                        if (x < width - 1 && y < height - 1) { sum += _lightGrid[x + 1, y + 1]; count++; } // Bottom-Right
+                        _blurGrid[x, y] = sum / count;
+                    }
+                }
+
+                // 4. Diagonal Pass 2: Top-Right to Bottom-Left (_blurGrid -> _lightGrid)
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        float sum = _blurGrid[x, y]; int count = 1;
+                        if (x < width - 1 && y > 0) { sum += _blurGrid[x + 1, y - 1]; count++; } // Top-Right
+                        if (x > 0 && y < height - 1) { sum += _blurGrid[x - 1, y + 1]; count++; } // Bottom-Left
+                        _lightGrid[x, y] = sum / count;
+                    }
+                }
+            }
+        }
+
     }
 }
