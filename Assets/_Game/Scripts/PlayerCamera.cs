@@ -46,8 +46,8 @@ namespace OceanGame
             }
 
             RectInt previousBounds = CurrentVisibleTileBounds;
-
             CurrentVisibleTileBounds = visibleBounds;
+
             OnVisibleTileBoundsChanged?.Invoke(previousBounds, visibleBounds);
         }
 
