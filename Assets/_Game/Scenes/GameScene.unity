@@ -2785,7 +2785,9 @@ MonoBehaviour:
   _lightmapFilterMode: 1
   _extraLightmapPadding: 4
   _fullBrightness: 10
-  _lightDecay: 4
+  _decayBuffer: 2
+  _solidFgDecay: 4
+  _baseDecay: 2
   _blurPasses: 1
 --- !u!1 &2070694658
 GameObject:

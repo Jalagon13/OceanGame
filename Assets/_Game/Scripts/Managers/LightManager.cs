@@ -19,8 +19,13 @@ namespace OceanGame
         [SerializeField] private FilterMode _lightmapFilterMode;
         [SerializeField] private int _extraLightmapPadding;
         [SerializeField, Min(1f)] private float _fullBrightness;
-        [SerializeField] private float _lightDecay = 1f;
+        [SerializeField] private int _decayBuffer = 1;
+        
+        [Header("Decay")]
+        [SerializeField] private float _solidFgDecay = 3f;
+        [SerializeField] private float _baseDecay = 1f;
 
+        [Header("Blur")]
         [Range(0, 4)]
         [SerializeField] private int _blurPasses = 2; // Tweakable in the Inspector!
 
@@ -28,6 +33,7 @@ namespace OceanGame
         private Texture2D _lightmapTexture;
         private float[,] _lightGrid;
         private float[,] _blurGrid; // Caching a reusable scratchpad array for the blur math
+        private int[,] _solidDepthGrid;
         private Color32[] _colorBuffer;
 
         private Queue<Vector2Int> _lightQueue;
@@ -88,11 +94,13 @@ namespace OceanGame
                 _lightGrid = new float[localWidth, localHeight];
                 _blurGrid = new float[localWidth, localHeight];
                 _colorBuffer = new Color32[localWidth * localHeight];
+                _solidDepthGrid = new int[localWidth, localHeight];
             }
             else
             {
                 Array.Clear(_lightGrid, 0, _lightGrid.Length); // Clear existing frames rather than instantiating clean arrays
                 // Note: _blurGrid doesn't need explicit clearing because the pass algorithm explicitly overwrites its cells
+                Array.Clear(_solidDepthGrid, 0, _solidDepthGrid.Length);
             }
 
             _lightQueue.Clear();
@@ -111,6 +119,7 @@ namespace OceanGame
                     if (fgTd.IsAir && bgTd.IsAir)
                     {
                         _lightGrid[localX, localY] = _fullBrightness;
+                        _solidDepthGrid[localX, localY] = 0;
                         _lightQueue.Enqueue(new Vector2Int(localX, localY));
                     }
                 }
@@ -129,12 +138,31 @@ namespace OceanGame
 
                     if (nx >= 0 && nx < localWidth && ny >= 0 && ny < localHeight)
                     {
-                        float potentialLight = currLight - _lightDecay;
-                        if (potentialLight < 0) potentialLight = 0;
+                        int currDepth = _solidDepthGrid[curr.x, curr.y];
 
-                        if (potentialLight > _lightGrid[nx, ny])
+                        // Calculate target tile world coordinates
+                        int worldNx = _lmBounds.xMin + nx;
+                        int worldNy = _lmBounds.yMin + ny;
+
+                        var fgTd = world.FgLayer.GetTileData(worldNx, worldNy);
+                        var bgTd = world.BgLayer.GetTileData(worldNx, worldNy);
+
+                        bool isSolidOrBg = fgTd.HasTile || bgTd.HasTile;
+
+                        // Increment depth if traveling into solid/BG tile, otherwise reset
+                        int nextDepth = isSolidOrBg ? currDepth + 1 : 0;
+
+                        // Apply decay only after exceeding the buffer
+                        float decay = (isSolidOrBg && nextDepth <= _decayBuffer) ? 0f : GetDecay(nx, ny, world);
+
+                        float potentialLight = currLight - decay;
+                        if (potentialLight < 0f) potentialLight = 0f;
+
+                        // Update if potential light is brighter, or equal light with less depth used
+                        if (potentialLight > _lightGrid[nx, ny] || (potentialLight == _lightGrid[nx, ny] && nextDepth < _solidDepthGrid[nx, ny]))
                         {
                             _lightGrid[nx, ny] = potentialLight;
+                            _solidDepthGrid[nx, ny] = nextDepth;
                             _lightQueue.Enqueue(new Vector2Int(nx, ny));
                         }
                     }
@@ -199,11 +227,23 @@ namespace OceanGame
             _lightmapOverlay.rectTransform.localScale = Vector3.one;
         }
 
+        private float GetDecay(int localX, int localY, WorldManager world)
+        {
+            int worldPosX = _lmBounds.xMin + localX;
+            int worldPosY = _lmBounds.yMin + localY;
+
+            var fgTd = world.FgLayer.GetTileData(worldPosX, worldPosY);
+            
+            if (fgTd.HasTile) return _solidFgDecay;
+            
+            return _baseDecay;
+        }
+
         private void BlurLightGrid(int width, int height)
         {
             for (int pass = 0; pass < _blurPasses; pass++)
             {
-                // 1. Horizontal Pass (_lightGrid -> _blurGrid)
+                // Horizontal Pass
                 for (int y = 0; y < height; y++)
                 {
                     for (int x = 0; x < width; x++)
@@ -215,7 +255,7 @@ namespace OceanGame
                     }
                 }
 
-                // 2. Vertical Pass (_blurGrid -> _lightGrid)
+                // Vertical Pass
                 for (int x = 0; x < width; x++)
                 {
                     for (int y = 0; y < height; y++)
@@ -227,7 +267,7 @@ namespace OceanGame
                     }
                 }
 
-                // 3. Diagonal Pass 1: Top-Left to Bottom-Right (_lightGrid -> _blurGrid)
+                // Diagonal Passes
                 for (int y = 0; y < height; y++)
                 {
                     for (int x = 0; x < width; x++)
@@ -239,7 +279,6 @@ namespace OceanGame
                     }
                 }
 
-                // 4. Diagonal Pass 2: Top-Right to Bottom-Left (_blurGrid -> _lightGrid)
                 for (int y = 0; y < height; y++)
                 {
                     for (int x = 0; x < width; x++)
