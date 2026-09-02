@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a530efe869c954f4b8ba8e3aa90934b6, type: 3}
-  m_Name: TD_Door
+  m_Name: TC_Door
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.DoorTileDataSO
   <Size>k__BackingField: {x: 1, y: 2}
   <DrawTile>k__BackingField: {fileID: 11400000, guid: 7d2495a05d7c34815832330efb687922, type: 2}

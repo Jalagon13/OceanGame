@@ -194,8 +194,8 @@ MonoBehaviour:
     AttractSpeed: 12
     TurnSharpness: 10
     ThrowAirResistance: 3
-    GravityForce: 25
-    TerminalVelocity: -30
+    GravityForce: 12.5
+    TerminalVelocity: -15
     Transform: {fileID: 0}
     DesiredDirection: {x: 0, y: 0}
     Velocity: {x: 0, y: 0}

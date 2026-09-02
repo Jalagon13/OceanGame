@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
   Width: 250
   Height: 400
-  SeaLevel: 365
+  SeaLevel: 360
   Seed: 0
   UndergroundBottomLevel: 275
-  UseRandomSeed: 0
+  UseRandomSeed: 1
   Steps:
   - rid: 2688502313846308944
   - rid: 2688502313846308994

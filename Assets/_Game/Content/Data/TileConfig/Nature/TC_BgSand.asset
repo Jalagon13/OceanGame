@@ -10,11 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93c73fdc83b114b56a5d587022066f87, type: 3}
-  m_Name: TD_Sand
+  m_Name: TC_BgSand
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.TileDataSO
-  <MaxHP>k__BackingField: 50
-  <Indestructible>k__BackingField: 0
   <Size>k__BackingField: {x: 1, y: 1}
-  <DrawTile>k__BackingField: {fileID: 11400000, guid: b88885a348c99447d9249ef60af0ee81, type: 2}
-  <DroppedItem>k__BackingField: {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}
-  <IsSolid>k__BackingField: 1
+  <DrawTile>k__BackingField: {fileID: 11400000, guid: 5964087ede5b94248bf7f236ce6f11eb, type: 2}
+  <DroppedItem>k__BackingField: {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
