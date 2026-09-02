@@ -38,6 +38,8 @@ namespace OceanGame
 
         private Queue<Vector2Int> _lightQueue;
         private static readonly Vector2Int[] _directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+        
+        public float FullBrightness => _fullBrightness;
 
         private void Awake()
         {
@@ -116,9 +118,17 @@ namespace OceanGame
                     var fgTd = world.FgLayer.GetTileData(worldPosX, worldPosY);
                     var bgTd = world.BgLayer.GetTileData(worldPosX, worldPosY);
 
-                    if (fgTd.IsAir && bgTd.IsAir)
+                    if (!fgTd.HasTile && !bgTd.HasTile)
                     {
                         _lightGrid[localX, localY] = _fullBrightness;
+                        _solidDepthGrid[localX, localY] = 0;
+                        _lightQueue.Enqueue(new Vector2Int(localX, localY));
+                    }
+                    else if (fgTd.LightLevel > 0 || bgTd.LightLevel > 0)
+                    {
+                        var largestLightVal = Mathf.Max(fgTd.LightLevel, bgTd.LightLevel);
+                        float t = largestLightVal / 100f;
+                        _lightGrid[localX, localY] = Mathf.Lerp(0, _fullBrightness, t);
                         _solidDepthGrid[localX, localY] = 0;
                         _lightQueue.Enqueue(new Vector2Int(localX, localY));
                     }

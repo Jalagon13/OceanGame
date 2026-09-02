@@ -264,14 +264,25 @@ namespace OceanGame
         public bool IsMultiTileRoot => TileConfig.IsMultiTile && OffsetX == 0 && OffsetY == 0;
         public TileConfigSO TileConfig => GameDataRegistry.Instance.GetTileConfigSOFromTileId(TileId);
 
-        public TileData(ushort tileId, byte offsetX = 0, byte offsetY = 0, byte state = 0, bool isSolid = true)
+        public TileData(ushort tileId, byte offsetX = 0, byte offsetY = 0, byte state = 0)
         {
+            this = default; // Need to do this bc i cant access this keyword for initializing some of the stuff below
+        
             TileId = tileId;
             OffsetX = offsetX;
             OffsetY = offsetY;
             State = state;
-            LightLevel = 0;
-            IsSolid = isSolid;
+            
+            // Config variables automatically set if tileconfig exists
+            if(TileConfig != null)
+            {
+                LightLevel = (byte)(TileConfig.LightLevel * 100); // LightLevel here should be a byte between 0 and 100
+                IsSolid = TileConfig.IsSolid;
+            }
+            else
+            {
+                Debug.Log($"U fucked up");
+            }
         }
     }
 }

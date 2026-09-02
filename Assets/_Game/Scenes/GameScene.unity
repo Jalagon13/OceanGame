@@ -1510,6 +1510,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3a59c7f25e99945a28b4d3a54aea23bc, type: 2}
   - {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
   - {fileID: 11400000, guid: 75d3adf13369b426cbdbcc99aabd6f3d, type: 2}
+  - {fileID: 11400000, guid: 7468c0c70321e43ce95a179d9f68e883, type: 2}
   _itemDatabase:
   - {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
   - {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}
@@ -1517,6 +1518,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ed13bde50d6d54218b3be409d52464f5, type: 2}
   - {fileID: 11400000, guid: 7c88a6e8135fd491198a7ef38abd39b0, type: 2}
   - {fileID: 11400000, guid: 8f118cc58053c4854aa4b9cb6b928fa7, type: 2}
+  - {fileID: 11400000, guid: 1c2c9103005254e2096a71428bc94070, type: 2}
 --- !u!114 &970924661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1724,6 +1726,8 @@ MonoBehaviour:
   - _ingredient: {fileID: 11400000, guid: 7c88a6e8135fd491198a7ef38abd39b0, type: 2}
     _amount: 10
   - _ingredient: {fileID: 11400000, guid: 8f118cc58053c4854aa4b9cb6b928fa7, type: 2}
+    _amount: 25
+  - _ingredient: {fileID: 11400000, guid: 1c2c9103005254e2096a71428bc94070, type: 2}
     _amount: 25
 --- !u!114 &1178486984
 MonoBehaviour:
@@ -2782,12 +2786,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.LightManager
   _lightmapOverlay: {fileID: 328273112}
   _multiplyMaterial: {fileID: 2100000, guid: c9c44d8d34d4a42d59d850f4cc9d34f9, type: 2}
-  _lightmapFilterMode: 1
+  _lightmapFilterMode: 0
   _extraLightmapPadding: 4
   _fullBrightness: 10
   _decayBuffer: 2
-  _solidFgDecay: 4
-  _baseDecay: 2
+  _solidFgDecay: 3
+  _baseDecay: 1.5
   _blurPasses: 1
 --- !u!1 &2070694658
 GameObject:

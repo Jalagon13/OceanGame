@@ -51,7 +51,7 @@ namespace OceanGame
 
             if (!targetTileData.HasTile)
             {
-                var tileToPlaceTd = new TileData(tileItem.PlaceTileDataSO.GetId(), isSolid: tileItem.PlaceTileDataSO.IsSolid);
+                var tileToPlaceTd = new TileData(tileItem.PlaceTileDataSO.GetId());
 
                 if (tileToPlaceTd.TileConfig != null && tileToPlaceTd.TileConfig.IsMultiTile)
                 {
