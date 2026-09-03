@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 namespace OceanGame
 {
     [CreateAssetMenu(fileName = "New DoorTileConfigSO", menuName = "OceanGame/TileConfig/DoorTileConfigSO")]
-    public class DoorTileConfigSO : TileConfigSO, IInteractable
+    public class DoorTileConfigSO : TileConfigSO
     {
         [field: Header("Door Tile Settings")]
         [field: SerializeField] public Sprite ClosedDoorSprite { get; private set; }
@@ -28,26 +28,6 @@ namespace OceanGame
                 default:
                     return DrawTile;
             }
-        }
-        
-        public void OnInteract(int x, int y)
-        {
-            var doorTd = WorldManager.Instance.FgGrid.GetTileData(x, y);
-            
-            if(doorTd.State == 0)
-            {
-                Debug.Log($"Opening door");
-                doorTd.State = 1;
-                doorTd.IsSolid = false;
-            }
-            else if (doorTd.State == 1)
-            {
-                Debug.Log($"Closing door");
-                doorTd.State = 0;
-                doorTd.IsSolid = true;   
-            }
-            
-            WorldManager.Instance.FgGrid.ChangeMultiTileData(x, y, doorTd, true);
         }
     }
 }

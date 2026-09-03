@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace OceanGame
 {
+    [Serializable]
     public class OreGenStep : WorldGenStep
     {
         [SerializeField] private TileConfigSO _ironOreTile;

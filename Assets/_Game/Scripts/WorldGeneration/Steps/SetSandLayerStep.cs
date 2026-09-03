@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 namespace OceanGame
 {
+    [Serializable]
     public class SetSandLayerStep : WorldGenStep
     {
         [SerializeField] private TileConfigSO _sandTile;

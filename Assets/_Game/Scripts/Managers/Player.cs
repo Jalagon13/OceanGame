@@ -82,10 +82,7 @@ namespace OceanGame
             var pos = WorldManager.MouseWorldTilePosition;
             var fgtd = WorldManager.Instance.FgGrid.GetTileData(pos.x, pos.y);
 
-            if (fgtd.TileConfig is IInteractable i)
-            {
-                i.OnInteract(pos.x, pos.y);
-            }
+            fgtd.TileConfig.InteractBehavior?.Interact(pos.x, pos.y);
         }
 
         private void OnJumpPressed()

@@ -10,10 +10,12 @@ namespace OceanGame
         [field: SerializeField] public int MaxHP { get; private set; } = 50;
         [field: SerializeField, Range(0, 1f)] public float LightLevel { get; private set; } = 0;
         [field: SerializeField] public bool Indestructible { get; private set; } = false;
+        [field: SerializeField] public bool IsSolid { get; private set; } = true;
         [field: SerializeField] public Vector2Int Size { get; private set; } = new(1, 1);
         [field: SerializeField] public TileBase DrawTile { get; private set; }
         [field: SerializeField] public ItemSO DroppedItem { get; private set; }
-        [field: SerializeField] public bool IsSolid { get; private set; } = true;
+        [field: SerializeReference]
+        [field: SerializeField] public InteractBehavior InteractBehavior { get; private set; }
 
         public bool IsMultiTile => Size != new Vector2Int(1, 1);
 
