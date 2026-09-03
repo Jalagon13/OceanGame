@@ -1511,6 +1511,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
   - {fileID: 11400000, guid: 75d3adf13369b426cbdbcc99aabd6f3d, type: 2}
   - {fileID: 11400000, guid: 7468c0c70321e43ce95a179d9f68e883, type: 2}
+  - {fileID: 11400000, guid: 056b279fd47f642cc8e24b2ed62ab624, type: 2}
   _itemDatabase:
   - {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
   - {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}
@@ -1519,6 +1520,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7c88a6e8135fd491198a7ef38abd39b0, type: 2}
   - {fileID: 11400000, guid: 8f118cc58053c4854aa4b9cb6b928fa7, type: 2}
   - {fileID: 11400000, guid: 1c2c9103005254e2096a71428bc94070, type: 2}
+  - {fileID: 11400000, guid: 210c16a27f4614f9cbf0daa3685d375c, type: 2}
 --- !u!114 &970924661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1728,6 +1730,8 @@ MonoBehaviour:
   - _ingredient: {fileID: 11400000, guid: 8f118cc58053c4854aa4b9cb6b928fa7, type: 2}
     _amount: 25
   - _ingredient: {fileID: 11400000, guid: 1c2c9103005254e2096a71428bc94070, type: 2}
+    _amount: 25
+  - _ingredient: {fileID: 11400000, guid: 210c16a27f4614f9cbf0daa3685d375c, type: 2}
     _amount: 25
 --- !u!114 &1178486984
 MonoBehaviour:
