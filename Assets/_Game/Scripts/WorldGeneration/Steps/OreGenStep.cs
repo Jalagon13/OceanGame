@@ -79,7 +79,7 @@ namespace OceanGame
         private bool IsValidVeinPosition(WorldGenContext ctx, Vector2Int pos, HashSet<Vector2Int> existingPositions)
         {
             if(pos.y >= ctx.SurfaceHeightValues[pos.x] - _belowSurfaceHeightOffset) return false; // Makes it spawn at least some distance away from the surface
-            if(ctx.FgTiles[pos.x, pos.y].IsAir) return false;
+            if(ctx.FgGrid[pos.x, pos.y].IsAir) return false;
         
             foreach (var existingPos in existingPositions)
             {
@@ -108,7 +108,7 @@ namespace OceanGame
             Queue<Vector2Int> frontier = new();
 
             // 2. Initialize with the seed position
-            ctx.FgTiles[seedPos.x, seedPos.y] = new TileData(_ironOreTile.GetId());
+            ctx.FgGrid[seedPos.x, seedPos.y] = new TileData(_ironOreTile.GetId());
             placedOrePositions.Add(seedPos);
             visitedPositions.Add(seedPos);
 
@@ -116,7 +116,7 @@ namespace OceanGame
             foreach (var dir in _cardinalDirections)
             {
                 Vector2Int neighbor = seedPos + dir;
-                bool isAir = ctx.FgTiles[seedPos.x, seedPos.y].IsAir;
+                bool isAir = ctx.FgGrid[seedPos.x, seedPos.y].IsAir;
                 
                 if (IsWithinWorldBounds(ctx, neighbor) && !isAir)
                 {
@@ -147,7 +147,7 @@ namespace OceanGame
                 if (roll <= spawnChance)
                 {
                     // Success! Convert this tile to ore
-                    ctx.FgTiles[currentTile.x, currentTile.y] = new TileData(_ironOreTile.GetId());
+                    ctx.FgGrid[currentTile.x, currentTile.y] = new TileData(_ironOreTile.GetId());
                     placedOrePositions.Add(currentTile);
 
                     // Since this tile is now part of the cluster, add ITS neighbors to the frontier

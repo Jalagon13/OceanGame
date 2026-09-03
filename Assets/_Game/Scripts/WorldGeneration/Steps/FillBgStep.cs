@@ -36,10 +36,10 @@ namespace OceanGame
 
                 for (int y = bottomLevel; y <= fillTopY; y++)
                 {
-                    ctx.BgTiles[x, y] = new TileData(sandBgTileId);
+                    ctx.BgGrid[x, y] = new TileData(sandBgTileId);
                 }
 
-                if (x % 32 == 0) yield return null;
+                if (x % ctx.GenColumnsPerFrame == 0) yield return null;
             }
         }
         
@@ -49,7 +49,7 @@ namespace OceanGame
 
             for (int y = surfaceValue; y >= 0; y--)
             {
-                if (ctx.FgTiles[x, y].IsSolid)
+                if (ctx.FgGrid[x, y].IsSolid)
                 {
                     if (!IsSolidTile(x - 1, y, ctx) || !IsSolidTile(x + 1, y, ctx)) continue;
                 
@@ -65,7 +65,7 @@ namespace OceanGame
             if (x < 0 || x >= ctx.Width || y < 0 || y >= ctx.Height)
                 return false;
 
-            return ctx.FgTiles[x, y].IsSolid;
+            return ctx.FgGrid[x, y].IsSolid;
         }
     }
 }

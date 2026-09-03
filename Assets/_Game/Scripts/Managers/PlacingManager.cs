@@ -47,7 +47,7 @@ namespace OceanGame
             if (distanceToPlayer > Player.Instance.InteractRange) return false;
 
             var world = WorldManager.Instance;
-            var targetTileData = world.FgLayer.GetTileData(mouseTilePos.x, mouseTilePos.y);
+            var targetTileData = world.FgGrid.GetTileData(mouseTilePos.x, mouseTilePos.y);
 
             if (!targetTileData.HasTile)
             {
@@ -55,11 +55,11 @@ namespace OceanGame
 
                 if (tileToPlaceTd.TileConfig != null && tileToPlaceTd.TileConfig.IsMultiTile)
                 {
-                    world.FgLayer.PlaceMultiTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true);
+                    world.FgGrid.PlaceMultiTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true);
                 }
                 else
                 {
-                    world.FgLayer.SetTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true);
+                    world.FgGrid.SetTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true);
                 }
 
                 InventoryInputManager.Instance.GetActiveInvSlot().RemoveFromCurrentAmount(1);

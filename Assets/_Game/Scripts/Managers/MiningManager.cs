@@ -45,7 +45,7 @@ namespace OceanGame
             float distanceToPlayer = Vector2.Distance(Player.Instance.transform.position, mouseWorldPos);
             if (distanceToPlayer > Player.Instance.InteractRange) return false;
 
-            var layer = tool.TargetLayer == WorldManager.LayerType.Foreground ? WorldManager.Instance.FgLayer : WorldManager.Instance.BgLayer;
+            var layer = tool.TargetLayer == WorldManager.LayerType.Foreground ? WorldManager.Instance.FgGrid : WorldManager.Instance.BgGrid;
             var tileData = layer.GetTileData(mouseTilePos.x, mouseTilePos.y);
 
             if (tileData.HasTile)

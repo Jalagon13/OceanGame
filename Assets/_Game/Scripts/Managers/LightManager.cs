@@ -115,8 +115,8 @@ namespace OceanGame
                     int worldPosX = xMin + localX;
                     int worldPosY = yMin + localY;
 
-                    var fgTd = world.FgLayer.GetTileData(worldPosX, worldPosY);
-                    var bgTd = world.BgLayer.GetTileData(worldPosX, worldPosY);
+                    var fgTd = world.FgGrid.GetTileData(worldPosX, worldPosY);
+                    var bgTd = world.BgGrid.GetTileData(worldPosX, worldPosY);
 
                     if (!fgTd.HasTile && !bgTd.HasTile)
                     {
@@ -154,8 +154,8 @@ namespace OceanGame
                         int worldNx = _lmBounds.xMin + nx;
                         int worldNy = _lmBounds.yMin + ny;
 
-                        var fgTd = world.FgLayer.GetTileData(worldNx, worldNy);
-                        var bgTd = world.BgLayer.GetTileData(worldNx, worldNy);
+                        var fgTd = world.FgGrid.GetTileData(worldNx, worldNy);
+                        var bgTd = world.BgGrid.GetTileData(worldNx, worldNy);
 
                         bool isSolidOrBg = fgTd.HasTile || bgTd.HasTile;
 
@@ -192,8 +192,8 @@ namespace OceanGame
                         int worldPosX = xMin + localX;
                         int worldPosY = yMin + localY;
 
-                        var fgTd = world.FgLayer.GetTileData(worldPosX, worldPosY);
-                        var bgTd = world.BgLayer.GetTileData(worldPosX, worldPosY);
+                        var fgTd = world.FgGrid.GetTileData(worldPosX, worldPosY);
+                        var bgTd = world.BgGrid.GetTileData(worldPosX, worldPosY);
 
                         if (fgTd.IsAir && bgTd.IsAir)
                         {
@@ -242,7 +242,7 @@ namespace OceanGame
             int worldPosX = _lmBounds.xMin + localX;
             int worldPosY = _lmBounds.yMin + localY;
 
-            var fgTd = world.FgLayer.GetTileData(worldPosX, worldPosY);
+            var fgTd = world.FgGrid.GetTileData(worldPosX, worldPosY);
             
             if (fgTd.HasTile) return _solidFgDecay;
             

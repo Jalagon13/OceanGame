@@ -19,11 +19,11 @@ namespace OceanGame
                 {
                     if(!ctx.CaveGrid[x, y])
                     {
-                        ctx.FgTiles[x, y] = new TileData(_limestoneTile.GetId());
+                        ctx.FgGrid[x, y] = new TileData(_limestoneTile.GetId());
                     }
                 }
 
-                if (x % 32 == 0) yield return null;
+                if (x % ctx.GenColumnsPerFrame == 0) yield return null;
             }
         }
     }

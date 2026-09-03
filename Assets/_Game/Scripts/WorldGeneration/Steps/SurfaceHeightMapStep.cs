@@ -38,7 +38,7 @@ namespace OceanGame
                 
                 ctx.SurfaceHeightValues[x] = Mathf.Clamp(Mathf.RoundToInt(combinedHeight), 0, ctx.Height);
 
-                if (x % 32 == 0) yield return null;
+                if (x % ctx.GenColumnsPerFrame == 0) yield return null;
             }
         }
     }

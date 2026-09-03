@@ -172,7 +172,7 @@ namespace OceanGame
 
             ActiveHotbarIndex = newIndex;
             OnActiveHotbarIndexChanged?.Invoke(ActiveHotbarIndex);
-            Debug.Log($"Active Hotbar Index is: {newIndex}");
+            // Debug.Log($"Active Hotbar Index is: {newIndex}");
         }
 
         

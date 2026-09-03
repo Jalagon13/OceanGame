@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe0e4c828bd83465e82ab75a6c973b41, type: 3}
   m_Name: DefaultWorldPreset
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
+  Seed: 0
+  UseRandomSeed: 1
+  GenColumnsPerFrame: 50
   Width: 250
   Height: 400
-  SeaLevel: 360
-  Seed: 0
+  SeaLevel: 365
   UndergroundBottomLevel: 275
-  UseRandomSeed: 1
   Steps:
   - rid: 2688502313846308944
   - rid: 2688502313846308994
@@ -25,6 +26,7 @@ MonoBehaviour:
   - rid: 2688502313846309004
   - rid: 2688502313846309037
   - rid: 2688502357985853566
+  - rid: 2895663963195310357
   references:
     version: 2
     RefIds:
@@ -86,3 +88,7 @@ MonoBehaviour:
         _belowSurfaceHeightOffset: 4
         _minVeinSize: 3
         _maxVeinSize: 8
+    - rid: 2895663963195310357
+      type: {class: SetFluidStep, ns: OceanGame, asm: Assembly-CSharp}
+      data:
+        RunStep: 1

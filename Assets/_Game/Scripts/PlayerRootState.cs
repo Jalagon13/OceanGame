@@ -26,7 +26,7 @@ namespace OceanGame
 
         // protected override State GetTransition()
         // {
-        //     if (_ctx.IsInOcean() && ActiveChild != Swimming) return Swimming;
+        //     if (_ctx.IsInWater() && ActiveChild != Swimming) return Swimming;
 
         //     return null;
         // }
@@ -116,7 +116,7 @@ namespace OceanGame
                 return (Parent as PlayerRootState).Grounded;
             }
             
-            if(_ctx.IsInOcean())
+            if(_ctx.IsInWater())
             {
                 if (_jumpBufferTimer > 0f)
                 {
@@ -241,7 +241,7 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            if (_ctx.IsHeadAboveWater() && (_ctx.JumpPressed || _ctx.WaterJumpBuffered))
+            if (_ctx.IsHeadInAir() && (_ctx.JumpPressed || _ctx.WaterJumpBuffered))
             {
                 _ctx.JumpPressed = false;
                 _ctx.WaterJumpBuffered = false;
@@ -250,7 +250,7 @@ namespace OceanGame
                 return (Parent as PlayerRootState).Airborne;
             }
 
-            if (!_ctx.IsInOcean())
+            if (!_ctx.IsInWater())
             {
                 if (!_ctx.CollisionResult.TouchingBottom)
                 {
@@ -307,7 +307,7 @@ namespace OceanGame
 
         private void ExecuteDash()
         {
-            if (_ctx.SwimDashCooldownTimer > 0f || _ctx.IsHeadAboveWater()) // If head is above water, do not execute dash only dash when i am underwater
+            if (_ctx.SwimDashCooldownTimer > 0f || _ctx.IsHeadInAir()) // If head is above water, do not execute dash only dash when i am underwater
             {
                 return;
             }

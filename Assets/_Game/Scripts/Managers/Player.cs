@@ -80,7 +80,7 @@ namespace OceanGame
             if (!WorldManager.Instance.IsWorldReady || WorldManager.Instance.MouseOverUI || !InventoryCursorManager.Instance.CursorSlot.IsEmpty || context.phase != InputActionPhase.Started) return;
 
             var pos = WorldManager.MouseWorldTilePosition;
-            var fgtd = WorldManager.Instance.FgLayer.GetTileData(pos.x, pos.y);
+            var fgtd = WorldManager.Instance.FgGrid.GetTileData(pos.x, pos.y);
 
             if (fgtd.TileConfig is IInteractable i)
             {
@@ -93,7 +93,7 @@ namespace OceanGame
             if(!WorldManager.Instance.IsWorldReady) return;
         
             bool canJumpFromGround = Ctx.CollisionResult.TouchingBottom;
-            bool canJumpFromWater = _machine.Root.Leaf() is PlayerSwimmingState && Ctx.IsHeadAboveWater();
+            bool canJumpFromWater = _machine.Root.Leaf() is PlayerSwimmingState && Ctx.IsHeadInAir();
 
             if (canJumpFromGround || canJumpFromWater)
             {
@@ -154,24 +154,20 @@ namespace OceanGame
         [HideInInspector] public bool WaterJumpBuffered = false;
         [HideInInspector] public float SwimDashCooldownTimer;
 
-        public bool IsHeadAboveWater()
+        public bool IsHeadInAir()
         {
-            if (Transform.position.y + 1f >= WorldManager.Instance.WorldGen.CurrentWorldGenPreset.SeaLevel)
-            {
-                return true;
-            }
+            // Get top of head position using actual collider height
+            float headY = Transform.position.y + 1;
+            Vector2Int playerHeadTop = new Vector2Int(Mathf.FloorToInt(Transform.position.x), Mathf.FloorToInt(headY));
 
-            return false;
+            // Head is above water if top tile is AIR (or not Water)
+            return WorldManager.Instance.FluidGrid.GetFluidType(playerHeadTop.x, playerHeadTop.y) == FluidType.Air;
         }
 
-        public bool IsInOcean()
+        public bool IsInWater()
         {
-            if (Transform.position.y - 0.6f <= WorldManager.Instance.WorldGen.CurrentWorldGenPreset.SeaLevel)
-            {
-                return true;
-            }
-
-            return false;
+            Vector2Int playerTilePos = new Vector2Int(Mathf.FloorToInt(Transform.position.x), Mathf.FloorToInt(Transform.position.y - 0.5f));
+            return WorldManager.Instance.FluidGrid.GetFluidType(playerTilePos.x, playerTilePos.y) == FluidType.Water;
         }
 
     }

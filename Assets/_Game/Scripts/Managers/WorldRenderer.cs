@@ -51,8 +51,8 @@ namespace OceanGame
                         if (!newBounds.Contains(oldPos2D))
                         {
                             Vector3Int tilePos = new Vector3Int(x, y, 0);
-                            world.FgLayer.Tilemap.SetTile(tilePos, null);
-                            world.BgLayer.Tilemap.SetTile(tilePos, null);
+                            world.FgGrid.Tilemap.SetTile(tilePos, null);
+                            world.BgGrid.Tilemap.SetTile(tilePos, null);
                             _waterTilemap.SetTile(tilePos, null);
                             _damageOverlayTilemap.SetTile(tilePos, null);
                         }
@@ -68,7 +68,7 @@ namespace OceanGame
                     Vector2Int tilePos = new(x, y);
 
                     // Process Foreground Layer
-                    var fgTd = world.FgLayer.GetTileData(x, y);
+                    var fgTd = world.FgGrid.GetTileData(x, y);
                     Vector3Int tilePos3D = (Vector3Int)tilePos;
 
                     if (fgTd.HasTile)
@@ -87,11 +87,11 @@ namespace OceanGame
                                     byte state = fgTd.State;
                                     TileBase interpretedTile = fgtc.GetStateInterpretedTileForRendering(state);
 
-                                    world.FgLayer.Tilemap.SetTile(tilePos3D, interpretedTile);
+                                    world.FgGrid.Tilemap.SetTile(tilePos3D, interpretedTile);
                                 }
                                 else
                                 {
-                                    world.FgLayer.Tilemap.SetTile(tilePos3D, null);
+                                    world.FgGrid.Tilemap.SetTile(tilePos3D, null);
                                 }
                             }
                             else
@@ -101,18 +101,18 @@ namespace OceanGame
                                 byte state = fgTd.State;
                                 TileBase interpretedTile = fgtc.GetStateInterpretedTileForRendering(state);
 
-                                world.FgLayer.Tilemap.SetTile(tilePos3D, interpretedTile);
+                                world.FgGrid.Tilemap.SetTile(tilePos3D, interpretedTile);
                             }
                         }
                     }
                     else if(fgTd.IsAir) // If we are setting it to air
                     {
-                        world.FgLayer.Tilemap.SetTile(tilePos3D, null);
+                        world.FgGrid.Tilemap.SetTile(tilePos3D, null);
                     }
 
                     // NTFS: Make it so it renders any damaged tile that is visible either background or foreground. Right now this only draws visible foreground damaged tiles
                     // Process cracked tile decals
-                    if (world.FgLayer.DamagedTiles.TryGetValue(tilePos, out int currentDamage) && fgTd.HasTile)
+                    if (world.FgGrid.DamagedTiles.TryGetValue(tilePos, out int currentDamage) && fgTd.HasTile)
                     {
                         int maxHp = fgTd.TileConfig.MaxHP;
 
@@ -134,7 +134,7 @@ namespace OceanGame
 
 
                     // Process Background Layer
-                    var bgTd = world.BgLayer.GetTileData(x, y);
+                    var bgTd = world.BgGrid.GetTileData(x, y);
                     
                     if (bgTd.HasTile)
                     {
@@ -142,20 +142,27 @@ namespace OceanGame
                         
                         if (bgtc != null)
                         {
-                            world.BgLayer.Tilemap.SetTile(tilePos3D, bgtc.DrawTile);
+                            world.BgGrid.Tilemap.SetTile(tilePos3D, bgtc.DrawTile);
                         }
                     }
                     else if(bgTd.IsAir) // If we are setting it to air
                     {
-                        world.BgLayer.Tilemap.SetTile(tilePos3D, null);
+                        world.BgGrid.Tilemap.SetTile(tilePos3D, null);
                     }
                     
-                    // Process Sea Layer. Place water tile everywhere
-                    int seaLevel = world.WorldGen.CurrentWorldGenPreset.SeaLevel;
-                    
-                    if (y <= seaLevel && !world.FgLayer.GetTileData(x, y).IsOutOfBounds)
+                    // Process Sea Layer
+                    FluidType fluid = world.FluidGrid.GetFluidType(x, y);
+                    switch (fluid)
                     {
-                        _waterTilemap.SetTile(tilePos3D, _waterTile);
+                        case FluidType.Water:
+                            _waterTilemap.SetTile(tilePos3D, _waterTile);
+                            break;
+                        case FluidType.Air:
+                            _waterTilemap.SetTile(tilePos3D, null);
+                            break;
+                        default:
+                            _waterTilemap.SetTile(tilePos3D, null);
+                            break;
                     }
                 }
             }

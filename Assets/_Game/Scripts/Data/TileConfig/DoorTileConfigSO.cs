@@ -32,7 +32,7 @@ namespace OceanGame
         
         public void OnInteract(int x, int y)
         {
-            var doorTd = WorldManager.Instance.FgLayer.GetTileData(x, y);
+            var doorTd = WorldManager.Instance.FgGrid.GetTileData(x, y);
             
             if(doorTd.State == 0)
             {
@@ -47,7 +47,7 @@ namespace OceanGame
                 doorTd.IsSolid = true;   
             }
             
-            WorldManager.Instance.FgLayer.ChangeMultiTileData(x, y, doorTd, true);
+            WorldManager.Instance.FgGrid.ChangeMultiTileData(x, y, doorTd, true);
         }
     }
 }

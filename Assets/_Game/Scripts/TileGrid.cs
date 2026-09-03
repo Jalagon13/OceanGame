@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 namespace OceanGame
 {
-    public class TileLayer
+    public class TileGrid
     {
         private readonly TileData[] _tiles;
         private readonly int _width;
@@ -14,7 +14,7 @@ namespace OceanGame
         public Dictionary<Vector2Int, int> DamagedTiles { get; private set; } = new(); // Stores accumulated damage only for tiles that have taken damage
         public Tilemap Tilemap { get; }
 
-        public TileLayer(int width, int height, Tilemap tilemap)
+        public TileGrid(int width, int height, Tilemap tilemap)
         {
             _width = width;
             _height = height;

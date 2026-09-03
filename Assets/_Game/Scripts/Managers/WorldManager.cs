@@ -16,8 +16,9 @@ namespace OceanGame
         [SerializeField] private Tilemap _backgroundTilemap;
 
         public enum LayerType { Foreground, Background }
-        public TileLayer FgLayer { get; private set; }
-        public TileLayer BgLayer { get; private set; }
+        public FluidGrid FluidGrid { get; private set; }
+        public TileGrid FgGrid { get; private set; }
+        public TileGrid BgGrid { get; private set; }
         public static Vector2Int MouseWorldTilePosition { get; private set; }
         public static Vector2 MouseWorldPosition { get; private set; }
         public bool MouseOverUI { get; private set; }
@@ -43,16 +44,18 @@ namespace OceanGame
             var height = context.Height;
 
             // Create fresh layers matching generated dimensions
-            FgLayer = new TileLayer(width, height, _foregroundTilemap);
-            BgLayer = new TileLayer(width, height, _backgroundTilemap);
+            FgGrid = new TileGrid(width, height, _foregroundTilemap);
+            BgGrid = new TileGrid(width, height, _backgroundTilemap);
+            FluidGrid = new FluidGrid(width, height);
 
             // Copy generated 2D tile arrays into layers
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    FgLayer.SetTileData(x, y, context.FgTiles[x, y]);
-                    BgLayer.SetTileData(x, y, context.BgTiles[x, y]);
+                    FgGrid.SetTileData(x, y, context.FgGrid[x, y]);
+                    BgGrid.SetTileData(x, y, context.BgGrid[x, y]);
+                    FluidGrid.SetFluidData(x, y, context.FluidGrid[x, y]);
                 }
             }
 
@@ -65,7 +68,7 @@ namespace OceanGame
 
         public void DamageTile(Vector2Int position, int damageAmount, LayerType layerType, bool refreshCurrentBounds = false)
         {
-            TileLayer layer = layerType == LayerType.Foreground ? FgLayer : BgLayer;
+            TileGrid layer = layerType == LayerType.Foreground ? FgGrid : BgGrid;
             layer.DamageTile(position.x, position.y, damageAmount, refreshCurrentBounds);
         }
     }

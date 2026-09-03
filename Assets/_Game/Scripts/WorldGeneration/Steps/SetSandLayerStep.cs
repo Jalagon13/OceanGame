@@ -19,8 +19,8 @@ namespace OceanGame
 
                 for (int y = ctx.SurfaceHeightValues[x]; y >= minYForSand; y--)
                 {
-                    bool hasTile = ctx.FgTiles[x, y].HasTile;
-                    bool hasTileAbove = ctx.FgTiles[x, y + 1].HasTile;
+                    bool hasTile = ctx.FgGrid[x, y].HasTile;
+                    bool hasTileAbove = ctx.FgGrid[x, y + 1].HasTile;
 
                     if (!hasTile || hasTileAbove)
                     {
@@ -30,13 +30,13 @@ namespace OceanGame
                     for (int depth = 0; depth < sandDepth; depth++)
                     {
                         int fillY = y - depth;
-                        ctx.FgTiles[x, fillY] = new TileData(_sandTile.GetId());
+                        ctx.FgGrid[x, fillY] = new TileData(_sandTile.GetId());
                     }
 
                     y -= sandDepth - 1;
                 }
 
-                if(x % 32 == 0) yield return null;
+                if (x % ctx.GenColumnsPerFrame == 0) yield return null;
             }
         }
 

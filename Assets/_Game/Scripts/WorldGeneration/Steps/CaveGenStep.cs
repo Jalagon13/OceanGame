@@ -123,7 +123,7 @@ namespace OceanGame
 
                 }
 
-                if (x % 50 == 0) yield return null;
+                if (x % ctx.GenColumnsPerFrame == 0) yield return null;
             }
 
         }
