@@ -7,8 +7,8 @@ namespace OceanGame
     [CreateAssetMenu(fileName = "New Gen Pipeline", menuName = "OceanGame/WorldGenPipelineSO")]
     public class WorldGenPipelineSO : ScriptableObject
     {
-        public int Seed = 0;
         public bool UseRandomSeed = true;
+        public int Seed = 0;
         public int GenColumnsPerFrame = 50;
         
         [Header("World")]

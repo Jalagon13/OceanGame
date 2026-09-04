@@ -58,7 +58,7 @@ namespace OceanGame
             var path = StatePath(_machine.Root.Leaf());
             if (path != _lastPath)
             {
-                Debug.Log($"{name}: {path}");
+                // Debug.Log($"{name}: {path}");
                 _lastPath = path;
             }
         }
@@ -82,7 +82,10 @@ namespace OceanGame
             var pos = WorldManager.MouseWorldTilePosition;
             var fgtd = WorldManager.Instance.FgGrid.GetTileData(pos.x, pos.y);
 
-            fgtd.TileConfig.InteractBehavior?.Interact(pos.x, pos.y);
+            if(fgtd.HasTile && fgtd.TileConfig.InteractBehavior != null)
+            {
+                fgtd.TileConfig.InteractBehavior.Interact(pos.x, pos.y);
+            }
         }
 
         private void OnJumpPressed()

@@ -9,7 +9,9 @@ namespace OceanGame
     public class WorldManager : MonoBehaviour
     {
         public static WorldManager Instance { get; private set; }
-        
+
+        public event Action OnWorldReady;
+
         [Header("World References")]
         [field: SerializeField] public WorldGenerator WorldGen { get; private set; }
         [SerializeField] private Tilemap _foregroundTilemap;
@@ -23,7 +25,7 @@ namespace OceanGame
         public static Vector2 MouseWorldPosition { get; private set; }
         public bool MouseOverUI { get; private set; }
         public bool IsWorldReady { get; private set; } = false;
-        public event Action OnWorldReady;
+       
 
         private void Awake()
         {

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefaultWorldPreset
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
   Seed: 0
-  UseRandomSeed: 1
+  UseRandomSeed: 0
   GenColumnsPerFrame: 50
   Width: 250
   Height: 400

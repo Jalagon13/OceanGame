@@ -7,6 +7,9 @@ namespace OceanGame
 {
     public class TileGrid
     {
+        public event Action<Vector2Int> OnTileDestroyed;
+        public event Action<Vector2Int> OnTilePlaced;
+    
         private readonly TileData[] _tiles;
         private readonly int _width;
         private readonly int _height;
@@ -118,6 +121,8 @@ namespace OceanGame
                 // Single 1x1 tile destruction
                 _tiles[y * _width + x] = TileData.Air;
             }
+            
+            OnTileDestroyed?.Invoke(new(x, y));
 
             if (refreshCurrentBounds)
             {
@@ -129,11 +134,16 @@ namespace OceanGame
             }
         }
         
-        public void SetTileData(int x, int y, TileData newTileData, bool refreshCurrentBounds = false)
+        public void SetTileData(int x, int y, TileData newTileData, bool refreshCurrentBounds = false, bool manualyPlaced = false)
         {
             if (!IsInBounds(x, y)) return;
 
             _tiles[y * _width + x] = newTileData;
+            
+            if(manualyPlaced)
+            {
+                OnTilePlaced?.Invoke(new(x, y));
+            }
 
             if (refreshCurrentBounds && PlayerCamera.Instance.PositionExistsInBounds(x, y))
             {
@@ -177,7 +187,7 @@ namespace OceanGame
             }
         }
 
-        public void PlaceMultiTileData(int x, int y, TileData newTileData, bool refreshCurrentBounds = false)
+        public void PlaceMultiTileData(int x, int y, TileData newTileData, bool refreshCurrentBounds = false, bool manualyPlaced = false)
         {
             if (!IsInBounds(x, y)) return;
             
@@ -203,6 +213,11 @@ namespace OceanGame
                         _tiles[targetY * _width + targetX] = newTileData;
                     }
                 }
+            }
+            
+            if(manualyPlaced)
+            {
+                OnTilePlaced?.Invoke(new(x, y));
             }
 
             if (refreshCurrentBounds && PlayerCamera.Instance.PositionExistsInBounds(x, y))

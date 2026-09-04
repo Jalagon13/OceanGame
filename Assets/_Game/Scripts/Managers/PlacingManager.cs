@@ -55,11 +55,11 @@ namespace OceanGame
 
                 if (tileToPlaceTd.TileConfig != null && tileToPlaceTd.TileConfig.IsMultiTile)
                 {
-                    world.FgGrid.PlaceMultiTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true);
+                    world.FgGrid.PlaceMultiTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true, true);
                 }
                 else
                 {
-                    world.FgGrid.SetTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true);
+                    world.FgGrid.SetTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true, true);
                 }
 
                 InventoryInputManager.Instance.GetActiveInvSlot().RemoveFromCurrentAmount(1);
