@@ -44,7 +44,7 @@ namespace OceanGame
         {
             if(CursorSlot.IsEmpty || WorldManager.Instance.MouseOverUI || context.phase != InputActionPhase.Started) return;
             
-            Vector2 aimDirection = WorldManager.MouseWorldPosition - (Vector2)Player.Instance.transform.position;
+            Vector2 aimDirection = WorldManager.MouseWorldPosition - (Vector2)Player.Instance.Character.transform.position;
             aimDirection.Normalize();
             aimDirection *= _throwItemForce;
             

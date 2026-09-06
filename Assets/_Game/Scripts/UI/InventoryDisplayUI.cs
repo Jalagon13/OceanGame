@@ -50,7 +50,7 @@ namespace OceanGame
         {
             if(_externalCraftMenuUI.gameObject.activeInHierarchy)
             {
-                float distance = Vector2.Distance(Player.Instance.transform.position, _interactedCtPos);
+                float distance = Vector2.Distance(Player.Instance.Character.transform.position, _interactedCtPos);
                 
                 if(distance > Player.Instance.InteractRange)
                 {

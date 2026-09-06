@@ -5,16 +5,16 @@ namespace OceanGame
 {
     #region Root State
 
-    // Root state remains active permanently
+    [Serializable]
     public class PlayerRootState : State
     {
         public readonly PlayerGroundedState Grounded;
         public readonly PlayerAirborneState Airborne;
         public readonly PlayerSwimmingState Swimming;
 
-        private readonly PlayerContext _ctx;
+        private readonly ServerCharacter _ctx;
 
-        public PlayerRootState(StateMachine m, PlayerContext ctx) : base(m, null)
+        public PlayerRootState(StateMachine m, ServerCharacter ctx) : base(m, null)
         {
             _ctx = ctx;
             Grounded = new PlayerGroundedState(m, this, ctx);
@@ -23,13 +23,6 @@ namespace OceanGame
         }
 
         protected override State GetInitialState() => Grounded;
-
-        // protected override State GetTransition()
-        // {
-        //     if (_ctx.IsInWater() && ActiveChild != Swimming) return Swimming;
-
-        //     return null;
-        // }
     }
 
     #endregion
@@ -42,9 +35,10 @@ namespace OceanGame
         public readonly PlayerMoveState Move;
         public readonly PlayerKnockbackState Knockback;
     
-        private readonly PlayerContext _ctx;
+        private readonly ServerCharacter _ctx;
+        private Player _player;
     
-        public PlayerGroundedState(StateMachine m, State parent, PlayerContext ctx) : base(m, parent)
+        public PlayerGroundedState(StateMachine m, State parent, ServerCharacter ctx) : base(m, parent)
         {
             _ctx = ctx;
 
@@ -57,10 +51,10 @@ namespace OceanGame
 
         protected override State GetTransition()
         {
-            if(_ctx.JumpPressed)
+            if(_player.JumpPressed)
             {
-                _ctx.JumpPressed = false;
-                _ctx.Velocity.y = _ctx.MinJumpSpeed;
+                _player.JumpPressed = false;
+                _ctx.Velocity.y = _player.MinJumpSpeed;
                 
                 return (Parent as PlayerRootState).Airborne;
             }
@@ -76,7 +70,8 @@ namespace OceanGame
         protected override void OnEnter()
         {
             // On Grounded Animation set here
-            _ctx.PlayerBodyCollider.size = _ctx.WalkingBoxColliderSize;
+            _player = Player.Instance;
+            _ctx.CurrentBodyColliderSize = Player.Instance.WalkingBoxColliderSize;
         }
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
@@ -91,7 +86,8 @@ namespace OceanGame
 
     public class PlayerAirborneState : State
     {
-        private readonly PlayerContext _ctx;
+        private readonly ServerCharacter _ctx;
+        private Player _player;
         private float _jumpHoldTimer; // Used for keeping track of how long jump has been held.
         private bool _jumpHoldEnded;
         private float _jumpBufferTimer; // Used for keeping track of how long the player can buffer a jump after pressing jump while airborne
@@ -99,7 +95,7 @@ namespace OceanGame
         private bool _coyoteJumpRequested;
         private bool _topTouchedFlag; // Used for checking during this ariborne state if the player's head hit a ceiling once.
 
-        public PlayerAirborneState(StateMachine m, State parent, PlayerContext ctx) : base(m, parent)
+        public PlayerAirborneState(StateMachine m, State parent, ServerCharacter ctx) : base(m, parent)
         {
             _ctx = ctx;
         }
@@ -110,17 +106,17 @@ namespace OceanGame
             {
                 if (_jumpBufferTimer > 0f)
                 {
-                    _ctx.JumpPressed = true;
+                    _player.JumpPressed = true;
                 }
 
                 return (Parent as PlayerRootState).Grounded;
             }
             
-            if(_ctx.IsInWater())
+            if(_player.IsInWater())
             {
                 if (_jumpBufferTimer > 0f)
                 {
-                    _ctx.WaterJumpBuffered = true;
+                    _player.WaterJumpBuffered = true;
                 }
 
                 return (Parent as PlayerRootState).Swimming;
@@ -131,17 +127,19 @@ namespace OceanGame
 
         protected override void OnEnter()
         {
-            _ctx.PlayerBodyCollider.size = _ctx.WalkingBoxColliderSize;
+            _player = Player.Instance;
+        
+            _ctx.CurrentBodyColliderSize = _player.WalkingBoxColliderSize;
 
             _jumpBufferTimer = 0;
-            _coyoteTimer = _ctx.Velocity.y <= 0f ? _ctx.CoyoteTimeBufferDuration : 0f;
+            _coyoteTimer = _ctx.Velocity.y <= 0f ? _player.CoyoteTimeBufferDuration : 0f;
             _coyoteJumpRequested = false;
             _topTouchedFlag = false;
 
             // On Jump Animation set here
             if (GameInput.Instance.JumpHold && _ctx.Velocity.y > 0)
             {
-                _jumpHoldTimer = _ctx.MaxJumpHoldDuration;
+                _jumpHoldTimer = _player.MaxJumpHoldDuration;
                 _jumpHoldEnded = false;
             }
             
@@ -169,8 +167,8 @@ namespace OceanGame
             if (_coyoteJumpRequested)
             {
                 _coyoteJumpRequested = false;
-                _ctx.Velocity.y = _ctx.MinJumpSpeed;
-                _jumpHoldTimer = GameInput.Instance.JumpHold ? _ctx.MaxJumpHoldDuration : 0f;
+                _ctx.Velocity.y = _player.MinJumpSpeed;
+                _jumpHoldTimer = GameInput.Instance.JumpHold ? _player.MaxJumpHoldDuration : 0f;
                 _jumpHoldEnded = !GameInput.Instance.JumpHold;
             }
 
@@ -197,17 +195,17 @@ namespace OceanGame
             {
                 _jumpHoldEnded = true;
 
-                _ctx.Velocity.y -= _ctx.GravityForce * fixedDeltaTime;
+                _ctx.Velocity.y -= _player.GravityForce * fixedDeltaTime;
 
-                if (_ctx.Velocity.y < _ctx.TerminalVelocity)
+                if (_ctx.Velocity.y < _player.TerminalVelocity)
                 {
-                    _ctx.Velocity.y = _ctx.TerminalVelocity;
+                    _ctx.Velocity.y = _player.TerminalVelocity;
                 }
             }
         
             // Allow horizontal movement while airborne
-            var currentSpeed = _ctx.MoveSpeed * _ctx.AirborneMoveSpeedMultiplier;
-            _ctx.Velocity.x = Mathf.Lerp(_ctx.Velocity.x, _ctx.DesiredDirection.x * currentSpeed, fixedDeltaTime * _ctx.LandTurnSharpness);
+            var currentSpeed = _ctx.Data.BaseSpeed * _player.AirborneMoveSpeedMultiplier;
+            _ctx.Velocity.x = Mathf.Lerp(_ctx.Velocity.x, _ctx.DesiredDirection.x * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
 
         private void OnJumpPressed()
@@ -218,7 +216,7 @@ namespace OceanGame
                 return;
             }
 
-            _jumpBufferTimer = _ctx.JumpBufferDuration;
+            _jumpBufferTimer = _player.JumpBufferDuration;
         }
 
     }
@@ -229,28 +227,29 @@ namespace OceanGame
 
     public class PlayerSwimmingState : State
     {
-        private readonly PlayerContext _ctx;
+        private readonly ServerCharacter _ctx;
+        private Player _player;
 
         private Vector2 _desiredVisualRotation;
         private int _turnDegreeThreshold = 90;
 
-        public PlayerSwimmingState(StateMachine m, State parent, PlayerContext ctx) : base(m, parent)
+        public PlayerSwimmingState(StateMachine m, State parent, ServerCharacter ctx) : base(m, parent)
         {
             _ctx = ctx;
         }
 
         protected override State GetTransition()
         {
-            if (_ctx.IsHeadInAir() && (_ctx.JumpPressed || _ctx.WaterJumpBuffered))
+            if (_player.IsHeadInAir() && (_player.JumpPressed || _player.WaterJumpBuffered))
             {
-                _ctx.JumpPressed = false;
-                _ctx.WaterJumpBuffered = false;
-                _ctx.Velocity.y = _ctx.FromWaterJumpSpeed;
+                _player.JumpPressed = false;
+                _player.WaterJumpBuffered = false;
+                _ctx.Velocity.y = _player.FromWaterJumpSpeed;
 
                 return (Parent as PlayerRootState).Airborne;
             }
 
-            if (!_ctx.IsInWater())
+            if (!_player.IsInWater())
             {
                 if (!_ctx.CollisionResult.TouchingBottom)
                 {
@@ -267,22 +266,23 @@ namespace OceanGame
 
         protected override void OnEnter()
         {
-            _ctx.PlayerBodyCollider.size = _ctx.SwimmingBoxColliderSize;
+            _player = Player.Instance;
+            _ctx.CurrentBodyColliderSize = _player.SwimmingBoxColliderSize;
 
             GameInput.Instance.OnJumpPressed += ExecuteDash;
         }
 
         protected override void OnExit()
         {
-            _ctx.VisualsTransform.up = Vector2.up;
+            _ctx.VisualsGO.transform.up = Vector2.up;
 
             GameInput.Instance.OnJumpPressed -= ExecuteDash;
         }
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
-            var currentSpeed = _ctx.SwimSpeed;
-            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.SwimmingTurnSharpness);
+            var currentSpeed = _ctx.Data.BaseSpeed;
+            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
 
         protected override void OnUpdate(float deltaTime)
@@ -296,24 +296,24 @@ namespace OceanGame
                 _desiredVisualRotation = _ctx.DesiredDirection.normalized;
             }
 
-            var angleDifference = Vector2.SignedAngle(_ctx.VisualsTransform.up, _desiredVisualRotation);
+            var angleDifference = Vector2.SignedAngle(_ctx.VisualsGO.transform.up, _desiredVisualRotation);
 
             float lerpSpeed = Mathf.Abs(angleDifference) < _turnDegreeThreshold ? 10f : 40f;
-            float currentAngle = _ctx.VisualsTransform.eulerAngles.z;
+            float currentAngle = _ctx.VisualsGO.transform.eulerAngles.z;
             float targetAngle = currentAngle + angleDifference;
             float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, lerpSpeed * deltaTime);
-            _ctx.VisualsTransform.rotation = Quaternion.Euler(0, 0, newAngle);
+            _ctx.VisualsGO.transform.rotation = Quaternion.Euler(0, 0, newAngle);
         }
 
         private void ExecuteDash()
         {
-            if (_ctx.SwimDashCooldownTimer > 0f || _ctx.IsHeadInAir()) // If head is above water, do not execute dash only dash when i am underwater
+            if (_player.SwimDashCooldownTimer > 0f || _player.IsHeadInAir()) // If head is above water, do not execute dash only dash when i am underwater
             {
                 return;
             }
 
-            _ctx.Velocity = _ctx.DesiredDirection * _ctx.SwimDashSpeed;
-            _ctx.SwimDashCooldownTimer = _ctx.SwimDashCooldown;
+            _ctx.Velocity = _ctx.DesiredDirection * _player.SwimDashSpeed;
+            _player.SwimDashCooldownTimer = _player.SwimDashCooldown;
         }
     }
 
@@ -323,9 +323,9 @@ namespace OceanGame
 
     public class PlayerIdleState : State
     {
-        private readonly PlayerContext _ctx;
+        private readonly ServerCharacter _ctx;
 
-        public PlayerIdleState(StateMachine m, State parent, PlayerContext ctx) : base(m, parent)
+        public PlayerIdleState(StateMachine m, State parent, ServerCharacter ctx) : base(m, parent)
         {
             _ctx = ctx;
         }
@@ -352,8 +352,8 @@ namespace OceanGame
         
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
-            var currentSpeed = _ctx.MoveSpeed;
-            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.LandTurnSharpness);
+            var currentSpeed = _ctx.Data.BaseSpeed;
+            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
     }
 
@@ -363,9 +363,9 @@ namespace OceanGame
 
     public class PlayerMoveState : State
     {
-        private readonly PlayerContext _ctx;
+        private readonly ServerCharacter _ctx;
 
-        public PlayerMoveState(StateMachine m, State parent, PlayerContext ctx) : base(m, parent)
+        public PlayerMoveState(StateMachine m, State parent, ServerCharacter ctx) : base(m, parent)
         {
             _ctx = ctx;
         }
@@ -387,8 +387,8 @@ namespace OceanGame
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
-            var currentSpeed = _ctx.MoveSpeed;
-            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.LandTurnSharpness);
+            var currentSpeed = _ctx.Data.BaseSpeed;
+            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
     }
 
@@ -398,9 +398,9 @@ namespace OceanGame
 
     public class PlayerKnockbackState : State
     {
-        private readonly PlayerContext _ctx;
+        private readonly ServerCharacter _ctx;
 
-        public PlayerKnockbackState(StateMachine m, State parent, PlayerContext ctx) : base(m, parent)
+        public PlayerKnockbackState(StateMachine m, State parent, ServerCharacter ctx) : base(m, parent)
         {
             _ctx = ctx;
         }

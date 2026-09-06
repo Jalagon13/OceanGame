@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace OceanGame
 {
+    [Serializable]
     public abstract class State 
     {
         public readonly StateMachine Machine;

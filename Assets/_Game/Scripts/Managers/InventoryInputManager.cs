@@ -59,6 +59,7 @@ namespace OceanGame
         private void OnPrimaryActionPressed(InputAction.CallbackContext context)
         {
             var activeSlot = GetActiveInvSlot();
+            
             if(!activeSlot.IsEmpty)
             {
                 if(context.phase == InputActionPhase.Started)
@@ -78,6 +79,7 @@ namespace OceanGame
         private void OnSecondaryActionPressed(InputAction.CallbackContext context)
         {
             var activeSlot = GetActiveInvSlot();
+            
             if (!activeSlot.IsEmpty)
             {
                 if (context.phase == InputActionPhase.Started)
@@ -97,6 +99,7 @@ namespace OceanGame
         public InventorySlot GetActiveInvSlot()
         {
             var cursorSlot = InventoryCursorManager.Instance.CursorSlot;
+            
             if(cursorSlot != null && !cursorSlot.IsEmpty)
             {
                 return cursorSlot;

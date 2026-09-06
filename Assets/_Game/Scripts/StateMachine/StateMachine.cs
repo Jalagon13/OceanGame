@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 namespace OceanGame
 {
+    [Serializable]
     public class StateMachine 
     {
         public readonly State Root;

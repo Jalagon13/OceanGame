@@ -1769,6 +1769,7 @@ GameObject:
   - component: {fileID: 1246345772}
   - component: {fileID: 1246345774}
   - component: {fileID: 1246345773}
+  - component: {fileID: 1246345775}
   m_Layer: 0
   m_Name: PLAYER
   m_TagString: Untagged
@@ -1816,6 +1817,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cee38bf93c04442388dc6b615db8ef3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.MiningManager
+--- !u!114 &1246345775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1246345771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 312f06ee138834a2bb001c3cbbc6ce3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.Player
+  _playerSO: {fileID: 11400000, guid: d2612cd7c6d00436188c7b1a8b45c63e, type: 2}
+  _playerCharacter: {fileID: 1715237434}
+  <InteractRange>k__BackingField: 4.5
+  <WalkingBoxColliderSize>k__BackingField: {x: 0.75, y: 1.75}
+  <SwimmingBoxColliderSize>k__BackingField: {x: 0.75, y: 1.25}
+  <SwimDashSpeed>k__BackingField: 15
+  <SwimDashCooldown>k__BackingField: 3
+  <FromWaterJumpSpeed>k__BackingField: 10
+  <MinJumpSpeed>k__BackingField: 5
+  <MaxJumpHoldDuration>k__BackingField: 0.4
+  <AirborneMoveSpeedMultiplier>k__BackingField: 0.5
+  <JumpBufferDuration>k__BackingField: 0.15
+  <CoyoteTimeBufferDuration>k__BackingField: 0.15
+  <GravityForce>k__BackingField: 25
+  <TerminalVelocity>k__BackingField: -40
 --- !u!1 &1268251165
 GameObject:
   m_ObjectHideFlags: 0
@@ -2542,7 +2570,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1715237431}
   - component: {fileID: 1715237433}
-  - component: {fileID: 1715237432}
+  - component: {fileID: 1715237434}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -2566,46 +2594,6 @@ Transform:
   - {fileID: 652389236}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1715237432
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1715237430}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 312f06ee138834a2bb001c3cbbc6ce3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.Player
-  <InteractRange>k__BackingField: 4.5
-  _debugOn: 0
-  _ignoreCollision: 0
-  Ctx:
-    VisualsTransform: {fileID: 652389236}
-    PlayerBodyCollider: {fileID: 1715237433}
-    WalkingBoxColliderSize: {x: 0.75, y: 1.75}
-    SwimmingBoxColliderSize: {x: 0.75, y: 1.3}
-    MoveSpeed: 6.5
-    LandTurnSharpness: 5
-    AirborneMoveSpeedMultiplier: 0.7
-    GravityForce: 30
-    TerminalVelocity: -40
-    SwimSpeed: 7.5
-    SwimDashSpeed: 13
-    SwimDashCooldown: 1.5
-    SwimmingTurnSharpness: 5
-    FromWaterJumpSpeed: 13
-    MinJumpSpeed: 9
-    MaxJumpHoldDuration: 0.25
-    JumpBufferDuration: 0.15
-    CoyoteTimeBufferDuration: 0.15
-    Transform: {fileID: 0}
-    DesiredDirection: {x: 0, y: 0}
-    Velocity: {x: 0, y: 0}
-    JumpPressed: 0
-    WaterJumpBuffered: 0
-    SwimDashCooldownTimer: 0
 --- !u!61 &1715237433
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2652,6 +2640,26 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.75, y: 1.75}
   m_EdgeRadius: 0
+--- !u!114 &1715237434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1715237430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb2c4941128cc45218cebb54ebf1a3b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ServerCharacter
+  _stateType: 0
+  _data: {fileID: 11400000, guid: d2612cd7c6d00436188c7b1a8b45c63e, type: 2}
+  _visualsGO: {fileID: 652389235}
+  _debugStateOn: 0
+  _ignoreCollision: 0
+  DesiredDirection: {x: 0, y: 0}
+  Velocity: {x: 0, y: 0}
+  CurrentBodyColliderSize: {x: 0, y: 0}
 --- !u!1 &1832764447
 GameObject:
   m_ObjectHideFlags: 0

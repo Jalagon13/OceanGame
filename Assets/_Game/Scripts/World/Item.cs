@@ -86,28 +86,33 @@ namespace OceanGame
         private void DetectPlayer()
         {
             int hitCount = Physics2D.OverlapCircle(transform.position, _detectRange, _playerFilter, _detectionResults);
-            Player closestPlayer = null;
+            ServerCharacter closestPlayer = null;
             float closestDistance = _detectRange;
 
             for (int i = 0; i < hitCount; i++)
             {
                 var currentCollider = _detectionResults[i];
 
-                if (currentCollider.TryGetComponent(out Player player))
+                if (currentCollider.TryGetComponent(out ServerCharacter character))
                 {
-                    // Only detect players who can accept this item. In the future, query each player for can accept item somehow
-                    bool canThisPlayerAcceptThisItem = InventoryManager.Instance.CanAcceptItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.CurrentAmount);
-                    
-                    if(canThisPlayerAcceptThisItem)
+                    if(character.StateMachineType == StateMachineType.Player)
                     {
-                        float distance = Vector2.Distance(transform.position, player.transform.position);
+                        // Only detect players who can accept this item. In the future, query each player for can accept item somehow
+                        bool canThisPlayerAcceptThisItem = InventoryManager.Instance.CanAcceptItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.CurrentAmount);
 
-                        if (distance < closestDistance)
+                        if (canThisPlayerAcceptThisItem)
                         {
-                            closestDistance = distance;
-                            closestPlayer = player;
+                            float distance = Vector2.Distance(transform.position, character.transform.position);
+
+                            if (distance < closestDistance)
+                            {
+                                closestDistance = distance;
+                                closestPlayer = character;
+                            }
                         }
                     }
+                
+                    
                 }
             }
             
@@ -152,7 +157,7 @@ namespace OceanGame
         [HideInInspector] public Vector2 Velocity;
         [HideInInspector] public GridPhysics.CollisionResult CollisionResult;
         [HideInInspector] public BoxCollider2D ItemCollider;
-        [HideInInspector] public Player ClosestPlayer;
+        [HideInInspector] public ServerCharacter ClosestPlayer;
         [HideInInspector] public bool CanBeCollected;
         [HideInInspector] public bool HasBeenCollected;
         [HideInInspector] public bool IgnoreCollisions;

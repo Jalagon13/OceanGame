@@ -15,7 +15,7 @@ namespace OceanGame
        
        public void SpawnItem(ItemSO itemSO, int amount, Vector2 position, Vector2 startingVector = default)
        {
-            Debug.Log($"Spawning item");
+          //   Debug.Log($"Spawning item");
             Item itemToSpawn = Instantiate(_itemPrefab, position, Quaternion.identity);
             itemToSpawn.InitializeItem(new(itemSO, amount), startingVector);
        }
