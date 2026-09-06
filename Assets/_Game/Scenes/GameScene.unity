@@ -2579,6 +2579,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.Player
   <InteractRange>k__BackingField: 4.5
+  _debugOn: 0
   _ignoreCollision: 0
   Ctx:
     VisualsTransform: {fileID: 652389236}

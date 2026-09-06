@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace OceanGame
 {
@@ -9,9 +10,11 @@ namespace OceanGame
         public readonly TransitionSequencer Sequencer;
 
         private bool _started;
+        public bool DebugOn { get; set; }
 
-        public StateMachine(State root)
+        public StateMachine(State root, bool debugOn = false)
         {
+            DebugOn = debugOn;
             Root = root;
             Sequencer = new TransitionSequencer(this);
         }
@@ -21,6 +24,7 @@ namespace OceanGame
             if(_started) return;
             _started = true;
             Root.Enter();
+            LogStatePath();
         }
 
         public void Tick(float deltaTime)
@@ -52,6 +56,20 @@ namespace OceanGame
             var stack = new Stack<State>();
             for(var s = to; s != lca; s = s.Parent) stack.Push(s);
             while(stack.Count > 0) stack.Pop().Enter();
+            LogStatePath();
+        }
+
+        private void LogStatePath()
+        {
+            if (!DebugOn) return;
+
+            var path = StatePath(Root.Leaf());
+            Debug.Log($"{Root}: {path}");
+        }
+
+        private static string StatePath(State s)
+        {
+            return string.Join(" > ", s.PathToRoot().Reverse().Select(n => n.GetType().Name));
         }
     }
 }

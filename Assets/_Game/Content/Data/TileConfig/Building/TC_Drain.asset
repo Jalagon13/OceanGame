@@ -27,4 +27,4 @@ MonoBehaviour:
     - rid: 2895663963195310395
       type: {class: DrainIB, ns: OceanGame, asm: Assembly-CSharp}
       data:
-        _drainLimit: 30
+        _drainLimit: 90

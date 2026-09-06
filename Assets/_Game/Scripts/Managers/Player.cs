@@ -1,5 +1,5 @@
 using System;
-using System.Linq;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,13 +10,15 @@ namespace OceanGame
         public static Player Instance { get; private set; }
         
         [field: SerializeField] public float InteractRange { get; private set; } = 4.5f;
+        
+        [SerializeField] private bool _debugOn;
         [SerializeField] private bool _ignoreCollision = false;
         
         public PlayerContext Ctx = new();
         
         private StateMachine _machine;
         private State _root;
-        private string _lastPath;
+        
         
         private void Awake() 
         {
@@ -24,7 +26,7 @@ namespace OceanGame
             
             _root = new PlayerRootState(null, Ctx);
             var builder = new StateMachineBuilder(_root);
-            _machine = builder.Build();
+            _machine = builder.Build(_debugOn);
             _machine.Start();
 
             Ctx.Transform = transform;
@@ -55,12 +57,7 @@ namespace OceanGame
 
             _machine.Tick(Time.deltaTime);
             
-            var path = StatePath(_machine.Root.Leaf());
-            if (path != _lastPath)
-            {
-                // Debug.Log($"{name}: {path}");
-                _lastPath = path;
-            }
+            
         }
         
         private void FixedUpdate()
@@ -108,10 +105,7 @@ namespace OceanGame
             Ctx.DesiredDirection = rawMoveInput;
         }
 
-        private static string StatePath(State s)
-        {
-            return string.Join(" > ", s.PathToRoot().Reverse().Select(n => n.GetType().Name));
-        }
+        
     }
     
     [Serializable]

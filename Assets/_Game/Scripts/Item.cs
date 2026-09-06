@@ -23,8 +23,6 @@ namespace OceanGame
         private ContactFilter2D _playerFilter;
         private StateMachine _machine;
         private State _root;
-        private string _lastPath;
-
 
         private void Awake() 
         {
@@ -64,13 +62,6 @@ namespace OceanGame
             {
                 _timer = DETECTION_INTERVAL;
                 DetectPlayer();
-            }
-
-            var path = StatePath(_machine.Root.Leaf());
-            if (path != _lastPath)
-            {
-                Debug.Log($"{name}: {path}");
-                _lastPath = path;
             }
         }
 
@@ -138,11 +129,6 @@ namespace OceanGame
                 Ctx.ClosestPlayer = null;
             }
             
-        }
-
-        private static string StatePath(State s)
-        {
-            return string.Join(" > ", s.PathToRoot().Reverse().Select(n => n.GetType().Name));
         }
     }
     

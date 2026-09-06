@@ -13,9 +13,9 @@ namespace OceanGame
             this._root = root;
         }
         
-        public StateMachine Build()
+        public StateMachine Build(bool debugOn = false)
         {
-            var m = new StateMachine(_root);
+            var m = new StateMachine(_root, debugOn);
             Wire(_root, m, new HashSet<State>());
             return m;
         }
