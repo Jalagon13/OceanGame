@@ -11,8 +11,8 @@ namespace OceanGame
             {
                 case StateMachineType.Player:
                     return new PlayerRootState(null, serverCharacter);
-                // case StateMachineType.Fish:
-                //     return new FishStateMachine(serverCharacter);
+                case StateMachineType.Crab:
+                    return new CrabRootState(null, serverCharacter);
                 // case StateMachineType.Jellyfish:
                 //     return new JellyfishStateMachine(serverCharacter);
                 default:
@@ -24,7 +24,7 @@ namespace OceanGame
     public enum StateMachineType
     {
         Player,
-        Fish,
+        Crab,
         Jellyfish
     }
 }

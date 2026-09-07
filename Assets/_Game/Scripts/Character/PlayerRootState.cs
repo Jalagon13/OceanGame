@@ -76,6 +76,11 @@ namespace OceanGame
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
+            if(_ctx.IsKnockedBack)
+            {
+                return;
+            }
+        
             _ctx.Velocity.y = -0.1f; // To firmly keep the character firmly pressed to the floor
         }
     }
@@ -159,6 +164,18 @@ namespace OceanGame
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
+            if (_ctx.IsKnockedBack)
+            {
+                _ctx.KnockbackVelocity.y -= _player.GravityForce * fixedDeltaTime;
+
+                if (_ctx.KnockbackVelocity.y < _player.TerminalVelocity)
+                {
+                    _ctx.KnockbackVelocity.y = _player.TerminalVelocity;
+                }
+
+                return;
+            }
+
             if (_coyoteTimer > 0f)
             {
                 _coyoteTimer -= fixedDeltaTime;
@@ -281,6 +298,11 @@ namespace OceanGame
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
+            if (_ctx.IsKnockedBack)
+            {
+                return;
+            }
+
             var currentSpeed = _ctx.Data.BaseSpeed;
             _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
@@ -307,7 +329,7 @@ namespace OceanGame
 
         private void ExecuteDash()
         {
-            if (_player.SwimDashCooldownTimer > 0f || _player.IsHeadInAir()) // If head is above water, do not execute dash only dash when i am underwater
+            if (_ctx.IsKnockedBack || _player.SwimDashCooldownTimer > 0f || _player.IsHeadInAir()) // If head is above water, do not execute dash only dash when i am underwater
             {
                 return;
             }
@@ -352,6 +374,9 @@ namespace OceanGame
         
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
+            if (_ctx.IsKnockedBack)
+                return;
+
             var currentSpeed = _ctx.Data.BaseSpeed;
             _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
@@ -387,6 +412,9 @@ namespace OceanGame
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
+            if (_ctx.IsKnockedBack)
+                return;
+
             var currentSpeed = _ctx.Data.BaseSpeed;
             _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
