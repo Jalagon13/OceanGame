@@ -62,6 +62,7 @@ namespace OceanGame
             if(CurrentHealth.Value <= 0)
             {
                 CurrentLifeState.Value = LifeState.Dead;
+                Debug.Log($"lifestate changed to ded");
             }
         }
 
@@ -70,6 +71,7 @@ namespace OceanGame
             if(!IsServer || netDamage <= 0 || CurrentLifeState.Value == LifeState.IFrame) return;
         
             CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - netDamage);
+            Debug.Log($"{name} Took {netDamage} Damage. {CurrentHealth.Value}/{_character.Data.BaseMaxHealth}");
             
             if(CurrentLifeState.Value == LifeState.Alive)
             {
@@ -79,9 +81,12 @@ namespace OceanGame
 
         private IEnumerator IFrameRoutine()
         {
+            Debug.Log($"{name} iframe started");
             CurrentLifeState.Value = LifeState.IFrame;
             yield return _iFrameDuration;
             CurrentLifeState.Value = LifeState.Alive;
+            Debug.Log($"{name} iframe ended");
+            
         }
     }
     

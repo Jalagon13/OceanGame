@@ -71,7 +71,7 @@ namespace OceanGame
         {
             // On Grounded Animation set here
             _player = Player.Instance;
-            _ctx.CurrentBodyColliderSize = Player.Instance.WalkingBoxColliderSize;
+            _ctx.ColliderSize = Player.Instance.WalkingBoxColliderSize;
         }
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
@@ -134,7 +134,7 @@ namespace OceanGame
         {
             _player = Player.Instance;
         
-            _ctx.CurrentBodyColliderSize = _player.WalkingBoxColliderSize;
+            _ctx.ColliderSize = _player.WalkingBoxColliderSize;
 
             _jumpBufferTimer = 0;
             _coyoteTimer = _ctx.Velocity.y <= 0f ? _player.CoyoteTimeBufferDuration : 0f;
@@ -284,7 +284,7 @@ namespace OceanGame
         protected override void OnEnter()
         {
             _player = Player.Instance;
-            _ctx.CurrentBodyColliderSize = _player.SwimmingBoxColliderSize;
+            _ctx.ColliderSize = _player.SwimmingBoxColliderSize;
 
             GameInput.Instance.OnJumpPressed += ExecuteDash;
         }

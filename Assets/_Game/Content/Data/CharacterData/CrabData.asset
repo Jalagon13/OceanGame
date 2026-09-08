@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1789cce2ee3144d3f896586a04761dd0, type: 3}
   m_Name: CrabData
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.CharacterSO
-  <BaseSpeed>k__BackingField: 3
+  <BodyColliderSize>k__BackingField: {x: 1, y: 1}
   <BaseMaxHealth>k__BackingField: 100
   <BaseDefense>k__BackingField: 0
-  <BaseKbResist>k__BackingField: 0
+  <BaseDamage>k__BackingField: 5
+  <KnockbackForce>k__BackingField: 25
+  <BaseSpeed>k__BackingField: 3
   <BaseIFrameDuration>k__BackingField: 0.67
   <BaseTurnSharpness>k__BackingField: 5
-  <CanDie>k__BackingField: 1
+  <BaseKbResist>k__BackingField: 0
   <CanBeKnockedBacked>k__BackingField: 1
-  <BodyColliderSize>k__BackingField: {x: 1, y: 1}
+  <CanDie>k__BackingField: 1
+  <CanDamagePlayerOnTouch>k__BackingField: 1

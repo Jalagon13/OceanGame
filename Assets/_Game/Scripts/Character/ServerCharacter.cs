@@ -4,8 +4,9 @@ using UnityEngine;
 namespace OceanGame
 {
     [RequireComponent(typeof(CharacterHealth), typeof(DamageReceiver))]
-    public class ServerCharacter : MonoBehaviour
+    public class ServerCharacter : Entity
     {
+        [Header("Character Settings")]
         [SerializeField] private StateMachineType _stateType;
         public StateMachineType StateMachineType => _stateType;
         
@@ -16,16 +17,13 @@ namespace OceanGame
         public GameObject VisualsGO => _visualsGO;
         
         [SerializeField] private bool _debugStateOn;
-        [SerializeField] private bool _ignoreCollision;
 
         [HideInInspector] public Vector2 DesiredDirection;
-        [HideInInspector] public Vector2 Velocity;
-        [HideInInspector] public Vector2 CurrentBodyColliderSize;
         [HideInInspector] public Vector2 KnockbackVelocity;
         public bool IsKnockedBack => KnockbackVelocity.sqrMagnitude > KnockbackThreshold * KnockbackThreshold;
 
         public StateMachine Machine { get; private set; }
-        public GridPhysics.CollisionResult CollisionResult { get; private set; }
+        
         public CharacterHealth Health { get; private set; }
         public DamageReceiver DamageReceiver { get; private set; }
 
@@ -43,9 +41,25 @@ namespace OceanGame
             Health = GetComponent<CharacterHealth>();
             DamageReceiver = GetComponent<DamageReceiver>();
             
-            CurrentBodyColliderSize = _data.BodyColliderSize;
+            ColliderSize = _data.BodyColliderSize;
             DesiredDirection = Vector2.zero;
             Velocity = Vector2.zero;
+        }
+        
+        private void OnEnable() 
+        {
+            if (EntityManager.Instance != null)
+            {
+                EntityManager.Instance.Register(this);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (EntityManager.Instance != null)
+            {
+                EntityManager.Instance.UnRegister(this);
+            }
         }
 
         private void Update()
@@ -55,30 +69,42 @@ namespace OceanGame
             Machine.Tick(Time.deltaTime);
         }
 
-        private void FixedUpdate()
+        public override void FixedTick(float fixedDeltaTime)
         {
             if (!WorldManager.Instance.IsWorldReady) return;
-            
-            if(IsKnockedBack)
+
+            if (IsKnockedBack)
             {
                 Velocity = KnockbackVelocity;
                 DesiredDirection = Vector2.zero;
             }
-            
-            Machine.FixedTick(Time.fixedDeltaTime);
+
+            Machine.FixedTick(fixedDeltaTime);
 
             // State may apply gravity, drag, etc. to KnockbackVelocity.
             // Then use the resulting value as final movement.
             if (IsKnockedBack)
             {
                 Velocity = KnockbackVelocity;
-                KnockbackVelocity = Vector2.Lerp(KnockbackVelocity, Vector2.zero, KnockbackDecay * Time.fixedDeltaTime);
+                KnockbackVelocity = Vector2.Lerp(KnockbackVelocity, Vector2.zero, KnockbackDecay * fixedDeltaTime);
 
                 if (!IsKnockedBack) KnockbackVelocity = Vector2.zero;
             }
+
+            base.FixedTick(fixedDeltaTime);
+        }
+
+        public override void OnEntityOverlap(Entity other)
+        {
+            if (!Data.CanDamagePlayerOnTouch) return;
+            if (other is not ServerCharacter target) return;
+            if (!target.CompareTag("Player")) return;
+            if (target.Health.CurrentLifeState.Value != LifeState.Alive) return;
+            Debug.Log($"1");
+            var receiver = target.DamageReceiver;
+            var hitData = new SyncHitData(_data.BaseDamage, _data.KnockbackForce, transform.position);
             
-            CollisionResult = GridPhysics.MoveAndResolve(transform.position, Velocity, CurrentBodyColliderSize, Time.fixedDeltaTime, _ignoreCollision);
-            transform.position = CollisionResult.NewPosition;
+            receiver.ReceiveHit(hitData);
         }
 
         public void ApplyKnockback(Vector2 velocity)

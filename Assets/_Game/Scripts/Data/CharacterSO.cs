@@ -9,6 +9,8 @@ namespace OceanGame
         [field: SerializeField] public Vector2 BodyColliderSize { get; private set; } = Vector2.one;
         [field: SerializeField] public int BaseMaxHealth { get; private set; }
         [field: SerializeField] public int BaseDefense { get; private set; }
+        [field: SerializeField] public int BaseDamage { get; private set; }
+        [field: SerializeField, Range(0, 100)] public int KnockbackForce { get; private set; }
         [field: SerializeField] public float BaseSpeed { get; private set; }
         [field: SerializeField] public float BaseIFrameDuration { get; private set; }
         [field: SerializeField] public float BaseTurnSharpness { get; private set; }

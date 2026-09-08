@@ -1544,7 +1544,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 970924653}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e893442ae6769439e99082650176a27d, type: 3}
+  m_Script: {fileID: 11500000, guid: 26e863dacb5f5417791ddf4499857291, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.SimulationManager
 --- !u!1 &996830788
@@ -2447,14 +2447,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb2c4941128cc45218cebb54ebf1a3b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ServerCharacter
+  _ignoreCollision: 0
+  Velocity: {x: 0, y: 0}
+  ColliderSize: {x: 0, y: 0}
   _stateType: 1
   _data: {fileID: 11400000, guid: 2a9db1f511b6a4888a49dd1d2f56bd26, type: 2}
   _visualsGO: {fileID: 1286347403}
   _debugStateOn: 1
-  _ignoreCollision: 0
   DesiredDirection: {x: 0, y: 0}
-  Velocity: {x: 0, y: 0}
-  CurrentBodyColliderSize: {x: 0, y: 0}
   KnockbackVelocity: {x: 0, y: 0}
 --- !u!114 &1509211433
 MonoBehaviour:
@@ -2519,6 +2519,112 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.DamageReceiver
   ShowTopMostFoldoutHeaderGroup: 1
+--- !u!1 &1588804450
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1588804451}
+  - component: {fileID: 1588804453}
+  - component: {fileID: 1588804452}
+  m_Layer: 0
+  m_Name: NetworkManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1588804451
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588804450}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1588804452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588804450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Transports.UTP.UnityTransport
+  m_ProtocolType: 0
+  m_UseWebSockets: 0
+  m_UseEncryption: 0
+  m_MaxPacketQueueSize: 128
+  m_MaxPayloadSize: 6144
+  m_HeartbeatTimeoutMS: 500
+  m_ConnectTimeoutMS: 1000
+  m_MaxConnectAttempts: 60
+  m_DisconnectTimeoutMS: 30000
+  ConnectionData:
+    Address: 127.0.0.1
+    Port: 7777
+    WebSocketPath: /
+    ServerListenAddress: 127.0.0.1
+    ClientBindPort: 0
+  DebugSimulator:
+    PacketDelayMS: 0
+    PacketJitterMS: 0
+    PacketDropRate: 0
+--- !u!114 &1588804453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588804450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 593a2fe42fa9d37498c96f9a383b6521, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkManager
+  NetworkManagerExpanded: 0
+  NetworkConfig:
+    ProtocolVersion: 0
+    NetworkTransport: {fileID: 1588804452}
+    PlayerPrefab: {fileID: 0}
+    Prefabs:
+      NetworkPrefabsLists:
+      - {fileID: 11400000, guid: 2e1af4323ea3d41eaa12e32cb16fa655, type: 2}
+    TickRate: 30
+    ClientConnectionBufferTimeout: 10
+    ConnectionApproval: 0
+    ConnectionData: 
+    EnableTimeResync: 0
+    TimeResyncInterval: 30
+    EnsureNetworkVariableLengthSafety: 0
+    EnableSceneManagement: 1
+    ForceSamePrefabs: 1
+    RecycleNetworkIds: 1
+    NetworkIdRecycleDelay: 120
+    RpcHashSize: 0
+    LoadSceneTimeOut: 120
+    SpawnTimeout: 10
+    EnableNetworkLogs: 1
+    NetworkTopology: 0
+    UseCMBService: 0
+    AutoSpawnPlayerPrefabClientSide: 1
+    NetworkProfilingMetrics: 1
+    OldPrefabList: []
+  RunInBackground: 1
+  LogLevel: 1
 --- !u!1 &1608990554
 GameObject:
   m_ObjectHideFlags: 0
@@ -2800,7 +2906,7 @@ GameObject:
   - component: {fileID: 1715237434}
   m_Layer: 3
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2879,14 +2985,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb2c4941128cc45218cebb54ebf1a3b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ServerCharacter
+  _ignoreCollision: 0
+  Velocity: {x: 0, y: 0}
+  ColliderSize: {x: 0, y: 0}
   _stateType: 0
   _data: {fileID: 11400000, guid: d2612cd7c6d00436188c7b1a8b45c63e, type: 2}
   _visualsGO: {fileID: 652389235}
-  _debugStateOn: 1
-  _ignoreCollision: 0
+  _debugStateOn: 0
   DesiredDirection: {x: 0, y: 0}
-  Velocity: {x: 0, y: 0}
-  CurrentBodyColliderSize: {x: 0, y: 0}
   KnockbackVelocity: {x: 0, y: 0}
 --- !u!114 &1715237435
 MonoBehaviour:
@@ -3542,6 +3648,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 970924654}
+  - {fileID: 1588804451}
   - {fileID: 279898998}
   - {fileID: 832575519}
   - {fileID: 330585546}

@@ -20,7 +20,7 @@ namespace OceanGame
         public void ReceiveHit(SyncHitData hit)
         {
             if(_character.Health.CurrentLifeState.Value != LifeState.Alive) return;
-        
+            Debug.Log($"2");
             ReceiveHitServerRpc(hit);
         }
         
@@ -34,7 +34,7 @@ namespace OceanGame
             int netDamage = Mathf.Max(1, hit.Damage - defense); // Clamp it to 1
 
             _character.Health.TakeDamage(netDamage);
-
+            Debug.Log($"3");
             if (!_character.Data.CanBeKnockedBacked || _character.Health.CurrentLifeState.Value == LifeState.Dead) return;
 
             float resistance = Mathf.Clamp01(_character.Data.BaseKbResist);
@@ -44,6 +44,7 @@ namespace OceanGame
             Vector2 direction = ((Vector2)_character.transform.position - hit.SourcePosition).normalized;
 
             _character.ApplyKnockback(direction * finalForce);
+            Debug.Log($"4");
         }
     }
     
@@ -52,6 +53,13 @@ namespace OceanGame
         public int Damage;
         public int KnockbackForce;
         public Vector2 SourcePosition;
+        
+        public SyncHitData(int damage, int knockbackForce, Vector2 sourcePosition)
+        {
+            Damage = damage;
+            KnockbackForce = knockbackForce;
+            SourcePosition = sourcePosition;
+        }
 
         public bool Equals(SyncHitData other)
         {

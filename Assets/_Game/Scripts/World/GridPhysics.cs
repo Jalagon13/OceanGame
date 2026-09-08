@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace OceanGame
@@ -254,6 +255,42 @@ namespace OceanGame
 
             result.NewPosition = currentPos;
             return result;
+        }
+
+        public static void CheckOverlap(List<Entity> entities)
+        {
+            for (int i = 0; i < entities.Count; i++)
+            {
+                for (int j = i + 1; j < entities.Count; j++)
+                {
+                    Entity first = entities[i];
+                    Entity second = entities[j];
+
+                    if (!Overlaps(first, second)) continue;
+
+                    Debug.Log($"0");
+                    first.OnEntityOverlap(second);
+                    second.OnEntityOverlap(first);
+                }
+            }
+        }
+
+        private static bool Overlaps(Entity first, Entity second)
+        {
+            Vector2 firstHalfSize = first.ColliderSize * 0.5f;
+            Vector2 secondHalfSize = second.ColliderSize * 0.5f;
+            Vector2 firstPosition = first.transform.position;
+            Vector2 secondPosition = second.transform.position;
+
+            return IsOverlapping(
+                firstPosition.x - firstHalfSize.x,
+                firstPosition.x + firstHalfSize.x,
+                firstPosition.y - firstHalfSize.y,
+                firstPosition.y + firstHalfSize.y,
+                secondPosition.x - secondHalfSize.x,
+                secondPosition.x + secondHalfSize.x,
+                secondPosition.y - secondHalfSize.y,
+                secondPosition.y + secondHalfSize.y);
         }
 
         // Pure mathematical evaluation: checks if two rectangular boundary definitions intersect
