@@ -15,5 +15,6 @@ namespace OceanGame
         [field: SerializeField, Range(0f, 1f)] public float BaseKbResist { get; private set; }
         [field: SerializeField] public bool CanBeKnockedBacked { get; private set; } = true;
         [field: SerializeField] public bool CanDie { get; private set; } = true;
+        [field: SerializeField] public bool CanDamagePlayerOnTouch { get; private set; }
     }
 }

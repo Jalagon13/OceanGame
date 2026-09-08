@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace OceanGame
 {
+    [RequireComponent(typeof(CharacterHealth), typeof(DamageReceiver))]
     public class ServerCharacter : MonoBehaviour
     {
         [SerializeField] private StateMachineType _stateType;
@@ -25,6 +26,8 @@ namespace OceanGame
 
         public StateMachine Machine { get; private set; }
         public GridPhysics.CollisionResult CollisionResult { get; private set; }
+        public CharacterHealth Health { get; private set; }
+        public DamageReceiver DamageReceiver { get; private set; }
 
         private const float KnockbackThreshold = 1.5f;
         private const float KnockbackDecay = 2f;
@@ -37,6 +40,9 @@ namespace OceanGame
             Machine = new StateMachineBuilder(rootState).Build(_debugStateOn);
             Machine.Start();
 
+            Health = GetComponent<CharacterHealth>();
+            DamageReceiver = GetComponent<DamageReceiver>();
+            
             CurrentBodyColliderSize = _data.BodyColliderSize;
             DesiredDirection = Vector2.zero;
             Velocity = Vector2.zero;
@@ -75,7 +81,6 @@ namespace OceanGame
             transform.position = CollisionResult.NewPosition;
         }
 
-        [Button("Apply Velocity")]
         public void ApplyKnockback(Vector2 velocity)
         {
             DesiredDirection = Vector2.zero;

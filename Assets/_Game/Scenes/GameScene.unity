@@ -1453,6 +1453,7 @@ GameObject:
   - component: {fileID: 970924655}
   - component: {fileID: 970924661}
   - component: {fileID: 970924657}
+  - component: {fileID: 970924662}
   m_Layer: 0
   m_Name: GAME_MANAGERS
   m_TagString: Untagged
@@ -1534,6 +1535,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.GameManager
   _itemPrefab: {fileID: 6863305319595252494, guid: fa7f4f0ad44c642ab80382803cda30a4, type: 3}
+--- !u!114 &970924662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 970924653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e893442ae6769439e99082650176a27d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.SimulationManager
 --- !u!1 &996830788
 GameObject:
   m_ObjectHideFlags: 0
@@ -2395,6 +2408,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1509211431}
+  - component: {fileID: 1509211433}
+  - component: {fileID: 1509211434}
+  - component: {fileID: 1509211435}
   - component: {fileID: 1509211432}
   m_Layer: 0
   m_Name: CrabNpc
@@ -2431,7 +2447,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb2c4941128cc45218cebb54ebf1a3b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ServerCharacter
-  _kbdecay: 0
   _stateType: 1
   _data: {fileID: 11400000, guid: 2a9db1f511b6a4888a49dd1d2f56bd26, type: 2}
   _visualsGO: {fileID: 1286347403}
@@ -2440,6 +2455,70 @@ MonoBehaviour:
   DesiredDirection: {x: 0, y: 0}
   Velocity: {x: 0, y: 0}
   CurrentBodyColliderSize: {x: 0, y: 0}
+  KnockbackVelocity: {x: 0, y: 0}
+--- !u!114 &1509211433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1509211430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 1662198724
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  m_InScenePlacedDisabledByDefault: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  m_InScenePlaced: 0
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &1509211434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1509211430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90ee462fa075b4ddab1892b1d4e1d414, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.CharacterHealth
+  ShowTopMostFoldoutHeaderGroup: 1
+  CurrentHealth:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  CurrentLifeState:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+--- !u!114 &1509211435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1509211430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3851579c1ebf4c6cb86ae223193cbb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.DamageReceiver
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &1608990554
 GameObject:
   m_ObjectHideFlags: 0
@@ -2715,6 +2794,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1715237431}
   - component: {fileID: 1715237433}
+  - component: {fileID: 1715237435}
+  - component: {fileID: 1715237436}
+  - component: {fileID: 1715237437}
   - component: {fileID: 1715237434}
   m_Layer: 3
   m_Name: Player
@@ -2797,7 +2879,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb2c4941128cc45218cebb54ebf1a3b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ServerCharacter
-  _kbdecay: 1
   _stateType: 0
   _data: {fileID: 11400000, guid: d2612cd7c6d00436188c7b1a8b45c63e, type: 2}
   _visualsGO: {fileID: 652389235}
@@ -2806,6 +2887,70 @@ MonoBehaviour:
   DesiredDirection: {x: 0, y: 0}
   Velocity: {x: 0, y: 0}
   CurrentBodyColliderSize: {x: 0, y: 0}
+  KnockbackVelocity: {x: 0, y: 0}
+--- !u!114 &1715237435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1715237430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 3742721365
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  m_InScenePlacedDisabledByDefault: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  m_InScenePlaced: 0
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &1715237436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1715237430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90ee462fa075b4ddab1892b1d4e1d414, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.CharacterHealth
+  ShowTopMostFoldoutHeaderGroup: 1
+  CurrentHealth:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  CurrentLifeState:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+--- !u!114 &1715237437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1715237430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3851579c1ebf4c6cb86ae223193cbb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.DamageReceiver
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &1832764447
 GameObject:
   m_ObjectHideFlags: 0
@@ -3402,6 +3547,6 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 759830593}
   - {fileID: 188555075}
-  - {fileID: 1715237431}
   - {fileID: 285757409}
+  - {fileID: 1715237431}
   - {fileID: 1509211431}

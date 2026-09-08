@@ -27,4 +27,11 @@ namespace OceanGame
         Crab,
         Jellyfish
     }
+    
+    public enum LifeState
+    {
+        Alive,
+        IFrame,
+        Dead
+    }
 }

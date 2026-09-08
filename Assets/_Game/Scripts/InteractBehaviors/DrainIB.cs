@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace OceanGame
 {
+    [Serializable]
     public class DrainIB : InteractBehavior
     {
         [SerializeField] private int _drainLimit = 16;
