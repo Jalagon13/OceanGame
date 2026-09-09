@@ -21,6 +21,8 @@ namespace OceanGame
 
         public InventorySlot[] PlayerInventory { get; private set; }
         
+        private readonly WaitForSeconds _startDelay = new(0.5f);
+        
         private void Awake() 
         {
             Instance = this;
@@ -35,14 +37,14 @@ namespace OceanGame
         
         private IEnumerator Start() 
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return _startDelay;
             
             foreach (var startItem in _startingItems)
             {
                 AddItem(startItem.Item.GetId(), startItem.Amount);
             }
         }
-        
+
         public void RefreshInventory()
         {
             OnPlayerInventoryChanged?.Invoke();
@@ -51,6 +53,8 @@ namespace OceanGame
 
         public int AddItem(ushort itemId, int amount) // Returns remainder 
         {
+            if(Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return 0;
+        
             // Search for existing matching stacks
             for (int i = 0; i < PlayerInventory.Length; i++)
             {
@@ -98,6 +102,8 @@ namespace OceanGame
 
         public bool RemoveItem(int itemId, int amount)
         {
+            if (Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return false;
+
             // Verify the player actually has enough total items to remove
             if (GetTotalItemCount(itemId) < amount) 
             {

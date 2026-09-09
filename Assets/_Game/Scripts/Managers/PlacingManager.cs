@@ -16,6 +16,24 @@ namespace OceanGame
             Instance = this;
         }
 
+        private void Start()
+        {
+            Player.Instance.Character.Health.CurrentLifeState.OnValueChanged += OnLifeStateChanged;
+        }
+
+        private void OnDestroy()
+        {
+            Player.Instance.Character.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
+        }
+
+        private void OnLifeStateChanged(LifeState previousValue, LifeState newValue)
+        {
+            if (newValue == LifeState.Dead)
+            {
+                StopPlacing();
+            }
+        }
+
         public void StartPlacing(TileItemSO tileItem)
         {
             _isPlacing = true;

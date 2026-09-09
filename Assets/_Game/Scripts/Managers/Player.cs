@@ -1,5 +1,5 @@
 using System;
-
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -39,6 +39,7 @@ namespace OceanGame
         public bool JumpPressed { get; set; }
         public bool WaterJumpBuffered { get; set; }
         public float SwimDashCooldownTimer { get; set; }
+        public Vector2 RespawnPoint { get; private set; }
         
         private void Awake() 
         {
@@ -50,6 +51,10 @@ namespace OceanGame
             GameInput.Instance.OnMoveInputPressed += OnMoveInputPressed;
             GameInput.Instance.OnJumpPressed += OnJumpPressed;
             GameInput.Instance.OnSecondaryActionPressed += InteractWithObject;
+            
+            WorldManager.Instance.OnWorldReady += SetSpawnPoint;
+            
+            _playerCharacter.Health.CurrentLifeState.OnValueChanged += OnLifeStateChanged;
         }
         
         private void OnDestroy() 
@@ -57,6 +62,10 @@ namespace OceanGame
             GameInput.Instance.OnMoveInputPressed -= OnMoveInputPressed;
             GameInput.Instance.OnJumpPressed -= OnJumpPressed;
             GameInput.Instance.OnSecondaryActionPressed -= InteractWithObject;
+
+            WorldManager.Instance.OnWorldReady -= SetSpawnPoint;
+
+            _playerCharacter.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
         }
 
         private void Update()
@@ -67,13 +76,42 @@ namespace OceanGame
             {
                 SwimDashCooldownTimer -= Time.deltaTime;
             }
+            
+            // If player is not dead and is holding down move input keep updating desired direction with it
+            if(_playerCharacter.Health.CurrentLifeState.Value == LifeState.Dead) return;
+            
+            if(GameInput.Instance.MoveInput != Vector2.zero)
+            {
+                _playerCharacter.DesiredDirection = GameInput.Instance.MoveInput;
+            }
+        }
 
+        private void SetSpawnPoint()
+        {
+            RespawnPoint = _playerCharacter.transform.position;
+        }
+
+        private void OnLifeStateChanged(LifeState previousValue, LifeState newValue)
+        {
+            if(newValue == LifeState.Dead)
+            {
+                _playerCharacter.KnockbackVelocity = Vector2.zero;
+                _playerCharacter.DesiredDirection = Vector2.zero;
+                _playerCharacter.Velocity = Vector2.zero;
+            }
+            
+            if(previousValue == LifeState.Dead && newValue == LifeState.Alive)
+            {
+                // respawn
+                _playerCharacter.transform.position = RespawnPoint;
+                _playerCharacter.Health.CurrentHealth.Value = _playerCharacter.Data.BaseMaxHealth;
+            }
         }
 
         private void InteractWithObject(InputAction.CallbackContext context)
         {
             // Interact with interactable logic here
-            if (!WorldManager.Instance.IsWorldReady || WorldManager.Instance.MouseOverUI || !InventoryCursorManager.Instance.CursorSlot.IsEmpty || context.phase != InputActionPhase.Started) return;
+            if (!WorldManager.Instance.IsWorldReady || WorldManager.Instance.MouseOverUI || !InventoryCursorManager.Instance.CursorSlot.IsEmpty || context.phase != InputActionPhase.Started || _playerCharacter.Health.CurrentLifeState.Value == LifeState.Dead) return;
 
             var pos = WorldManager.MouseWorldTilePosition;
             var fgtd = WorldManager.Instance.FgGrid.GetTileData(pos.x, pos.y);
@@ -86,7 +124,7 @@ namespace OceanGame
 
         private void OnJumpPressed()
         {
-            if(!WorldManager.Instance.IsWorldReady) return;
+            if(!WorldManager.Instance.IsWorldReady || _playerCharacter.Health.CurrentLifeState.Value == LifeState.Dead) return;
         
             bool canJumpFromGround = _playerCharacter.CollisionResult.TouchingBottom;
             bool canJumpFromWater = _playerCharacter.Machine.Root.Leaf() is PlayerSwimmingState && IsHeadInAir();
@@ -99,7 +137,7 @@ namespace OceanGame
 
         private void OnMoveInputPressed(Vector2 rawMoveInput)
         {
-            if (!WorldManager.Instance.IsWorldReady) return;
+            if (!WorldManager.Instance.IsWorldReady || _playerCharacter.Health.CurrentLifeState.Value == LifeState.Dead) return;
             
             _playerCharacter.DesiredDirection = rawMoveInput;
         }
@@ -119,5 +157,7 @@ namespace OceanGame
             Vector2Int playerTilePos = new Vector2Int(Mathf.FloorToInt(_playerCharacter.transform.position.x), Mathf.FloorToInt(_playerCharacter.transform.position.y - 0.5f));
             return WorldManager.Instance.FluidGrid.GetFluidType(playerTilePos.x, playerTilePos.y) == FluidType.Water;
         }
+
+        
     }
 }

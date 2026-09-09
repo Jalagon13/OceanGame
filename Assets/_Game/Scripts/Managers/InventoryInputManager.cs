@@ -46,6 +46,8 @@ namespace OceanGame
             var activeSlot = GetActiveInvSlot();
             if(activeSlot.IsEmpty) return;
             
+            if(Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
+            
             if(GameInput.Instance.PrimaryActionHeld)
             {
                 activeSlot.GetItemSO().OnPrimaryActionHeld();
@@ -58,6 +60,8 @@ namespace OceanGame
 
         private void OnPrimaryActionPressed(InputAction.CallbackContext context)
         {
+            if (Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
+
             var activeSlot = GetActiveInvSlot();
             
             if(!activeSlot.IsEmpty)
@@ -78,6 +82,8 @@ namespace OceanGame
 
         private void OnSecondaryActionPressed(InputAction.CallbackContext context)
         {
+            if (Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
+
             var activeSlot = GetActiveInvSlot();
             
             if (!activeSlot.IsEmpty)
@@ -110,7 +116,9 @@ namespace OceanGame
 
         public void OnInteractWithCraftingTable(List<RecipeSO> recipes, int x, int y)
         {
-            if(!IsInventoryOpen)
+            if (Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
+
+            if (!IsInventoryOpen)
             {
                 OnToggleInventory();
             }
@@ -120,6 +128,8 @@ namespace OceanGame
 
         private void OnToggleInventory()
         {
+            if (Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
+
             IsInventoryOpen = !IsInventoryOpen;
 
             OnInventoryOpenChanged?.Invoke(IsInventoryOpen);
@@ -127,6 +137,8 @@ namespace OceanGame
 
         private void OnScrollWheel(InputAction.CallbackContext context)
         {
+            if (Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
+
             Vector2 scrollDelta = context.ReadValue<Vector2>();
             int itemCount = InventoryManager.Instance.HotbarSize;
             if (itemCount == 0)
@@ -152,6 +164,8 @@ namespace OceanGame
 
         private void OnSelectSlot(InputAction.CallbackContext context)
         {
+            if (Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
+
             var control = context.control;
 
             if (control is KeyControl key)
@@ -166,6 +180,8 @@ namespace OceanGame
 
         private void SelectHotbarSlot(int hotbarSlotIndex)
         {
+            if (Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
+
             int newIndex = Mathf.Clamp(hotbarSlotIndex, 0, InventoryManager.Instance.HotbarSize - 1);
 
             if (newIndex == ActiveHotbarIndex) // Ignore same calls

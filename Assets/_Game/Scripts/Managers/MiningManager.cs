@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace OceanGame
@@ -12,6 +13,24 @@ namespace OceanGame
         private void Awake()
         {
             Instance = this;
+        }
+        
+        private void Start() 
+        {
+            Player.Instance.Character.Health.CurrentLifeState.OnValueChanged += OnLifeStateChanged;
+        }
+        
+        private void OnDestroy() 
+        {
+            Player.Instance.Character.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
+        }
+
+        private void OnLifeStateChanged(LifeState previousValue, LifeState newValue)
+        {
+            if(newValue == LifeState.Dead)
+            {
+                StopMining();
+            }
         }
 
         public void StartMining(ToolItemSO tool)

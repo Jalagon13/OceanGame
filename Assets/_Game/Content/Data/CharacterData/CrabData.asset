@@ -15,8 +15,8 @@ MonoBehaviour:
   <BodyColliderSize>k__BackingField: {x: 1, y: 1}
   <BaseMaxHealth>k__BackingField: 100
   <BaseDefense>k__BackingField: 0
-  <BaseDamage>k__BackingField: 5
-  <KnockbackForce>k__BackingField: 25
+  <BaseDamage>k__BackingField: 50
+  <KnockbackForce>k__BackingField: 10
   <BaseSpeed>k__BackingField: 3
   <BaseIFrameDuration>k__BackingField: 0.67
   <BaseTurnSharpness>k__BackingField: 5

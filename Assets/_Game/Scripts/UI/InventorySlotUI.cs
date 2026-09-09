@@ -46,6 +46,8 @@ namespace OceanGame
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            if(Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
+        
             if(eventData.button == PointerEventData.InputButton.Left)
             {
                 InventoryCursorManager.Instance.HandleSlotLeftClick(_slotIndex);

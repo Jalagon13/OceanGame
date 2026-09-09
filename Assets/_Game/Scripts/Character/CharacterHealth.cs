@@ -80,12 +80,9 @@ namespace OceanGame
 
         private IEnumerator IFrameRoutine()
         {
-            Debug.Log($"{name} iframe started");
             CurrentLifeState.Value = LifeState.IFrame;
             yield return _iFrameDuration;
             CurrentLifeState.Value = LifeState.Alive;
-            Debug.Log($"{name} iframe ended");
-            
         }
     }
     
