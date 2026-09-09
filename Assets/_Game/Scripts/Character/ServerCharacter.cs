@@ -100,7 +100,7 @@ namespace OceanGame
             if (other is not ServerCharacter target) return;
             if (!target.CompareTag("Player")) return;
             if (target.Health.CurrentLifeState.Value != LifeState.Alive) return;
-            Debug.Log($"1");
+            
             var receiver = target.DamageReceiver;
             var hitData = new SyncHitData(_data.BaseDamage, _data.KnockbackForce, transform.position);
             

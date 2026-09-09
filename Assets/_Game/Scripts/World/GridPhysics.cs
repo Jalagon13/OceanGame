@@ -268,7 +268,6 @@ namespace OceanGame
 
                     if (!Overlaps(first, second)) continue;
 
-                    Debug.Log($"0");
                     first.OnEntityOverlap(second);
                     second.OnEntityOverlap(first);
                 }

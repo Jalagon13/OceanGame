@@ -62,7 +62,6 @@ namespace OceanGame
             if(CurrentHealth.Value <= 0)
             {
                 CurrentLifeState.Value = LifeState.Dead;
-                Debug.Log($"lifestate changed to ded");
             }
         }
 
