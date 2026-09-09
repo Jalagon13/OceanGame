@@ -4012,6 +4012,7 @@ GameObject:
   - component: {fileID: 2043979316}
   - component: {fileID: 2043979317}
   - component: {fileID: 2043979318}
+  - component: {fileID: 2043979319}
   m_Layer: 0
   m_Name: WORLD
   m_TagString: Untagged
@@ -4120,6 +4121,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5002b5e9103417a96d133cfc723147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.AirPocketManager
+--- !u!114 &2043979319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043979312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d58df6de50ce94e08a6db50f9a63e04c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.CharacterManager
 --- !u!1 &2070694658
 GameObject:
   m_ObjectHideFlags: 0
@@ -4558,7 +4571,7 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 330585546}
   - {fileID: 759830593}
-  - {fileID: 188555075}
   - {fileID: 285757409}
+  - {fileID: 188555075}
   - {fileID: 1715237431}
   - {fileID: 1509211431}
