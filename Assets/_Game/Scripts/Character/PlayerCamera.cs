@@ -51,6 +51,24 @@ namespace OceanGame
             OnVisibleTileBoundsChanged?.Invoke(previousBounds, visibleBounds);
         }
 
+        private void OnDrawGizmos()
+        {
+            // Only draw if we have a valid width and height calculated
+            if (CurrentVisibleTileBounds.width <= 0 || CurrentVisibleTileBounds.height <= 0) return;
+
+            // Use a distinct color (like Cyan) for camera view bounds
+            Gizmos.color = Color.cyan;
+
+            // RectInt positions track the bottom-left corner, but Gizmos draw from the center.
+            // We use standard floats (rect.center) to avoid integer truncation issues.
+            Vector2 center2D = CurrentVisibleTileBounds.center;
+            Vector3 center = new Vector3(center2D.x, center2D.y, 0f);
+            Vector3 size = new Vector3(CurrentVisibleTileBounds.size.x, CurrentVisibleTileBounds.size.y, 0f);
+
+            // Draws the wireframe box outlining your tile bounds in the Scene View
+            Gizmos.DrawWireCube(center, size);
+        }
+
         private void ClampCameraToWorld()
         {
             Vector3 targetPos = new(_player.transform.position.x, _player.transform.position.y, transform.position.z);
