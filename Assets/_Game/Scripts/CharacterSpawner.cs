@@ -44,20 +44,124 @@ namespace OceanGame
             float newPerSecondSpawnChance = CalculatePerSecondSpawnChance();
             float tickChance = ConvertSpawnChancePerSecondToPerTick(newPerSecondSpawnChance);
 
-            if (UnityEngine.Random.value >= tickChance)
+            if (Random.value >= tickChance)
                 return;
 
-            TrySpawnCharacter();
+            BeginCharacterSpawnAttempt();
         }
 
-        private void TrySpawnCharacter()
+        private CharacterSpawnCircumstance GetSpawnCircumstances()
+        {
+            // Quieries something and gets a characterspawncircumstance from a different place maybe WorldManager? idk TODO for now
+
+            return new CharacterSpawnCircumstance(6, 0.1f);
+        }
+
+        private void BeginCharacterSpawnAttempt()
         {
             if (!CharacterManager.Instance.CanSpawnCharacter())
                 return;
 
-            Debug.Log($"Trying to spawn character");
+            if (CurrentCharacterCount >= CurrentCircumstance.MaxCharacterCount)
+                return; // Enforce local cap
+
+            if (!TryToSpawnCharacter(out Vector2Int spawnSpot)) 
+                return;
             
+            Debug.Log($"");
+        }
+
+        private bool TryToSpawnCharacter(out Vector2Int spawnSpot)
+        {
+            spawnSpot = default;
+
+            for (int attempt = 0; attempt < 50; attempt++)
+            {
+                // Find a random position in spawn area
+                int randX = Random.Range(_spawnArea.xMin, _spawnArea.xMax);
+                int randY = Random.Range(_spawnArea.yMin, _spawnArea.yMax);
+                var candidate = new Vector2Int(randX, randY);
+                
+                if (!WorldManager.Instance.FgGrid.IsInBounds(candidate.x, candidate.y))
+                    continue; // If out of bounds try again
+                    
+                var fgTd = WorldManager.Instance.FgGrid.GetTileData(candidate.x, candidate.y);
+
+                if (fgTd.HasTile)
+                    continue; // If has tile, try again
+                    
+                if(!TryFindGround(candidate, out Vector2Int foundGroundSpot))
+                    continue;
+                    
+                if(!TestSpotForSpace(foundGroundSpot))
+                    continue;
+
+                spawnSpot = foundGroundSpot;
+                return true;
+            }
             
+            // If all attempts dont make it return false
+            return false;
+        }
+
+        private bool TestSpotForSpace(Vector2Int foundGroundSpot)
+        {
+            return true;
+        }
+
+        private bool TryFindGround(Vector2Int candidate, out Vector2Int spawnSpot)
+        {
+            spawnSpot = default;
+
+            // If it is empty space, seach 22 tiles down to find solid ground
+            for (int searchAttempt = 0; searchAttempt < 22; searchAttempt++)
+            {
+                var grid = WorldManager.Instance.FgGrid;
+            
+                Vector2Int posToCheck = new(candidate.x, candidate.y - searchAttempt);
+                Vector2Int belowPosToCheck = new(candidate.x, candidate.y - (searchAttempt + 1));
+
+                if (!grid.IsInBounds(posToCheck.x, posToCheck.y) || !grid.IsInBounds(belowPosToCheck.x, belowPosToCheck.y))
+                    continue;
+
+                TileData checkTile = grid.GetTileData(posToCheck.x, posToCheck.y);
+                TileData belowTile = grid.GetTileData(belowPosToCheck.x, belowPosToCheck.y);
+
+                if (checkTile.IsAir && belowTile.IsSolid)
+                {
+                    if (_noSpawnArea.Contains(posToCheck))
+                        continue;
+
+                    spawnSpot = posToCheck;
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
+        public void RegisterOwnedCharacter(ServerCharacter character)
+        {
+            if (character != null)
+            {
+                _ownedCharacters.Add(character);
+            }
+        }
+
+        public void UnregisterOwnedCharacter(ServerCharacter character)
+        {
+            _ownedCharacters.Remove(character);
+        }
+
+        private void UpdateAreas()
+        {
+            Vector3 hostPos = _host.transform.position;
+            Vector2Int hostPosInt = new((int)hostPos.x, (int)hostPos.y);
+
+            _spawnArea = CreateRectCenteredAt(hostPosInt, _spawnAreaDimensions);
+            _noSpawnArea = CreateRectCenteredAt(hostPosInt, _noSpawnAreaDimensions);
+            _activeArea = CreateRectCenteredAt(hostPosInt, _activeAreaDimensions);
+            _timerSafeArea = CreateRectCenteredAt(hostPosInt, _timerSafeAreaDimensions);
         }
 
         private float CalculatePerSecondSpawnChance()
@@ -81,26 +185,6 @@ namespace OceanGame
             return Mathf.Clamp01(perSecondChance * chanceMultiplier);
         }
 
-        public void RegisterOwnedCharacter(ServerCharacter character)
-        {
-            if (character != null)
-            {
-                _ownedCharacters.Add(character);
-            }
-        }
-
-        public void UnregisterOwnedCharacter(ServerCharacter character)
-        {
-            _ownedCharacters.Remove(character);
-        }
-
-        private CharacterSpawnCircumstance GetSpawnCircumstances()
-        {
-            // Quieries something and gets a characterspawncircumstance from a different place maybe WorldManager? idk TODO for now
-
-            return new CharacterSpawnCircumstance(6, 0.1f);
-        }
-
         private float ConvertSpawnChancePerSecondToPerTick(float perSecondChance)
         {
             float spawnChancePerSecond = Mathf.Clamp01(perSecondChance);
@@ -109,17 +193,6 @@ namespace OceanGame
             float perTickChance = 1f - Mathf.Pow(1f - spawnChancePerSecond, Time.fixedDeltaTime);
 
             return perTickChance;
-        }
-
-        private void UpdateAreas()
-        {
-            Vector3 hostPos = _host.transform.position;
-            Vector2Int hostPosInt = new((int)hostPos.x, (int)hostPos.y);
-
-            _spawnArea = CreateRectCenteredAt(hostPosInt, _spawnAreaDimensions);
-            _noSpawnArea = CreateRectCenteredAt(hostPosInt, _noSpawnAreaDimensions);
-            _activeArea = CreateRectCenteredAt(hostPosInt, _activeAreaDimensions);
-            _timerSafeArea = CreateRectCenteredAt(hostPosInt, _timerSafeAreaDimensions);
         }
 
         private RectInt CreateRectCenteredAt(Vector2Int center, Vector2Int size)
