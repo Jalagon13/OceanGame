@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace OceanGame
@@ -18,5 +19,6 @@ namespace OceanGame
         [field: SerializeField] public bool CanBeKnockedBacked { get; private set; } = true;
         [field: SerializeField] public bool CanDie { get; private set; } = true;
         [field: SerializeField] public bool CanDamagePlayerOnTouch { get; private set; }
+        [field: SerializeField] public ServerCharacter CharacterPrefab { get; private set; }
     }
 }

@@ -16,7 +16,7 @@ namespace OceanGame
             Instance = this;
         }
         
-        private void FixedUpdate() 
+        private void FixedUpdate() // This entire fixedupdate assumes it is running on the server and should be
         {
             if (!WorldManager.Instance.IsWorldReady) return;
             
@@ -26,6 +26,7 @@ namespace OceanGame
             }
 
             GridPhysics.CheckOverlap(_entities);
+            CharacterManager.Instance.TickCharacters();
         }
 
         public void Register(Entity entity)

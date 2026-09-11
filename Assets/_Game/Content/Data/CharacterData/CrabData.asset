@@ -24,3 +24,4 @@ MonoBehaviour:
   <CanBeKnockedBacked>k__BackingField: 1
   <CanDie>k__BackingField: 1
   <CanDamagePlayerOnTouch>k__BackingField: 1
+  <CharacterPrefab>k__BackingField: {fileID: 3454599396775519568, guid: 97551924553cd4e8a94609e9d830e17f, type: 3}

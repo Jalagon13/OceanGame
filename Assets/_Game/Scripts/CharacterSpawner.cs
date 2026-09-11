@@ -21,7 +21,7 @@ namespace OceanGame
         public ServerCharacter Host => _host;
 
         private readonly HashSet<ServerCharacter> _ownedCharacters = new();
-        public int CurrentCharacterCount => _ownedCharacters.Count;
+        public int LocalCurrentCharCount => _ownedCharacters.Count;
 
         public CharacterSpawnCircumstance CurrentCircumstance { get; private set; }
 
@@ -39,7 +39,7 @@ namespace OceanGame
         {
             UpdateAreas();
 
-            CurrentCircumstance = GetSpawnCircumstances();
+            CurrentCircumstance = CharacterSpawnRules.Instance.GetCircumstances(_host);
 
             float newPerSecondSpawnChance = CalculatePerSecondSpawnChance();
             float tickChance = ConvertSpawnChancePerSecondToPerTick(newPerSecondSpawnChance);
@@ -50,28 +50,29 @@ namespace OceanGame
             BeginCharacterSpawnAttempt();
         }
 
-        private CharacterSpawnCircumstance GetSpawnCircumstances()
-        {
-            // Quieries something and gets a characterspawncircumstance from a different place maybe WorldManager? idk TODO for now
-
-            return new CharacterSpawnCircumstance(6, 0.1f);
-        }
-
         private void BeginCharacterSpawnAttempt()
         {
             if (!CharacterManager.Instance.CanSpawnCharacter())
                 return;
 
-            if (CurrentCharacterCount >= CurrentCircumstance.MaxCharacterCount)
+            if (LocalCurrentCharCount >= CurrentCircumstance.MaxCharacterCount)
                 return; // Enforce local cap
 
-            if (!TryToSpawnCharacter(out Vector2Int spawnSpot)) 
+            if(!CurrentCircumstance.SpawnPool.TrySelectCharacter(out CharacterSpawnEntry spawnEntry))
                 return;
             
-            Debug.Log($"");
+            if (!TryToFindSpawnSpot(spawnEntry, out Vector2 spawnSpot)) 
+                return;
+            
+            if(!CharacterManager.Instance.TrySpawnCharacter(this, spawnEntry.Character.CharacterPrefab, spawnSpot, out ServerCharacter spawnedCharacter))
+                return;
+                
+            RegisterOwnedCharacter(spawnedCharacter);
+            Debug.Log($"Host's local char count: {LocalCurrentCharCount}/{CurrentCircumstance.MaxCharacterCount}");
+            Debug.Log($"Global Character count: {CharacterManager.Instance.CurrentCharacterCount}/{CharacterManager.Instance.GlobalMaxCharCap}");
         }
 
-        private bool TryToSpawnCharacter(out Vector2Int spawnSpot)
+        private bool TryToFindSpawnSpot(CharacterSpawnEntry spawnEntry, out Vector2 spawnSpot)
         {
             spawnSpot = default;
 
@@ -93,10 +94,10 @@ namespace OceanGame
                 if(!TryFindGround(candidate, out Vector2Int foundGroundSpot))
                     continue;
                     
-                if(!TestSpotForSpace(foundGroundSpot))
+                if(!TestSpotForSpace(spawnEntry, foundGroundSpot, out Vector2 spawnPosition))
                     continue;
 
-                spawnSpot = foundGroundSpot;
+                spawnSpot = spawnPosition;
                 return true;
             }
             
@@ -104,8 +105,38 @@ namespace OceanGame
             return false;
         }
 
-        private bool TestSpotForSpace(Vector2Int foundGroundSpot)
+        private bool TestSpotForSpace(CharacterSpawnEntry spawnEntry, Vector2Int foundGroundSpot, out Vector2 spawnPosition)
         {
+            TileGrid grid = WorldManager.Instance.FgGrid;
+            Vector2 size = spawnEntry.Character.BodyColliderSize;
+            Vector2 halfSize = size * 0.5f;
+            
+            spawnPosition = new(foundGroundSpot.x + 0.5f, foundGroundSpot.y + 0.5f + halfSize.y);
+
+            float left = spawnPosition.x - halfSize.x;
+            float right = spawnPosition.x + halfSize.x;
+            float bottom = spawnPosition.y - halfSize.y;
+            float top = spawnPosition.y + halfSize.y;
+
+            int minX = Mathf.FloorToInt(left);
+            int maxX = Mathf.CeilToInt(right) - 1;
+            int minY = Mathf.FloorToInt(bottom);
+            int maxY = Mathf.CeilToInt(top) - 1;
+
+            for (int x = minX; x <= maxX; x++)
+            {
+                for (int y = minY; y <= maxY; y++)
+                {
+                    if (!grid.IsInBounds(x, y))
+                        return false;
+
+                    TileData tile = grid.GetTileData(x, y);
+
+                    if (tile.IsSolid)
+                        return false;
+                }
+            }
+
             return true;
         }
 
@@ -121,6 +152,9 @@ namespace OceanGame
                 Vector2Int posToCheck = new(candidate.x, candidate.y - searchAttempt);
                 Vector2Int belowPosToCheck = new(candidate.x, candidate.y - (searchAttempt + 1));
 
+                if(!_spawnArea.Contains(posToCheck))
+                    continue;
+                    
                 if (!grid.IsInBounds(posToCheck.x, posToCheck.y) || !grid.IsInBounds(belowPosToCheck.x, belowPosToCheck.y))
                     continue;
 
@@ -167,7 +201,7 @@ namespace OceanGame
         private float CalculatePerSecondSpawnChance()
         {
             float perSecondChance = CurrentCircumstance.PerSecondSpawnChance;
-            float populationRatio = CurrentCircumstance.MaxCharacterCount > 0 ? (float)CurrentCharacterCount / CurrentCircumstance.MaxCharacterCount : 1f;
+            float populationRatio = CurrentCircumstance.MaxCharacterCount > 0 ? (float)LocalCurrentCharCount / CurrentCircumstance.MaxCharacterCount : 1f;
             float chanceMultiplier;
 
             // Increase the odds of spawning when this spawner's owned population is low.
@@ -202,15 +236,5 @@ namespace OceanGame
         }
     }
 
-    public readonly struct CharacterSpawnCircumstance
-    {
-        public int MaxCharacterCount { get; }
-        public float PerSecondSpawnChance { get; }
-
-        public CharacterSpawnCircumstance(int maxCharacterCount, float perSecondSpawnChance)
-        {
-            MaxCharacterCount = maxCharacterCount;
-            PerSecondSpawnChance = perSecondSpawnChance;
-        }
-    }
+    
 }

@@ -8,10 +8,25 @@ namespace OceanGame
         public static CharacterManager Instance { get; private set; }
 
         [SerializeField] private bool _enableSpawning = true;
+        
         [SerializeField] private int _globalMaxCharacterCap = 200;
+        public int GlobalMaxCharCap => _globalMaxCharacterCap;
+        
         [SerializeField] private float _durationTillCharacterDespawns = 20f;
         
         private List<CharacterSpawner> _spawners = new();
+        private readonly Dictionary<ServerCharacter, CharacterLifetime> _characterDespawnTimers = new();
+        private class CharacterLifetime
+        {
+            public CharacterSpawner Owner;
+            public float RemainingTime;
+            
+            public CharacterLifetime(CharacterSpawner owner, float remainingTime)
+            {
+                Owner = owner;
+                RemainingTime = remainingTime;
+            }
+        }
 
         public int CurrentCharacterCount
         {
@@ -21,7 +36,7 @@ namespace OceanGame
 
                 foreach (CharacterSpawner spawner in _spawners)
                 {
-                    count += spawner.CurrentCharacterCount;
+                    count += spawner.LocalCurrentCharCount;
                 }
 
                 return count;
@@ -56,13 +71,13 @@ namespace OceanGame
                 Gizmos.color = Color.black;
                 DrawRectIntGizmo(spawner.ActiveArea);
 
-                Gizmos.color = Color.orange;
+                Gizmos.color = Color.white;
                 DrawRectIntGizmo(spawner.TimerSafeArea);
             }
         }
 
-        // We will just used the fixed update for a consistent tick rate
-        private void FixedUpdate() 
+        // Ticks after everything in the entitymanager so it uses up to date positions
+        public void TickCharacters() 
         {
             if(!WorldManager.Instance.IsWorldReady) return;
             
@@ -73,6 +88,105 @@ namespace OceanGame
                     _spawners[i].TickSpawner();
                 }
             }
+            
+            TickCharacterLifetimes();
+        }
+
+        private void TickCharacterLifetimes()
+        {
+            Dictionary<ServerCharacter, CharacterSpawner> charactersToDespawn = new();
+
+            // Loop through all spawned characters
+            foreach (KeyValuePair<ServerCharacter, CharacterLifetime> entry in _characterDespawnTimers)
+            {
+                ServerCharacter character = entry.Key;
+
+                // Check if null for any reason
+                if (character == null)
+                {
+                    charactersToDespawn.Add(character, entry.Value.Owner);
+                    continue;
+                }
+                
+                // Check if dead
+                if(character.Health.CurrentLifeState.Value == LifeState.Dead)
+                {
+                    charactersToDespawn.Add(character, entry.Value.Owner);
+                    continue;
+                }
+
+                Vector2Int position = new(Mathf.FloorToInt(character.transform.position.x), Mathf.FloorToInt(character.transform.position.y));
+
+                bool isInActiveArea = false;
+                bool isInTimerSafeArea = false;
+
+                foreach (CharacterSpawner spawner in _spawners)
+                {
+                    if (spawner.ActiveArea.Contains(position))
+                        isInActiveArea = true;
+
+                    if (spawner.TimerSafeArea.Contains(position))
+                        isInTimerSafeArea = true;
+
+                    if (isInActiveArea && isInTimerSafeArea)
+                        break;
+                }
+
+                if (!isInActiveArea)
+                {
+                    charactersToDespawn.Add(character, entry.Value.Owner);
+                    continue;
+                }
+
+                if (isInTimerSafeArea)
+                {
+                    _characterDespawnTimers[character].RemainingTime = _durationTillCharacterDespawns;
+                    continue;
+                }
+
+                // Decrement it and check if should despawn
+                float remainingTime = entry.Value.RemainingTime - Time.fixedDeltaTime;
+
+                if (remainingTime <= 0f)
+                {
+                    charactersToDespawn.Add(character, entry.Value.Owner);
+                }
+                else
+                {
+                    _characterDespawnTimers[character].RemainingTime = remainingTime;
+                }
+            }
+
+            foreach (KeyValuePair<ServerCharacter, CharacterSpawner> entry in charactersToDespawn)
+            {
+                ServerCharacter character = entry.Key;
+                CharacterSpawner owner = entry.Value;
+
+                _characterDespawnTimers.Remove(character);
+                owner.UnregisterOwnedCharacter(character);
+
+                if (character != null)
+                {
+                    Debug.Log($"{character.name} despawned.");
+                    Debug.Log($"Owner character count: {owner.LocalCurrentCharCount}/{owner.CurrentCircumstance.MaxCharacterCount}");
+                    Destroy(character.gameObject);
+                }
+            }
+        }
+
+        public bool TrySpawnCharacter(CharacterSpawner owner, ServerCharacter prefab, Vector2 spawnPosition, out ServerCharacter spawnedCharacter)
+        {
+            spawnedCharacter = null;
+            
+            if(!CanSpawnCharacter())
+                return false;
+
+            spawnedCharacter = Instantiate(prefab, spawnPosition, Quaternion.identity);
+
+            CharacterLifetime lifetime = new(owner, _durationTillCharacterDespawns);
+            _characterDespawnTimers.Add(spawnedCharacter, lifetime);
+            Debug.Log($"Spawned {spawnedCharacter.name} at {spawnPosition}!");
+            return true;
         }
 
         // Register and unregister spawners when players enter and leave the world
