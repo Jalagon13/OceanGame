@@ -7,11 +7,6 @@ namespace OceanGame
         [field: SerializeField] 
         public WorldGenPipelineSO CurrentWorldGenPreset { get; private set; }
 
-        private void Start()
-        {
-            GenerateWorld(); // Auto-generate on start for testing
-        }
-
         public void GenerateWorld()
         {
             if (CurrentWorldGenPreset == null)
