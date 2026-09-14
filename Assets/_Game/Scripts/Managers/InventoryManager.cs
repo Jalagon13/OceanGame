@@ -21,8 +21,6 @@ namespace OceanGame
 
         public InventorySlot[] PlayerInventory { get; private set; }
         
-        private readonly WaitForSeconds _startDelay = new(0.5f);
-        
         private void Awake() 
         {
             Instance = this;
@@ -35,10 +33,22 @@ namespace OceanGame
             }
         }
         
-        private IEnumerator Start() 
+        private void Start() 
         {
-            yield return _startDelay;
+            if(Player.Instance == null) return;
             
+            Player.Instance.PlayerReady += OnPlayerReady;
+        }
+
+        private void OnDestroy() 
+        {
+            if (Player.Instance == null) return;
+
+            Player.Instance.PlayerReady -= OnPlayerReady;
+        }
+
+        private void OnPlayerReady(ServerCharacter character)
+        {
             foreach (var startItem in _startingItems)
             {
                 AddItem(startItem.Item.GetId(), startItem.Amount);

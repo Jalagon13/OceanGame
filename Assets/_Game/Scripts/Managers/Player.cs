@@ -40,7 +40,9 @@ namespace OceanGame
         public bool WaterJumpBuffered { get; set; }
         public float SwimDashCooldownTimer { get; set; }
         public Vector2 RespawnPoint { get; private set; }
-        
+
+        public event Action<ServerCharacter> PlayerReady;
+
         private void Awake() 
         {
             Instance = this;    
@@ -53,8 +55,6 @@ namespace OceanGame
             GameInput.Instance.OnSecondaryActionPressed += InteractWithObject;
             
             WorldManager.Instance.OnWorldReady += SetSpawnPoint;
-            
-            _playerCharacter.Health.CurrentLifeState.OnValueChanged += OnLifeStateChanged;
         }
         
         private void OnDestroy() 
@@ -65,7 +65,8 @@ namespace OceanGame
 
             WorldManager.Instance.OnWorldReady -= SetSpawnPoint;
 
-            _playerCharacter.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
+            if(_playerCharacter != null)
+                _playerCharacter.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
         }
 
         private void Update()
@@ -84,6 +85,16 @@ namespace OceanGame
             {
                 _playerCharacter.DesiredDirection = GameInput.Instance.MoveInput;
             }
+        }
+
+        public void BindCharacter(ServerCharacter character)
+        {
+            if (_playerCharacter == character) return;
+
+            _playerCharacter = character;
+            _playerCharacter.Health.CurrentLifeState.OnValueChanged += OnLifeStateChanged;
+
+            PlayerReady?.Invoke(_playerCharacter);
         }
 
         private void SetSpawnPoint()

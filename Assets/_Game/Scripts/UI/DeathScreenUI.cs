@@ -27,12 +27,27 @@ namespace OceanGame
 
         private void Start() 
         {
-            Player.Instance.Character.Health.CurrentLifeState.OnValueChanged += OnLifeValueChanged;    
+            if (Player.Instance == null) return;
+
+            Player.Instance.PlayerReady += OnPlayerReady;
+
+            if (Player.Instance.Character != null)
+                OnPlayerReady(Player.Instance.Character);
         }
         
         private void OnDestroy() 
         {
-            Player.Instance.Character.Health.CurrentLifeState.OnValueChanged -= OnLifeValueChanged;
+            if (Player.Instance == null) return;
+            
+            if(Player.Instance.Character != null)
+                Player.Instance.Character.Health.CurrentLifeState.OnValueChanged -= OnLifeValueChanged;
+                
+            Player.Instance.PlayerReady -= OnPlayerReady;
+        }
+
+        private void OnPlayerReady(ServerCharacter player)
+        {
+            player.Health.CurrentLifeState.OnValueChanged += OnLifeValueChanged;
         }
 
         private void OnLifeValueChanged(LifeState previousValue, LifeState newValue)
