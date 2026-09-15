@@ -6,6 +6,11 @@ namespace OceanGame
     public abstract class Entity : MonoBehaviour
     {
         [SerializeField] private bool _ignoreCollision;
+        public bool IgnoreCollision
+        {
+            get => _ignoreCollision;
+            set => _ignoreCollision = value;
+        }
 
         [HideInInspector] public Vector2 Velocity;
         [HideInInspector] public Vector2 ColliderSize;

@@ -9,7 +9,8 @@ namespace OceanGame
     {
         public static EntityManager Instance { get; private set; }
         
-        private List<Entity> _entities = new();
+        private readonly List<Entity> _entities = new();
+        public IReadOnlyList<Entity> Entities => _entities;
 
         private void Awake() 
         {
@@ -22,7 +23,10 @@ namespace OceanGame
             
             for (int i = _entities.Count - 1; i >= 0; i--)
             {
-                _entities[i].FixedTick(Time.fixedDeltaTime);
+                if (_entities[i] != null)
+                {
+                    _entities[i].FixedTick(Time.fixedDeltaTime);
+                }
             }
 
             GridPhysics.CheckOverlap(_entities);

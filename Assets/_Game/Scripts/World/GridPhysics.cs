@@ -261,15 +261,22 @@ namespace OceanGame
         {
             for (int i = 0; i < entities.Count; i++)
             {
+                Entity first = entities[i];
+                if (first == null) continue;
+
                 for (int j = i + 1; j < entities.Count; j++)
                 {
-                    Entity first = entities[i];
                     Entity second = entities[j];
+                    if (second == null) continue;
 
                     if (!Overlaps(first, second)) continue;
 
                     first.OnEntityOverlap(second);
-                    second.OnEntityOverlap(first);
+                    if (first == null) break;
+                    if (second != null)
+                    {
+                        second.OnEntityOverlap(first);
+                    }
                 }
             }
         }

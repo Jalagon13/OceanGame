@@ -6,46 +6,53 @@ using System.Collections.Generic;
 
 namespace OceanGame
 {
-    public class Item : MonoBehaviour
+    public class Item : Entity
     {
         [SerializeField] private SpriteRenderer _sprite;
-    
+        [SerializeField] private Vector2 _colliderSize = new(0.4f, 0.4f);
+
         [Header("Detection Setup")]
-        [SerializeField] private LayerMask _playerLayer;
         [SerializeField] private float _ableToCollectTimer = 0.5f;
         [SerializeField] private float _detectRange = 5f;
-    
+
         public ItemContext Ctx = new();
 
         private const float DETECTION_INTERVAL = 0.125f;
         private float _timer;
-        private readonly List<Collider2D> _detectionResults = new();
-        private ContactFilter2D _playerFilter;
         private StateMachine _machine;
         private State _root;
 
         private void Awake() 
         {
+            ColliderSize = _colliderSize;
+
+            Ctx.Item = this;
+            Ctx.ClosestPlayer = null;
+            Ctx.CanBeCollected = false;
+            Ctx.HasBeenCollected = false;
+
             _root = new ItemRootState(null, Ctx);
             var builder = new StateMachineBuilder(_root);
             _machine = builder.Build();
             _machine.Start();
-            
-            Ctx.Transform = transform;
-            Ctx.ItemCollider = GetComponent<BoxCollider2D>();
-            Ctx.ClosestPlayer = null;
-            Ctx.CanBeCollected = false;
-            Ctx.HasBeenCollected = false;
-            Ctx.Item = this;
-            Ctx.IgnoreCollisions = false;
-
-            _playerFilter = new ContactFilter2D();
-            _playerFilter.SetLayerMask(_playerLayer);
-            _playerFilter.useLayerMask = true;
-            _playerFilter.useTriggers = true; // Allows detecting trigger colliders too
-            _playerFilter.useDepth = false;   // Disables Z-depth filtering
         }
-        
+
+        private void OnEnable()
+        {
+            if (EntityManager.Instance != null)
+            {
+                EntityManager.Instance.Register(this);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (EntityManager.Instance != null)
+            {
+                EntityManager.Instance.UnRegister(this);
+            }
+        }
+
         private IEnumerator Start() 
         {
             yield return new WaitForSeconds(_ableToCollectTimer);
@@ -55,29 +62,46 @@ namespace OceanGame
 
         private void Update()
         {
+            if (!WorldManager.Instance.IsWorldReady) return;
+
             _machine.Tick(Time.deltaTime);
             
             _timer -= Time.deltaTime;
-            if(_timer <= 0 && Ctx.CanBeCollected && Ctx.ItemSlot != null && !Ctx.HasBeenCollected)
+            if (_timer <= 0 && Ctx.CanBeCollected && Ctx.ItemSlot != null && !Ctx.HasBeenCollected)
             {
                 _timer = DETECTION_INTERVAL;
                 DetectPlayer();
             }
         }
 
-        private void FixedUpdate()
+        public override void FixedTick(float fixedDeltaTime)
         {
-            _machine.FixedTick(Time.fixedDeltaTime);
+            if (!WorldManager.Instance.IsWorldReady) return;
+            if (Ctx.HasBeenCollected) return;
 
-            Vector2 boxSize = Ctx.ItemCollider.size; 
-            Ctx.CollisionResult = GridPhysics.MoveAndResolve(transform.position, Ctx.Velocity, boxSize, Time.fixedDeltaTime, Ctx.IgnoreCollisions);
-            transform.position = Ctx.CollisionResult.NewPosition;
+            _machine.FixedTick(fixedDeltaTime);
+            
+            base.FixedTick(fixedDeltaTime);
         }
-        
+
+        public override void OnEntityOverlap(Entity other)
+        {
+            if (!Ctx.CanBeCollected || Ctx.HasBeenCollected || Ctx.ItemSlot == null) return;
+            if (other is not ServerCharacter character) return;
+            if (character.StateMachineType != StateMachineType.Player) return;
+            if (character.Health != null && character.Health.CurrentLifeState.Value != LifeState.Alive) return;
+
+            bool canThisPlayerAcceptThisItem = InventoryManager.Instance.CanAcceptItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.CurrentAmount);
+            if (canThisPlayerAcceptThisItem)
+            {
+                OnItemCollected();
+            }
+        }
+
         public void InitializeItem(InventorySlot item, Vector2 startingVelocity = default)
         {
             Ctx.ItemSlot = item;
-            Ctx.Velocity = startingVelocity;
+            Velocity = startingVelocity;
 
             // Visuals
             _sprite.sprite = GameDataRegistry.Instance.GetItemSOFromItemId(item.ItemId).DisplayIcon;
@@ -85,18 +109,21 @@ namespace OceanGame
 
         private void DetectPlayer()
         {
-            int hitCount = Physics2D.OverlapCircle(transform.position, _detectRange, _playerFilter, _detectionResults);
             ServerCharacter closestPlayer = null;
             float closestDistance = _detectRange;
 
-            for (int i = 0; i < hitCount; i++)
+            if (EntityManager.Instance != null)
             {
-                var currentCollider = _detectionResults[i];
-
-                if (currentCollider.TryGetComponent(out ServerCharacter character))
+                IReadOnlyList<Entity> entities = EntityManager.Instance.Entities;
+                for (int i = 0; i < entities.Count; i++)
                 {
-                    if(character.StateMachineType == StateMachineType.Player)
+                    Entity entity = entities[i];
+                    if (entity == null || entity == this) continue;
+
+                    if (entity is ServerCharacter character && character.StateMachineType == StateMachineType.Player)
                     {
+                        if (character.Health != null && character.Health.CurrentLifeState.Value != LifeState.Alive) continue;
+
                         // Only detect players who can accept this item. In the future, query each player for can accept item somehow
                         bool canThisPlayerAcceptThisItem = InventoryManager.Instance.CanAcceptItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.CurrentAmount);
 
@@ -111,8 +138,6 @@ namespace OceanGame
                             }
                         }
                     }
-                
-                    
                 }
             }
             
@@ -121,6 +146,8 @@ namespace OceanGame
         
         public void OnItemCollected()
         {
+            if (Ctx.HasBeenCollected || Ctx.ItemSlot == null) return;
+
             int remainder = InventoryManager.Instance.AddItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.CurrentAmount);
 
             if (remainder <= 0)
@@ -133,7 +160,6 @@ namespace OceanGame
                 Ctx.ItemSlot.AssignItem(Ctx.ItemSlot.ItemId, remainder);
                 Ctx.ClosestPlayer = null;
             }
-            
         }
     }
     
@@ -152,15 +178,22 @@ namespace OceanGame
         public float GravityForce = 25f;
         public float TerminalVelocity = -40f;
 
-        [HideInInspector] public Transform Transform;
+        [HideInInspector] public Item Item;
         [HideInInspector] public Vector2 DesiredDirection;
-        [HideInInspector] public Vector2 Velocity;
-        [HideInInspector] public GridPhysics.CollisionResult CollisionResult;
-        [HideInInspector] public BoxCollider2D ItemCollider;
         [HideInInspector] public ServerCharacter ClosestPlayer;
         [HideInInspector] public bool CanBeCollected;
         [HideInInspector] public bool HasBeenCollected;
-        [HideInInspector] public bool IgnoreCollisions;
-        [HideInInspector] public Item Item;
+
+        public Transform Transform => Item != null ? Item.transform : null;
+        public ref Vector2 Velocity => ref Item.Velocity;
+        public GridPhysics.CollisionResult CollisionResult => Item != null ? Item.CollisionResult : default;
+        public bool IgnoreCollisions
+        {
+            get => Item != null && Item.IgnoreCollision;
+            set
+            {
+                if (Item != null) Item.IgnoreCollision = value;
+            }
+        }
     }
 }
