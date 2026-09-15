@@ -48,11 +48,6 @@ namespace OceanGame
             Instance = this;
         }
         
-        private void Start() 
-        {
-            RegisterSpawner(Player.Instance.Character);    
-        }
-
         private void OnDrawGizmos()
         {
             if (_spawners == null || _spawners.Count == 0) return;
@@ -202,6 +197,7 @@ namespace OceanGame
 
             CharacterSpawner spawner = new(host);
             _spawners.Add(spawner);
+            Debug.Log($"{host} registered as spawner");
         }
         
         public void UnRegisterSpawner(ServerCharacter host)
@@ -211,6 +207,7 @@ namespace OceanGame
                 if (_spawners[i].Host == host)
                 {
                     _spawners.RemoveAt(i);
+                    Debug.Log($"{host} un registered as spawner");
                     return; // Found and removed, exit early
                 }
             }

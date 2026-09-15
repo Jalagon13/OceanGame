@@ -49,14 +49,16 @@ namespace OceanGame
 
         private void OnClientConnected(ulong clientId)
         {
+            CharacterManager.Instance.RegisterSpawner(NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<ServerCharacter>());
+        
             if (NetworkManager.LocalClientId != clientId) return;
 
             WorldManager.Instance.WorldGen.GenerateWorld();
         }
 
-        private void OnClientDisconnected(ulong obj)
+        private void OnClientDisconnected(ulong clientId)
         {
-            
+            CharacterManager.Instance.UnRegisterSpawner(NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<ServerCharacter>());
         }
     }
 }
