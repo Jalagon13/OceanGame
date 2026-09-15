@@ -9,7 +9,6 @@ namespace OceanGame
     
         public event Action<RectInt, RectInt> OnVisibleTileBoundsChanged;
 
-        [SerializeField] private GameObject _player;
         [SerializeField] private Camera _camera;
         [SerializeField] private int _padding = 4;
 
@@ -22,10 +21,10 @@ namespace OceanGame
         {
             Instance = this;    
         }
-
+        
         private void LateUpdate()
         {
-            if (WorldManager.Instance == null || !WorldManager.Instance.IsWorldReady) return;
+            if (WorldManager.Instance == null || !WorldManager.Instance.IsWorldReady || Player.Instance.Character == null) return;
 
             ClampCameraToWorld();
 
@@ -71,7 +70,7 @@ namespace OceanGame
 
         private void ClampCameraToWorld()
         {
-            Vector3 targetPos = new(_player.transform.position.x, _player.transform.position.y, transform.position.z);
+            Vector3 targetPos = new(Player.Instance.Character.transform.position.x, Player.Instance.Character.transform.position.y, transform.position.z);
 
             int width = WorldManager.Instance.WorldGen.CurrentWorldGenPreset.Width;
             int height = WorldManager.Instance.WorldGen.CurrentWorldGenPreset.Height;

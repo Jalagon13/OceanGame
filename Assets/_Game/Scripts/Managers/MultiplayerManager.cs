@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace OceanGame
 {
-    public class MultiplayerManager : MonoBehaviour
+    public class MultiplayerManager : NetworkBehaviour
     {
         public static MultiplayerManager Instance { get; private set; }
         
@@ -14,29 +14,41 @@ namespace OceanGame
             Instance = this;    
         }
         
-        private void Start() 
+        private void OnEnable() 
         {
             SceneManager.sceneLoaded += HandleNetworkLoad;
         }
-        
-        private void OnDestroy() 
+
+        private void OnDisable()
         {
             SceneManager.sceneLoaded -= HandleNetworkLoad;
         }
 
         private void HandleNetworkLoad(Scene arg0, LoadSceneMode arg1)
         {
+            if (NetworkManager.Singleton == null) return;
+            
+            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+
             if (Loader.IsHost)
             {
                 Debug.Log($"Starting game as host");
                 NetworkManager.Singleton.StartHost();
-                WorldManager.Instance.WorldGen.GenerateWorld();
+                
             }
             else
             {
                 Debug.Log($"Starting game as client");
                 NetworkManager.Singleton.StartClient();
             }
+        }
+
+        private void OnClientConnected(ulong clientId)
+        {
+            if (NetworkManager.LocalClientId != clientId) return;
+
+            WorldManager.Instance.WorldGen.GenerateWorld();
         }
     }
 }
