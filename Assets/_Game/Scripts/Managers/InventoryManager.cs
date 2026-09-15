@@ -36,8 +36,10 @@ namespace OceanGame
         private void Start() 
         {
             if(Player.Instance == null) return;
-            
             Player.Instance.PlayerReady += OnPlayerReady;
+
+            if (Player.Instance.Character != null)
+                OnPlayerReady(Player.Instance.Character);
         }
 
         private void OnDestroy() 

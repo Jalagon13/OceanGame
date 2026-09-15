@@ -30,6 +30,9 @@ namespace OceanGame
             
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+            
+            NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
 
             if (Loader.IsHost)
             {
@@ -49,6 +52,11 @@ namespace OceanGame
             if (NetworkManager.LocalClientId != clientId) return;
 
             WorldManager.Instance.WorldGen.GenerateWorld();
+        }
+
+        private void OnClientDisconnected(ulong obj)
+        {
+            
         }
     }
 }
