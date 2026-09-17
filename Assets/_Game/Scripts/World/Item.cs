@@ -64,14 +64,7 @@ namespace OceanGame
         {
             if (!WorldManager.Instance.IsWorldReady) return;
 
-            _machine.Tick(Time.deltaTime);
-            
-            _timer -= Time.deltaTime;
-            if (_timer <= 0 && Ctx.CanBeCollected && Ctx.ItemSlot != null && !Ctx.HasBeenCollected)
-            {
-                _timer = DETECTION_INTERVAL;
-                DetectPlayer();
-            }
+            _machine.UpdateTick(Time.deltaTime);
         }
 
         public override void FixedTick(float fixedDeltaTime)
@@ -80,7 +73,14 @@ namespace OceanGame
             if (Ctx.HasBeenCollected) return;
 
             _machine.FixedTick(fixedDeltaTime);
-            
+
+            _timer -= Time.deltaTime;
+            if (_timer <= 0 && Ctx.CanBeCollected && Ctx.ItemSlot != null && !Ctx.HasBeenCollected)
+            {
+                _timer = DETECTION_INTERVAL;
+                DetectPlayer();
+            }
+
             base.FixedTick(fixedDeltaTime);
         }
 

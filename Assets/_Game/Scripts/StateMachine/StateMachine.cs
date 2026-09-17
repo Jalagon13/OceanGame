@@ -29,7 +29,7 @@ namespace OceanGame
             LogStatePath();
         }
 
-        public void Tick(float deltaTime)
+        public void UpdateTick(float deltaTime)
         {
             if(!_started) return;
             InternalTick(deltaTime);

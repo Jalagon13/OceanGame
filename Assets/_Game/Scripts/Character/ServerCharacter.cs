@@ -66,7 +66,7 @@ namespace OceanGame
         {
             if (!WorldManager.Instance.IsWorldReady) return;
 
-            Machine.Tick(Time.deltaTime);
+            Machine.UpdateTick(Time.deltaTime);
         }
 
         public override void FixedTick(float fixedDeltaTime)
