@@ -25,6 +25,7 @@ namespace OceanGame
         public static Vector2 MouseWorldPosition { get; private set; }
         public bool MouseOverUI { get; private set; }
         public bool IsWorldReady { get; private set; } = false;
+        public int SeaLevel { get; private set; }
        
 
         private void Awake()
@@ -44,6 +45,7 @@ namespace OceanGame
         {
             var width = context.Width;
             var height = context.Height;
+            SeaLevel = context.SeaLevel;
 
             // Create fresh layers matching generated dimensions
             FgGrid = new TileGrid(width, height, _foregroundTilemap);

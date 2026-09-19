@@ -13,9 +13,6 @@ namespace OceanGame
         [SerializeField] private CharacterSO _playerSO;
         public CharacterSO Data => _playerSO;
         
-        [SerializeField] private ServerCharacter _playerCharacter;
-        public ServerCharacter Character => _playerCharacter;
-
         [field: SerializeField] public float InteractRange { get; private set; } = 4.5f;
         [field: SerializeField] public Vector2 WalkingBoxColliderSize { get; private set; }
         [field: SerializeField] public Vector2 SwimmingBoxColliderSize { get; private set; }
@@ -43,6 +40,9 @@ namespace OceanGame
         public PlayerArmHandler ArmHandler { get; private set; }
 
         public event Action<ServerCharacter> PlayerReady;
+
+        private ServerCharacter _playerCharacter;
+        public ServerCharacter Character => _playerCharacter;
 
         private void Awake() 
         {

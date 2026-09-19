@@ -10,7 +10,10 @@ namespace OceanGame
     
         public override void Interact(int posX, int posY)
         {
-            AirPocketManager.Instance.TryToDrain(posX, posY, _drainLimit);
+            if (DrainManager.Instance != null)
+            {
+                DrainManager.Instance.InteractWithDrain(posX, posY, _drainLimit);
+            }
         }
     }
 }

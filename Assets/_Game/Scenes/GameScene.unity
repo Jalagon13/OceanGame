@@ -1036,7 +1036,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b9b28a14b5574a55a1d861e9bb49e3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.PlayerCamera
-  _player: {fileID: 0}
   _camera: {fileID: 330585545}
   _padding: 4
   _smoothSpeed: 1
@@ -2136,8 +2135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.Player
   _playerSO: {fileID: 11400000, guid: d2612cd7c6d00436188c7b1a8b45c63e, type: 2}
-  _playerCharacter: {fileID: 0}
-  <InteractRange>k__BackingField: 4.5
+  <InteractRange>k__BackingField: 4
   <WalkingBoxColliderSize>k__BackingField: {x: 0.75, y: 1.75}
   <SwimmingBoxColliderSize>k__BackingField: {x: 0.75, y: 1.25}
   <SwimDashSpeed>k__BackingField: 15
@@ -3509,9 +3507,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2043979312}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e5002b5e9103417a96d133cfc723147, type: 3}
+  m_Script: {fileID: 11500000, guid: ad3c40d5996ba48a9b0408f6de2e7233, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.AirPocketManager
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.DrainManager
 --- !u!114 &2043979319
 MonoBehaviour:
   m_ObjectHideFlags: 0
