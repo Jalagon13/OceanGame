@@ -300,9 +300,20 @@ namespace OceanGame
         }
 
         // Pure mathematical evaluation: checks if two rectangular boundary definitions intersect
-        private static bool IsOverlapping(float b1Left, float b1Right, float b1Bottom, float b1Top, float b2Left, float b2Right, float b2Bottom, float b2Top)
+        public static bool IsOverlapping(float b1Left, float b1Right, float b1Bottom, float b1Top, float b2Left, float b2Right, float b2Bottom, float b2Top)
         {
             return b1Right > b2Left && b1Left < b2Right && b1Top > b2Bottom && b1Bottom < b2Top;
+        }
+
+        public static bool IsOverlapping(Vector2 centerA, Vector2 sizeA, Vector2 centerB, Vector2 sizeB)
+        {
+            Vector2 halfA = sizeA * 0.5f;
+            Vector2 halfB = sizeB * 0.5f;
+            
+            return IsOverlapping(
+                centerA.x - halfA.x, centerA.x + halfA.x, centerA.y - halfA.y, centerA.y + halfA.y,
+                centerB.x - halfB.x, centerB.x + halfB.x, centerB.y - halfB.y, centerB.y + halfB.y
+            );
         }
     }
 }

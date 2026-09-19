@@ -40,6 +40,7 @@ namespace OceanGame
         public bool WaterJumpBuffered { get; set; }
         public float SwimDashCooldownTimer { get; set; }
         public Vector2 RespawnPoint { get; private set; }
+        public PlayerArmHandler ArmHandler { get; private set; }
 
         public event Action<ServerCharacter> PlayerReady;
 
@@ -93,6 +94,8 @@ namespace OceanGame
 
             _playerCharacter = character;
             _playerCharacter.Health.CurrentLifeState.OnValueChanged += OnLifeStateChanged;
+
+            ArmHandler = _playerCharacter.GetComponent<PlayerArmHandler>();
 
             PlayerReady?.Invoke(_playerCharacter);
         }

@@ -68,8 +68,8 @@ namespace OceanGame
                 return;
                 
             RegisterOwnedCharacter(spawnedCharacter);
-            Debug.Log($"Host's local char count: {LocalCurrentCharCount}/{CurrentCircumstance.MaxCharacterCount}");
-            Debug.Log($"Global Character count: {CharacterManager.Instance.CurrentCharacterCount}/{CharacterManager.Instance.GlobalMaxCharCap}");
+            // Debug.Log($"Host's local char count: {LocalCurrentCharCount}/{CurrentCircumstance.MaxCharacterCount}");
+            // Debug.Log($"Global Character count: {CharacterManager.Instance.CurrentCharacterCount}/{CharacterManager.Instance.GlobalMaxCharCap}");
         }
 
         private bool TryToFindSpawnSpot(CharacterSpawnEntry spawnEntry, out Vector2 spawnSpot)

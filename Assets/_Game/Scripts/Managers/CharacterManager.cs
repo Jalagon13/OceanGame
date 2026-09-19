@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace OceanGame
@@ -59,13 +60,10 @@ namespace OceanGame
 
                 Gizmos.color = Color.green;
                 DrawRectIntGizmo(spawner.SpawnArea);
-
                 Gizmos.color = Color.red;
                 DrawRectIntGizmo(spawner.NoSpawnArea);
-
                 Gizmos.color = Color.black;
                 DrawRectIntGizmo(spawner.ActiveArea);
-
                 Gizmos.color = Color.white;
                 DrawRectIntGizmo(spawner.TimerSafeArea);
             }
@@ -89,7 +87,7 @@ namespace OceanGame
 
         private void TickCharacterLifetimes()
         {
-            Dictionary<ServerCharacter, CharacterSpawner> charactersToDespawn = new();
+            List<ServerCharacter> charactersToDespawn = new();
 
             // Loop through all spawned characters
             foreach (KeyValuePair<ServerCharacter, CharacterLifetime> entry in _characterDespawnTimers)
@@ -99,14 +97,14 @@ namespace OceanGame
                 // Check if null for any reason
                 if (character == null)
                 {
-                    charactersToDespawn.Add(character, entry.Value.Owner);
+                    charactersToDespawn.Add(character);
                     continue;
                 }
-                
+
                 // Check if dead
-                if(character.Health.CurrentLifeState.Value == LifeState.Dead)
+                if (character.Health != null && character.Health.CurrentLifeState.Value == LifeState.Dead)
                 {
-                    charactersToDespawn.Add(character, entry.Value.Owner);
+                    charactersToDespawn.Add(character);
                     continue;
                 }
 
@@ -129,43 +127,33 @@ namespace OceanGame
 
                 if (!isInActiveArea)
                 {
-                    charactersToDespawn.Add(character, entry.Value.Owner);
+                    charactersToDespawn.Add(character);
                     continue;
                 }
 
                 if (isInTimerSafeArea)
                 {
-                    _characterDespawnTimers[character].RemainingTime = _durationTillCharacterDespawns;
+                    entry.Value.RemainingTime = _durationTillCharacterDespawns;
                     continue;
                 }
 
-                // Decrement it and check if should despawn
+                // Decrement timer and check if should despawn
                 float remainingTime = entry.Value.RemainingTime - Time.fixedDeltaTime;
 
                 if (remainingTime <= 0f)
                 {
-                    charactersToDespawn.Add(character, entry.Value.Owner);
+                    charactersToDespawn.Add(character);
                 }
                 else
                 {
-                    _characterDespawnTimers[character].RemainingTime = remainingTime;
+                    entry.Value.RemainingTime = remainingTime;
                 }
             }
 
-            foreach (KeyValuePair<ServerCharacter, CharacterSpawner> entry in charactersToDespawn)
+            // Cleanly despawn marked characters
+            for (int i = 0; i < charactersToDespawn.Count; i++)
             {
-                ServerCharacter character = entry.Key;
-                CharacterSpawner owner = entry.Value;
-
-                _characterDespawnTimers.Remove(character);
-                owner.UnregisterOwnedCharacter(character);
-
-                if (character != null)
-                {
-                    Debug.Log($"{character.name} despawned.");
-                    Debug.Log($"Owner character count: {owner.LocalCurrentCharCount}/{owner.CurrentCircumstance.MaxCharacterCount}");
-                    Destroy(character.gameObject);
-                }
+                DespawnCharacter(charactersToDespawn[i]);
             }
         }
 
@@ -173,15 +161,54 @@ namespace OceanGame
         {
             spawnedCharacter = null;
             
-            if(!CanSpawnCharacter())
+            if (!CanSpawnCharacter() || prefab == null)
                 return false;
 
-            spawnedCharacter = Instantiate(prefab, spawnPosition, Quaternion.identity);
+            // Instantiate the prefab on the server
+            ServerCharacter character = Instantiate(prefab, spawnPosition, Quaternion.identity);
 
+            if (character == null)
+                return false;
+
+            // Spawn over the network via NGO
+            if (character.TryGetComponent<NetworkObject>(out var networkObject))
+            {
+                networkObject.Spawn(destroyWithScene: true);
+            }
+
+            // Assign out parameter & track despawn lifetime
+            spawnedCharacter = character;
             CharacterLifetime lifetime = new(owner, _durationTillCharacterDespawns);
             _characterDespawnTimers.Add(spawnedCharacter, lifetime);
-            Debug.Log($"Spawned {spawnedCharacter.name} at {spawnPosition}!");
+            // Debug.Log($"Spawned {spawnedCharacter.name} at {spawnPosition}!");
             return true;
+        }
+
+        public void DespawnCharacter(ServerCharacter character)
+        {
+            if (character == null)
+            {
+                _characterDespawnTimers.Remove(null);
+                return;
+            }
+            
+            // Unregister from the spawner owner and remove from timer dictionary
+            if (_characterDespawnTimers.TryGetValue(character, out CharacterLifetime lifetime))
+            {
+                lifetime.Owner.UnregisterOwnedCharacter(character);
+                _characterDespawnTimers.Remove(character);
+            }
+
+            // Despawn across NGO or fallback to Destroy for local objects
+            Debug.Log($"{character.name} despawned.");
+            if (character.TryGetComponent<NetworkObject>(out var networkObject) && networkObject.IsSpawned)
+            {
+                networkObject.Despawn(destroy: true);
+            }
+            else
+            {
+                Destroy(character.gameObject);
+            }
         }
 
         // Register and unregister spawners when players enter and leave the world

@@ -9,17 +9,17 @@ namespace OceanGame
         [field: Header("Tile Item Settings")]
         [field: SerializeField] public TileConfigSO PlaceTileDataSO { get; private set; }
 
-        public override void OnPrimaryActionStarted()
+        public override void OnPrimaryActionStarted(Player player)
         {
             PlacingManager.Instance.StartPlacing(this);
         }
 
-        public override void OnPrimaryActionHeld()
+        public override void OnPrimaryActionHeld(Player player)
         {
             PlacingManager.Instance.TickPlacing(this);
         }
 
-        public override void OnPrimaryActionRelease()
+        public override void OnPrimaryActionRelease(Player player)
         {
             PlacingManager.Instance.StopPlacing();
         }

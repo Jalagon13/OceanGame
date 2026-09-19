@@ -16,6 +16,8 @@ namespace OceanGame
         
         public int ActiveHotbarIndex { get; private set; }
         public bool IsInventoryOpen { get; private set; }
+        
+        public InventorySlot ActiveSlot { get; private set; }
 
         private void Awake()
         {
@@ -43,18 +45,20 @@ namespace OceanGame
 
         private void Update()
         {
-            var activeSlot = GetActiveInvSlot();
-            if(activeSlot.IsEmpty) return;
+            ActiveSlot = GetActiveInvSlot();
+            if(ActiveSlot.IsEmpty) return;
             
             if(Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
             
-            if(GameInput.Instance.PrimaryActionHeld)
+            var player = Player.Instance;
+
+            if (GameInput.Instance.PrimaryActionHeld)
             {
-                activeSlot.GetItemSO().OnPrimaryActionHeld();
+                ActiveSlot.GetItemSO().OnPrimaryActionHeld(player);
             }
             else if(GameInput.Instance.SecondaryActionHeld)
             {
-                activeSlot.GetItemSO().OnSecondaryActionHeld();
+                ActiveSlot.GetItemSO().OnSecondaryActionHeld(player);
             }
         }
 
@@ -66,15 +70,17 @@ namespace OceanGame
             
             if(!activeSlot.IsEmpty)
             {
-                if(context.phase == InputActionPhase.Started)
+                var player = Player.Instance;
+
+                if (context.phase == InputActionPhase.Started)
                 {
                     if(WorldManager.Instance.MouseOverUI) return;
                     
-                    activeSlot.GetItemSO().OnPrimaryActionStarted();
+                    activeSlot.GetItemSO().OnPrimaryActionStarted(player);
                 }
                 else if(context.phase == InputActionPhase.Canceled)
                 {
-                    activeSlot.GetItemSO().OnPrimaryActionRelease();
+                    activeSlot.GetItemSO().OnPrimaryActionRelease(player);
                 }
                 
             }
@@ -88,15 +94,17 @@ namespace OceanGame
             
             if (!activeSlot.IsEmpty)
             {
+                var player = Player.Instance;
+
                 if (context.phase == InputActionPhase.Started)
                 {
                     if (WorldManager.Instance.MouseOverUI) return;
 
-                    activeSlot.GetItemSO().OnSecondaryActionStarted();
+                    activeSlot.GetItemSO().OnSecondaryActionStarted(player);
                 }
                 else if (context.phase == InputActionPhase.Canceled)
                 {
-                    activeSlot.GetItemSO().OnSecondaryActionRelease();
+                    activeSlot.GetItemSO().OnSecondaryActionRelease(player);
                 }
 
             }

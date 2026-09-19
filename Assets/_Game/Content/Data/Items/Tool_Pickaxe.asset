@@ -19,3 +19,11 @@ MonoBehaviour:
   <MiningDamage>k__BackingField: 15
   <MineTicksPerSecond>k__BackingField: 8
   <TargetLayer>k__BackingField: 0
+  MeleeDamage: 4
+  KnockbackForce: 6
+  HitboxOffset: 1
+  HitboxSize: {x: 0.5, y: 0.5}
+  <SwingArcAngle>k__BackingField: 120
+  <SwingDuration>k__BackingField: 0.3
+  <SwingEndArcAngle>k__BackingField: 10
+  <SwingEndDuration>k__BackingField: 0.2

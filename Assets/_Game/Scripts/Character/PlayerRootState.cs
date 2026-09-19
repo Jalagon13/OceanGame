@@ -303,13 +303,16 @@ namespace OceanGame
                 return;
             }
 
-            var currentSpeed = _ctx.Data.BaseSpeed;
+            float speedMult = Player.Instance.ArmHandler.IsSwinging ? 0.65f : 1f;
+            var currentSpeed = _ctx.Data.BaseSpeed * speedMult;
             _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
 
         protected override void OnUpdate(float deltaTime)
         {
-            if (_ctx.Velocity.sqrMagnitude <= 10f && _ctx.DesiredDirection == Vector2.zero)
+            bool isArmHandling = Player.Instance.ArmHandler.IsActionHeld || Player.Instance.ArmHandler.IsSwinging;
+        
+            if (isArmHandling || (_ctx.Velocity.sqrMagnitude <= 10f && _ctx.DesiredDirection == Vector2.zero))
             {
                 _desiredVisualRotation = Vector2.up;
             }
