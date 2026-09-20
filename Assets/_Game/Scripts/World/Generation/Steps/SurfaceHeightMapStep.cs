@@ -7,7 +7,6 @@ namespace OceanGame
     [Serializable]
     public class SurfaceHeightMapStep : WorldGenStep
     {
-        [SerializeField] private TileConfigSO _landTile;
         [SerializeField] private int _baseHeight;
         
         [Header("Main Terrain Shape")]

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe0e4c828bd83465e82ab75a6c973b41, type: 3}
   m_Name: DefaultWorldPreset
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
-  Seed: 0
   UseRandomSeed: 0
+  Seed: 0
   GenColumnsPerFrame: 50
   Width: 250
   Height: 400
@@ -21,6 +21,7 @@ MonoBehaviour:
   UndergroundBottomLevel: 275
   Steps:
   - rid: 2688502313846308944
+  - rid: 2895664395369054302
   - rid: 2688502313846308994
   - rid: 2688502313846308995
   - rid: 2688502313846309004
@@ -34,7 +35,6 @@ MonoBehaviour:
       type: {class: SurfaceHeightMapStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
         RunStep: 1
-        _landTile: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
         _baseHeight: 325
         _largeShapeFrequency: 0.035
         _largeShapeAmplitude: 25
@@ -92,3 +92,10 @@ MonoBehaviour:
       type: {class: SetFluidStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
         RunStep: 1
+    - rid: 2895664395369054302
+      type: {class: IslandGenStep, ns: OceanGame, asm: Assembly-CSharp}
+      data:
+        RunStep: 0
+        _islandFrequency: 0.03
+        _islandThreshold: 0.065
+        _maxHeightAboveSeaLevel: 15

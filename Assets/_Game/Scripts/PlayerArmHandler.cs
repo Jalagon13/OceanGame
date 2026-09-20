@@ -129,6 +129,7 @@ namespace OceanGame
 
                 // Skip self (Player) and already-hit targets
                 if (entity == Player.Instance.Character) continue;
+                if (entity is not ServerCharacter) continue;
                 if (_hitEntitiesThisSwing.Contains(entity)) continue;
 
                 // Check AABB overlap
