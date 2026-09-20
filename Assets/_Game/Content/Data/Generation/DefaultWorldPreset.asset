@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe0e4c828bd83465e82ab75a6c973b41, type: 3}
   m_Name: DefaultWorldPreset
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
-  UseRandomSeed: 0
+  UseRandomSeed: 1
   Seed: 0
   GenColumnsPerFrame: 50
   Width: 250
@@ -95,7 +95,9 @@ MonoBehaviour:
     - rid: 2895664395369054302
       type: {class: IslandGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
-        RunStep: 0
-        _islandFrequency: 0.03
-        _islandThreshold: 0.065
-        _maxHeightAboveSeaLevel: 15
+        RunStep: 1
+        _plateauHalfWidth: 20
+        _slopeWidth: 20
+        _islandBaseHeight: 6
+        _plateauDetailFrequency: 0.08
+        _plateauDetailAmplitude: 4

@@ -2141,8 +2141,8 @@ MonoBehaviour:
   <SwimDashSpeed>k__BackingField: 15
   <SwimDashCooldown>k__BackingField: 3
   <FromWaterJumpSpeed>k__BackingField: 10
-  <MinJumpSpeed>k__BackingField: 5
-  <MaxJumpHoldDuration>k__BackingField: 0.4
+  <MinJumpSpeed>k__BackingField: 7
+  <MaxJumpHoldDuration>k__BackingField: 0.3
   <AirborneMoveSpeedMultiplier>k__BackingField: 0.5
   <JumpBufferDuration>k__BackingField: 0.15
   <CoyoteTimeBufferDuration>k__BackingField: 0.15
