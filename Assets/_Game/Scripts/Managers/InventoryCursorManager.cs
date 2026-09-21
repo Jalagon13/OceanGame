@@ -114,6 +114,88 @@ namespace OceanGame
             InventoryManager.Instance.RefreshInventory();
         }
 
+        public void HandleOxygenTankSlotLeftClick()
+        {
+            if (Player.Instance == null || Player.Instance.Equipment == null) return;
+
+            InventorySlot equipSlot = Player.Instance.Equipment.EquippedOxygenTank;
+            
+            if (equipSlot == null) return;
+            if (CursorSlot.IsEmpty && equipSlot.IsEmpty) return;
+
+            if (CursorSlot.IsEmpty)
+            {
+                ushort unequippedItemId = equipSlot.ItemId;
+                CursorSlot.AssignItem(unequippedItemId, 1);
+                Player.Instance.Equipment.UnequipOxygenTank();
+            }
+            else if (equipSlot.IsEmpty)
+            {
+                ItemSO itemSO = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
+                
+                if (itemSO is not OxygenTankItemSO) return;
+                
+                ushort itemIdToEquip = CursorSlot.ItemId;
+                CursorSlot.RemoveFromCurrentAmount(1);
+                Player.Instance.Equipment.EquipOxygenTank(itemIdToEquip);
+            }
+            else
+            {
+                ItemSO cursorItemSO = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
+                
+                if (cursorItemSO is not OxygenTankItemSO) return;
+                
+                if (CursorSlot.CurrentAmount == 1)
+                {
+                    ushort oldEquippedItemId = equipSlot.ItemId;
+                    ushort newEquippedItemId = CursorSlot.ItemId;
+
+                    CursorSlot.AssignItem(oldEquippedItemId, 1);
+                    Player.Instance.Equipment.EquipOxygenTank(newEquippedItemId);
+                }
+            }
+        }
+
+        public void HandleOxygenTankSlotRightClick()
+        {
+            if (Player.Instance == null || Player.Instance.Equipment == null) return;
+
+            InventorySlot equipSlot = Player.Instance.Equipment.EquippedOxygenTank;
+            
+            if (equipSlot == null) return;
+            if (CursorSlot.IsEmpty && equipSlot.IsEmpty) return;
+
+            if (CursorSlot.IsEmpty)
+            {
+                ushort unequippedItemId = equipSlot.ItemId;
+                CursorSlot.AssignItem(unequippedItemId, 1);
+                Player.Instance.Equipment.UnequipOxygenTank();
+            }
+            else if (equipSlot.IsEmpty)
+            {
+                ItemSO itemSO = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
+                if (itemSO is not OxygenTankItemSO) return;
+
+                ushort itemIdToEquip = CursorSlot.ItemId;
+                CursorSlot.RemoveFromCurrentAmount(1);
+                Player.Instance.Equipment.EquipOxygenTank(itemIdToEquip);
+            }
+            else
+            {
+                ItemSO cursorItemSO = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
+                if (cursorItemSO is not OxygenTankItemSO) return;
+
+                if (CursorSlot.CurrentAmount == 1)
+                {
+                    ushort oldEquippedItemId = equipSlot.ItemId;
+                    ushort newEquippedItemId = CursorSlot.ItemId;
+
+                    CursorSlot.AssignItem(oldEquippedItemId, 1);
+                    Player.Instance.Equipment.EquipOxygenTank(newEquippedItemId);
+                }
+            }
+        }
+
         private int MoveAmount(InventorySlot source, InventorySlot target, int maxTargetAmount, int requestedAmount = int.MaxValue)
         {
             if (source == null || target == null || source.IsEmpty || target.IsEmpty)
@@ -123,6 +205,7 @@ namespace OceanGame
 
             int amountToMove = Mathf.Min(requestedAmount, source.CurrentAmount);
             amountToMove = Mathf.Min(amountToMove, maxTargetAmount - target.CurrentAmount);
+            
             if (amountToMove <= 0)
             {
                 return 0;

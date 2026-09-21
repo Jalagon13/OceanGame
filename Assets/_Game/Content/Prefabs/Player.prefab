@@ -80,6 +80,7 @@ GameObject:
   - component: {fileID: 8320316462856433193}
   - component: {fileID: 8488650257111462904}
   - component: {fileID: 4397858196725711225}
+  - component: {fileID: 1260414927922091770}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -115,7 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 50644434
+  GlobalObjectIdHash: 2134763030
   InScenePlacedSourceGlobalObjectIdHash: 0
   m_InScenePlacedDisabledByDefault: 0
   DeferredDespawnTick: 0
@@ -237,7 +238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb2c4941128cc45218cebb54ebf1a3b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ServerCharacter
-  _ignoreCollision: 1
+  _ignoreCollision: 0
   Velocity: {x: 0, y: 0}
   ColliderSize: {x: 0, y: 0}
   _stateType: 0
@@ -261,6 +262,18 @@ MonoBehaviour:
   _armPivot: {fileID: 6889074860058788524}
   _hitboxPoint: {fileID: 2786607778504804567}
   _swingToolSr: {fileID: 3499107727543684731}
+--- !u!114 &1260414927922091770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2708704097900981217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b497c61b08fb40989d30081c8a7b051, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.PlayerEquipment
 --- !u!1 &5752291961946935962
 GameObject:
   m_ObjectHideFlags: 0

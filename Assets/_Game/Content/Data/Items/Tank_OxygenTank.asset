@@ -15,7 +15,7 @@ MonoBehaviour:
   <ItemName>k__BackingField: Oxygen Tank
   <Description>k__BackingField: 
   <DisplayIcon>k__BackingField: {fileID: -3544011162389870280, guid: 2f87ce7e588154a76acbf2c4eda5fff0, type: 3}
-  <IsStackable>k__BackingField: 1
+  <IsStackable>k__BackingField: 0
   <AdditionalHpBuff>k__BackingField: 20
   <BuffDuration>k__BackingField: 300
   <OxygenRecoveryDuration>k__BackingField: 2
