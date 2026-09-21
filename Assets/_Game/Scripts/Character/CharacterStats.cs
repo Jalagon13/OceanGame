@@ -5,6 +5,9 @@ namespace OceanGame
 {
     public class CharacterStats
     {
+        public System.Action<Buff> OnBuffStarted;
+        public System.Action<Buff> OnBuffStopped;
+
         public Stat MoveSpeed { get; }
         public Stat MaxHealth { get; }
         public Stat Defense { get; }
@@ -23,10 +26,12 @@ namespace OceanGame
         {
             for (int i = _activeBuffs.Count - 1; i >= 0; i--)
             {
-                _activeBuffs[i].Tick(deltaTime, this);
-                if (!_activeBuffs[i].IsActive)
+                var buff = _activeBuffs[i];
+                buff.Tick(deltaTime, this);
+                if (!buff.IsActive)
                 {
                     _activeBuffs.RemoveAt(i);
+                    OnBuffStopped?.Invoke(buff);
                 }
             }
         }
@@ -39,6 +44,7 @@ namespace OceanGame
             _activeBuffs.Add(buff);
             buff.ApplyTo(this);
             Debug.Log($"Added buff {buff.Name}");
+            OnBuffStarted?.Invoke(buff);
         }
 
         public void StopBuff(Buff buff)
@@ -48,6 +54,7 @@ namespace OceanGame
 
             buff.Stop(this);
             Debug.Log($"Stop buff {buff.Name}");
+            OnBuffStopped?.Invoke(buff);
         }
 
         public Stat GetStat(StatType type)

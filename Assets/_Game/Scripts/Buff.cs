@@ -13,8 +13,9 @@ namespace OceanGame
         private readonly float _defaultDuration;
         public bool IsIndefinite => RemainingDuration < 0f;
         public bool IsActive { get; private set; }
+        public Sprite Icon { get; }
 
-        public Buff(string name, StatType targetStat, int flatAmount = 0, float percentAmount = 0f, float duration = -1f)
+        public Buff(string name, StatType targetStat, int flatAmount = 0, float percentAmount = 0f, float duration = -1f, Sprite icon = null)
         {
             Name = string.IsNullOrWhiteSpace(name) ? "Unnamed Buff" : name;
             TargetStat = targetStat;
@@ -23,6 +24,7 @@ namespace OceanGame
             RemainingDuration = duration;
             _defaultDuration = duration;
             IsActive = true;
+            Icon = icon;
         }
 
         internal void ApplyTo(CharacterStats owner)
