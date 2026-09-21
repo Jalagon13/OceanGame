@@ -35,11 +35,10 @@ namespace OceanGame
 
             if (_boundBuff.IsIndefinite)
             {
-                _durationText.gameObject.SetActive(false);
+                _durationText.text = $"∞";
             }
             else
             {
-                _durationText.gameObject.SetActive(true);
                 float remaining = _boundBuff.RemainingDuration;
                 int totalSeconds = Mathf.Max(0, Mathf.CeilToInt(remaining));
                 int minutes = totalSeconds / 60;

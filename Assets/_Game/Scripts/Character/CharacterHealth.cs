@@ -36,8 +36,6 @@ namespace OceanGame
         {
             _character = GetComponent<ServerCharacter>();
             _iFrameDuration = new(_character.Data.BaseIFrameDuration);
-
-            CurrentHealth.OnValueChanged += OnCurrentHealthChanged;
         }
 
         public override void OnDestroy()
@@ -51,8 +49,11 @@ namespace OceanGame
         {
             if (!IsServer) return;
 
+            CurrentHealth.OnValueChanged += OnCurrentHealthChanged;
             CurrentHealth.Value = _character.Stats.MaxHealth.GetValue();
             CurrentLifeState.Value = LifeState.Alive;
+
+            OnCurrentHealthChanged(0, CurrentHealth.Value);
         }
 
         private void OnCurrentHealthChanged(int previousValue, int newValue)

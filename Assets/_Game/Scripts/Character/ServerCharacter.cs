@@ -33,12 +33,6 @@ namespace OceanGame
 
         private void Awake()
         {
-            State rootState = CharacterCommons.GetNpcHSMRootState(this, _stateType);
-            if (rootState == null) return;
-
-            Machine = new StateMachineBuilder(rootState).Build(_debugStateOn);
-            Machine.Start();
-
             Stats = new(_data);
             Health = GetComponent<CharacterHealth>();
             DamageReceiver = GetComponent<DamageReceiver>();
@@ -47,7 +41,16 @@ namespace OceanGame
             DesiredDirection = Vector2.zero;
             Velocity = Vector2.zero;
         }
-        
+
+        public override void OnNetworkSpawn()
+        {
+            State rootState = CharacterCommons.GetNpcHSMRootState(this, _stateType);
+            if (rootState == null) return;
+
+            Machine = new StateMachineBuilder(rootState).Build(_debugStateOn);
+            Machine.Start();
+        }
+
         private void OnEnable() 
         {
             if (EntityManager.Instance != null)
@@ -67,6 +70,7 @@ namespace OceanGame
         private void Update()
         {
             if (!WorldManager.Instance.IsWorldReady) return;
+            if (Machine == null) return;
 
             Machine.UpdateTick(Time.deltaTime);
             Stats.TickBuffs(Time.deltaTime);
@@ -75,6 +79,7 @@ namespace OceanGame
         public override void FixedTick(float fixedDeltaTime)
         {
             if (!WorldManager.Instance.IsWorldReady) return;
+            if (Machine == null) return;
 
             if (IsKnockedBack)
             {

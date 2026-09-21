@@ -25,11 +25,22 @@ namespace OceanGame
                 Player.Instance.Character.Health.OnHealthChanged -= OnHealthChanged;
                 
             Player.Instance.PlayerReady -= OnPlayerReady;
+            Player.Instance.Character.Stats.OnBuffStarted -= UpdateStatBar;
+            Player.Instance.Character.Stats.OnBuffStopped -= UpdateStatBar;
         }
 
         private void OnPlayerReady(ServerCharacter player)
         {
             player.Health.OnHealthChanged += OnHealthChanged;
+            player.Stats.OnBuffStarted += UpdateStatBar;
+            player.Stats.OnBuffStopped += UpdateStatBar;
+            
+            _healthBar.UpdateBar(player.Health.CurrentHealth.Value, player.Stats.MaxHealth.GetValue());
+        }
+
+        private void UpdateStatBar(Buff buff)
+        {
+            _healthBar.UpdateBar(Player.Instance.Character.Health.CurrentHealth.Value, Player.Instance.Character.Stats.MaxHealth.GetValue());
         }
 
         private void OnHealthChanged(object sender, CharacterHealth.HealthChangedArgs e)

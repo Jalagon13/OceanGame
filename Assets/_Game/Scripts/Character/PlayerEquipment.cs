@@ -28,6 +28,9 @@ namespace OceanGame
         {
             Debug.Log($"Oxygen Tank UnEquipped");
             EquippedOxygenTank.Clear();
+            
+            Player.Instance.Character.Stats.StopBuff(InAirOxygenBuff);
+            Player.Instance.Character.Stats.StopBuff(InWaterOxygenBuff);
 
             InAirOxygenBuff = null;
             InWaterOxygenBuff = null;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,8 +6,8 @@ namespace OceanGame
 {
     public class CharacterStats
     {
-        public System.Action<Buff> OnBuffStarted;
-        public System.Action<Buff> OnBuffStopped;
+        public Action<Buff> OnBuffStarted;
+        public Action<Buff> OnBuffStopped;
 
         public Stat MoveSpeed { get; }
         public Stat MaxHealth { get; }

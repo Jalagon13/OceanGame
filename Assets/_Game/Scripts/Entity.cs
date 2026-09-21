@@ -1,9 +1,10 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace OceanGame
 {
-    public abstract class Entity : MonoBehaviour
+    public abstract class Entity : NetworkBehaviour
     {
         [SerializeField] private bool _ignoreCollision;
         public bool IgnoreCollision
