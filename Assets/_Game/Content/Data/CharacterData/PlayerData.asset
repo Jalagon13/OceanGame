@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerData
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.CharacterSO
   <BodyColliderSize>k__BackingField: {x: 1, y: 1}
-  <BaseMaxHealth>k__BackingField: 100
+  <BaseMaxHealth>k__BackingField: 25
   <BaseDefense>k__BackingField: 0
   <BaseDamage>k__BackingField: 0
   <KnockbackForce>k__BackingField: 0
