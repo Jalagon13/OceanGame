@@ -200,7 +200,7 @@ namespace OceanGame
             }
 
             // Despawn across NGO or fallback to Destroy for local objects
-            Debug.Log($"{character.name} despawned.");
+            // Debug.Log($"{character.name} despawned.");
             if (character.TryGetComponent<NetworkObject>(out var networkObject) && networkObject.IsSpawned)
             {
                 networkObject.Despawn(destroy: true);

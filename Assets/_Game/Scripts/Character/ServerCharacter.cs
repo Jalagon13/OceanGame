@@ -25,6 +25,7 @@ namespace OceanGame
         public StateMachine Machine { get; private set; }
         
         public CharacterHealth Health { get; private set; }
+        public CharacterStats Stats { get; private set; }
         public DamageReceiver DamageReceiver { get; private set; }
 
         private const float KnockbackThreshold = 1.5f;
@@ -38,9 +39,10 @@ namespace OceanGame
             Machine = new StateMachineBuilder(rootState).Build(_debugStateOn);
             Machine.Start();
 
+            Stats = new(_data);
             Health = GetComponent<CharacterHealth>();
             DamageReceiver = GetComponent<DamageReceiver>();
-            
+
             ColliderSize = _data.BodyColliderSize;
             DesiredDirection = Vector2.zero;
             Velocity = Vector2.zero;
@@ -67,6 +69,7 @@ namespace OceanGame
             if (!WorldManager.Instance.IsWorldReady) return;
 
             Machine.UpdateTick(Time.deltaTime);
+            Stats.TickBuffs(Time.deltaTime);
         }
 
         public override void FixedTick(float fixedDeltaTime)

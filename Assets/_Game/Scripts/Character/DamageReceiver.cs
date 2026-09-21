@@ -30,7 +30,7 @@ namespace OceanGame
             if(_character.Health.CurrentLifeState.Value == LifeState.IFrame) return;
         
             float difficultyMult = 0.5f; // Placeholder for difficulty multiplier, 0.5 for normal, 0.75 for hard, 1 for insane TENT mults
-            int defense = Mathf.RoundToInt(_character.Data.BaseDefense * difficultyMult);
+            int defense = Mathf.RoundToInt(_character.Stats.Defense.GetValue() * difficultyMult);
             int netDamage = Mathf.Max(1, hit.Damage - defense); // Clamp it to 1
 
             _character.Health.TakeDamage(netDamage);

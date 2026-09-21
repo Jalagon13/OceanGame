@@ -118,7 +118,7 @@ namespace OceanGame
             {
                 // respawn
                 _playerCharacter.transform.position = RespawnPoint;
-                _playerCharacter.Health.CurrentHealth.Value = _playerCharacter.Data.BaseMaxHealth;
+                _playerCharacter.Health.CurrentHealth.Value = _playerCharacter.Stats.MaxHealth.GetValue();
             }
         }
 

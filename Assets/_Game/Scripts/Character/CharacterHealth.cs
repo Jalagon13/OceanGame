@@ -51,13 +51,13 @@ namespace OceanGame
         {
             if (!IsServer) return;
 
-            CurrentHealth.Value = _character.Data.BaseMaxHealth;
+            CurrentHealth.Value = _character.Stats.MaxHealth.GetValue();
             CurrentLifeState.Value = LifeState.Alive;
         }
 
         private void OnCurrentHealthChanged(int previousValue, int newValue)
         {
-            OnHealthChanged?.Invoke(this, new(_character.Data.BaseMaxHealth, CurrentHealth.Value, previousValue));
+            OnHealthChanged?.Invoke(this, new(_character.Stats.MaxHealth.GetValue(), CurrentHealth.Value, previousValue));
             
             if(CurrentHealth.Value <= 0)
             {
@@ -70,7 +70,7 @@ namespace OceanGame
             if(!IsServer || netDamage <= 0 || CurrentLifeState.Value == LifeState.IFrame) return;
         
             CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - netDamage);
-            Debug.Log($"{name} Took {netDamage} Damage. {CurrentHealth.Value}/{_character.Data.BaseMaxHealth}");
+            Debug.Log($"{name} Took {netDamage} Damage. {CurrentHealth.Value}/{_character.Stats.MaxHealth.GetValue()}");
             
             if(CurrentLifeState.Value == LifeState.Alive)
             {

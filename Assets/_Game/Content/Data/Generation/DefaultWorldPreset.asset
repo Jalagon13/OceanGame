@@ -15,7 +15,7 @@ MonoBehaviour:
   UseRandomSeed: 1
   Seed: 0
   GenColumnsPerFrame: 50
-  Width: 250
+  Width: 1600
   Height: 400
   SeaLevel: 365
   UndergroundBottomLevel: 275

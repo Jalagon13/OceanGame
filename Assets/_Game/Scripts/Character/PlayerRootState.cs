@@ -221,7 +221,7 @@ namespace OceanGame
             }
         
             // Allow horizontal movement while airborne
-            var currentSpeed = _ctx.Data.BaseSpeed * _player.AirborneMoveSpeedMultiplier;
+            var currentSpeed = _ctx.Stats.MoveSpeed.GetValue() * _player.AirborneMoveSpeedMultiplier;
             _ctx.Velocity.x = Mathf.Lerp(_ctx.Velocity.x, _ctx.DesiredDirection.x * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
 
@@ -304,7 +304,7 @@ namespace OceanGame
             }
 
             float speedMult = Player.Instance.ArmHandler.IsSwinging ? 0.65f : 1f;
-            var currentSpeed = _ctx.Data.BaseSpeed * speedMult;
+            var currentSpeed = _ctx.Stats.MoveSpeed.GetValue() * speedMult;
             _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
 
@@ -380,7 +380,7 @@ namespace OceanGame
             if (_ctx.IsKnockedBack)
                 return;
 
-            var currentSpeed = _ctx.Data.BaseSpeed;
+            var currentSpeed = _ctx.Stats.MoveSpeed.GetValue();
             _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
     }
@@ -418,7 +418,7 @@ namespace OceanGame
             if (_ctx.IsKnockedBack)
                 return;
 
-            var currentSpeed = _ctx.Data.BaseSpeed;
+            var currentSpeed = _ctx.Stats.MoveSpeed.GetValue();
             _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
     }
