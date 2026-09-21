@@ -14,8 +14,10 @@ namespace OceanGame
 
         [SerializeField] private RawImage _lightmapOverlay;
         [SerializeField] private Material _multiplyMaterial;
+        [SerializeField] private GameObject _lightOverlay;
 
         [Header("Light Settings")]
+        [SerializeField] private bool _showLight = true;
         [SerializeField] private FilterMode _lightmapFilterMode;
         [SerializeField] private int _extraLightmapPadding;
         [SerializeField, Min(1f)] private float _fullBrightness;
@@ -24,6 +26,7 @@ namespace OceanGame
         [Header("Decay")]
         [SerializeField] private float _solidFgDecay = 3f;
         [SerializeField] private float _baseDecay = 1f;
+        [SerializeField] private float _waterDecay = 0.75f;
 
         [Header("Blur")]
         [Range(0, 4)]
@@ -44,6 +47,9 @@ namespace OceanGame
         private void Awake()
         {
             Instance = this;
+
+            _lightOverlay.SetActive(_showLight);
+
             _lightQueue = new Queue<Vector2Int>(100 * 100); // Pre-allocate a reasonable default size 
         }
 
@@ -118,7 +124,7 @@ namespace OceanGame
                     var fgTd = world.FgGrid.GetTileData(worldPosX, worldPosY);
                     var bgTd = world.BgGrid.GetTileData(worldPosX, worldPosY);
 
-                    if (!fgTd.HasTile && !bgTd.HasTile)
+                    if (!fgTd.HasTile && !bgTd.HasTile && world.FluidGrid.GetFluidType(worldPosX, worldPosY) == FluidType.Air)
                     {
                         _lightGrid[localX, localY] = _fullBrightness;
                         _solidDepthGrid[localX, localY] = 0;
@@ -157,13 +163,13 @@ namespace OceanGame
                         var fgTd = world.FgGrid.GetTileData(worldNx, worldNy);
                         var bgTd = world.BgGrid.GetTileData(worldNx, worldNy);
 
-                        bool isSolidOrBg = fgTd.HasTile || bgTd.HasTile;
+                        bool isSolidOrBgOrWater = fgTd.HasTile || bgTd.HasTile || world.FluidGrid.GetFluidType(worldNx, worldNy) == FluidType.Water;
 
                         // Increment depth if traveling into solid/BG tile, otherwise reset
-                        int nextDepth = isSolidOrBg ? currDepth + 1 : 0;
+                        int nextDepth = isSolidOrBgOrWater ? currDepth + 1 : 0;
 
                         // Apply decay only after exceeding the buffer
-                        float decay = (isSolidOrBg && nextDepth <= _decayBuffer) ? 0f : GetDecay(nx, ny, world);
+                        float decay = (isSolidOrBgOrWater && nextDepth <= _decayBuffer) ? 0f : GetDecay(nx, ny, world);
 
                         float potentialLight = currLight - decay;
                         if (potentialLight < 0f) potentialLight = 0f;
@@ -194,8 +200,9 @@ namespace OceanGame
 
                         var fgTd = world.FgGrid.GetTileData(worldPosX, worldPosY);
                         var bgTd = world.BgGrid.GetTileData(worldPosX, worldPosY);
+                        var fluidType = world.FluidGrid.GetFluidType(worldPosX, worldPosY);
 
-                        if (fgTd.IsAir && bgTd.IsAir)
+                        if (fgTd.IsAir && bgTd.IsAir && fluidType == FluidType.Air)
                         {
                             _lightGrid[localX, localY] = _fullBrightness;
                         }
@@ -243,9 +250,11 @@ namespace OceanGame
             int worldPosY = _lmBounds.yMin + localY;
 
             var fgTd = world.FgGrid.GetTileData(worldPosX, worldPosY);
-            
+            var fluidType = world.FluidGrid.GetFluidType(worldPosX, worldPosY);
+
             if (fgTd.HasTile) return _solidFgDecay;
-            
+            if (fluidType == FluidType.Water) return _waterDecay;
+
             return _baseDecay;
         }
 

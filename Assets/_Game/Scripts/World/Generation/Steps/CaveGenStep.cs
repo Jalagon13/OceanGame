@@ -11,10 +11,12 @@ namespace OceanGame
         [SerializeField, Range(0f, 1f)] private float _topThresh = 0.8f;
         
         [Header("Base Cave Shapes")]
+        [SerializeField] private int _caveStartDepth = 10;
+        [SerializeField] private int _caveCeilingFadeDistance = 8;
         [SerializeField] private int _caveSurfaceFadeDistance = 5; // How many tiles deep the widening effect takes to fully blend
         [SerializeField, Range(0f, 1f)] private float _caveNoiseFrequency = 0.03f;
         [SerializeField, Range(0f, 1f)] private float _baseNoiseInfluencePercentage = 0.9f;
-        
+
         [Header("Cheese Cave Shapes")]
         [SerializeField, Range(0f, 1f)] private float _cheeseCaveNoiseFrequency = 0.03f;
         [SerializeField, Range(0f, 1f)] private float _cheeseNoiseThresh = 0.9f;
@@ -29,6 +31,7 @@ namespace OceanGame
         {
             int width = ctx.Width;
             int height = ctx.Height;
+            int highestCaveSpawnHeight = ctx.SeaLevel - _caveStartDepth;
 
             float baseSeedX = ctx.Random.Next(-100000, 100000);
             float baseSeedY = ctx.Random.Next(-100000, 100000);
@@ -52,28 +55,35 @@ namespace OceanGame
                     float detailSampleY = (y * _detailFrequency) + detailSeedY;
                     float detailNoise = Mathf.PerlinNoise(detailSampleX, detailSampleY);
 
-                    float finalNoise = (baseNoise * _baseNoiseInfluencePercentage) + (detailNoise * (1 - _baseNoiseInfluencePercentage));
+                    float finalNoise = (baseNoise * _baseNoiseInfluencePercentage) + (detailNoise * (1f - _baseNoiseInfluencePercentage));
 
-                    if (y <= surfaceHeight)
+                    if (y > surfaceHeight || y > highestCaveSpawnHeight)
                     {
+                        finalNoise = 0f;
+                    }
+                    else
+                    {
+                        float ceilingDepth = highestCaveSpawnHeight - y;
+
+                        if (ceilingDepth < _caveCeilingFadeDistance)
+                        {
+                            float fadeProgress = ceilingDepth / _caveCeilingFadeDistance;
+                            fadeProgress = Mathf.SmoothStep(0f, 1f, fadeProgress);
+
+                            // 0 is outside the cave range, so caves gradually disappear.
+                            finalNoise = Mathf.Lerp(0f, finalNoise, fadeProgress);
+                        }
+
                         float distanceToSurface = surfaceHeight - y;
 
                         if (distanceToSurface <= _caveSurfaceFadeDistance)
                         {
-                            // Calculate percentage close to the surface (1.0 at surface, 0.0 at 15 blocks deep)
-                            float surfaceProximity = 1f - (distanceToSurface / _caveSurfaceFadeDistance);
+                            float surfaceProximity =
+                                1f - (distanceToSurface / _caveSurfaceFadeDistance);
 
-                            // Smooth the transition out so it looks more organic
                             surfaceProximity = Mathf.SmoothStep(0f, 1f, surfaceProximity);
-
-                            // Smoothly blend the natural cave noise toward 0.5f (dead center of your open cave thresh)
                             finalNoise = Mathf.Lerp(finalNoise, 0.5f, surfaceProximity);
                         }
-                    }
-                    else
-                    {
-                        // If we are strictly ABOVE the surface height, force solid air/no caves
-                        finalNoise = 0f;
                     }
 
                     if (finalNoise >= _botThresh && finalNoise <= _topThresh)

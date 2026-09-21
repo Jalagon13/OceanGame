@@ -36,16 +36,18 @@ MonoBehaviour:
       data:
         RunStep: 1
         _baseHeight: 325
-        _largeShapeFrequency: 0.035
-        _largeShapeAmplitude: 25
-        _detailFrequency: 0.07
-        _detailAmplitude: 10
+        _largeShapeFrequency: 0.038
+        _largeShapeAmplitude: 20
+        _detailFrequency: 0.08
+        _detailAmplitude: 15
     - rid: 2688502313846308994
       type: {class: CaveGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
         RunStep: 1
         _botThresh: 0.502
         _topThresh: 0.604
+        _caveStartDepth: 8
+        _caveCeilingFadeDistance: 6
         _caveSurfaceFadeDistance: 5
         _caveNoiseFrequency: 0.032
         _baseNoiseInfluencePercentage: 0.9
@@ -95,9 +97,9 @@ MonoBehaviour:
     - rid: 2895664395369054302
       type: {class: IslandGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
-        RunStep: 1
-        _plateauHalfWidth: 20
+        RunStep: 0
+        _plateauHalfWidth: 15
         _slopeWidth: 20
-        _islandBaseHeight: 6
+        _islandBaseHeight: 2
         _plateauDetailFrequency: 0.08
         _plateauDetailAmplitude: 4

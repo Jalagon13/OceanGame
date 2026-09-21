@@ -3491,12 +3491,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.LightManager
   _lightmapOverlay: {fileID: 328273112}
   _multiplyMaterial: {fileID: 2100000, guid: c9c44d8d34d4a42d59d850f4cc9d34f9, type: 2}
+  _lightOverlay: {fileID: 328273110}
+  _showLight: 0
   _lightmapFilterMode: 0
   _extraLightmapPadding: 4
   _fullBrightness: 10
   _decayBuffer: 2
   _solidFgDecay: 3
   _baseDecay: 1.5
+  _waterDecay: 0.9
   _blurPasses: 1
 --- !u!114 &2043979318
 MonoBehaviour:

@@ -237,7 +237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb2c4941128cc45218cebb54ebf1a3b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ServerCharacter
-  _ignoreCollision: 0
+  _ignoreCollision: 1
   Velocity: {x: 0, y: 0}
   ColliderSize: {x: 0, y: 0}
   _stateType: 0
