@@ -2333,7 +2333,7 @@ MonoBehaviour:
   <FromWaterJumpSpeed>k__BackingField: 10
   <MinJumpSpeed>k__BackingField: 7
   <MaxJumpHoldDuration>k__BackingField: 0.3
-  <AirborneMoveSpeedMultiplier>k__BackingField: 0.5
+  <AirborneMoveSpeedMultiplier>k__BackingField: 0.65
   <JumpBufferDuration>k__BackingField: 0.15
   <CoyoteTimeBufferDuration>k__BackingField: 0.15
   <GravityForce>k__BackingField: 25
@@ -3897,13 +3897,13 @@ MonoBehaviour:
   _lightmapOverlay: {fileID: 328273112}
   _multiplyMaterial: {fileID: 2100000, guid: c9c44d8d34d4a42d59d850f4cc9d34f9, type: 2}
   _lightOverlay: {fileID: 328273110}
-  _showLight: 0
-  _lightmapFilterMode: 0
+  _showLight: 1
+  _lightmapFilterMode: 1
   _extraLightmapPadding: 4
   _fullBrightness: 10
   _decayBuffer: 2
-  _solidFgDecay: 3
-  _baseDecay: 1.5
+  _solidFgDecay: 4
+  _baseDecay: 2
   _waterDecay: 0.5
   _blurPasses: 1
 --- !u!114 &2043979318

@@ -17,13 +17,16 @@ namespace OceanGame
 
             for (int x = 0; x < ctx.Width; x++)
             {
-                int minYForSand = ctx.SurfaceHeightValues[x] - _depthOfSandFromSurface;
+                // Start from top of world down to seabed depth limit
+                int startY = ctx.Height - 2;
+                int minYForSand = Mathf.Max(0, ctx.SurfaceHeightValues[x] - _depthOfSandFromSurface);
 
-                for (int y = ctx.SurfaceHeightValues[x]; y >= minYForSand; y--)
+                for (int y = startY; y >= minYForSand; y--)
                 {
                     bool hasTile = ctx.FgGrid[x, y].HasTile;
                     bool hasTileAbove = ctx.FgGrid[x, y + 1].HasTile;
 
+                    // Only place sand on top-facing exposed tiles
                     if (!hasTile || hasTileAbove)
                     {
                         continue;
@@ -32,7 +35,10 @@ namespace OceanGame
                     for (int depth = 0; depth < sandDepth; depth++)
                     {
                         int fillY = y - depth;
-                        ctx.FgGrid[x, fillY] = new TileData(_sandTile.GetId());
+                        if (fillY >= 0)
+                        {
+                            ctx.FgGrid[x, fillY] = new TileData(_sandTile.GetId());
+                        }
                     }
 
                     y -= sandDepth - 1;
