@@ -22,6 +22,7 @@ MonoBehaviour:
   Steps:
   - rid: 2688502313846308944
   - rid: 2895664395369054302
+  - rid: 2895664395369054429
   - rid: 2688502313846308994
   - rid: 2688502313846308995
   - rid: 2688502313846309004
@@ -103,3 +104,7 @@ MonoBehaviour:
         _islandBaseHeight: 2
         _plateauDetailFrequency: 0.08
         _plateauDetailAmplitude: 4
+    - rid: 2895664395369054429
+      type: {class: BlobIslandGenStep, ns: OceanGame, asm: Assembly-CSharp}
+      data:
+        RunStep: 1

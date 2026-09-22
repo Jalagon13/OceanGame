@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,11 +22,11 @@ namespace OceanGame
         [SerializeReference]
         public List<WorldGenStep> Steps = new();
 
-        public IEnumerator RunPipelineRoutine(System.Action<WorldGenContext> onComplete, System.Action<float, string> onProgress = null)
+        public IEnumerator RunGenPipelineRoutine(Action<WorldGenContext> onComplete, Action<float, string> onProgress = null)
         {
             Debug.Log($"[WorldGen] Generation Started");
         
-            int actualSeed = UseRandomSeed ? Random.Range(0, 100000) : Seed;
+            int actualSeed = UseRandomSeed ? UnityEngine.Random.Range(0, 100000) : Seed;
             var context = new WorldGenContext(Width, Height, actualSeed, UndergroundBottomLevel, GenColumnsPerFrame, SeaLevel);
 
             for (int i = 0; i < Steps.Count; i++)

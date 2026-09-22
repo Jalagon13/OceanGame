@@ -16,7 +16,7 @@ namespace OceanGame
             }
 
             // Start the pipeline coroutine
-            StartCoroutine(CurrentWorldGenPreset.RunPipelineRoutine(onComplete: OnWorldGenComplete, onProgress: OnWorldGenProgress));
+            StartCoroutine(CurrentWorldGenPreset.RunGenPipelineRoutine(onComplete: OnWorldGenComplete, onProgress: OnWorldGenProgress));
         }
 
         private void OnWorldGenProgress(float progress, string stepName)
