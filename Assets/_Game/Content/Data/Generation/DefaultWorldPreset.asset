@@ -24,8 +24,8 @@ MonoBehaviour:
   - rid: 2895664395369054302
   - rid: 2688502313846308994
   - rid: 2688502313846308995
-  - rid: 2895664395369054429
   - rid: 2688502313846309004
+  - rid: 2895664395369054429
   - rid: 2688502313846309037
   - rid: 2688502357985853566
   - rid: 2895663963195310357
@@ -98,7 +98,7 @@ MonoBehaviour:
     - rid: 2895664395369054302
       type: {class: IslandGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
-        RunStep: 0
+        RunStep: 1
         _plateauHalfWidth: 15
         _slopeWidth: 20
         _islandBaseHeight: 2
@@ -107,13 +107,17 @@ MonoBehaviour:
     - rid: 2895664395369054429
       type: {class: BlobIslandGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
-        RunStep: 1
+        RunStep: 0
         _islandTile: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
-        _radiusX: 24
-        _radiusY: 12
-        _yOffset: -4
-        _minIslandSpacing: 50
-        _maxIslandSpacing: 70
+        _islandBgTile: {fileID: 11400000, guid: c05cf26c0c6a34a5abbd9e4f8aa70df3, type: 2}
+        _minRadiusX: 5
+        _maxRadiusX: 35
+        _minRadiusY: 5
+        _maxRadiusY: 12
+        _yOffset: -3
+        _minIslandSpacing: 3
+        _maxIslandSpacing: 30
         _noiseFrequency: 0.08
         _noiseInfluence: 0.5
         _densityThreshold: 0.212
+        _backgroundSlopeWidth: 5

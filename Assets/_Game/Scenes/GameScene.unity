@@ -3904,7 +3904,7 @@ MonoBehaviour:
   _decayBuffer: 2
   _solidFgDecay: 4
   _baseDecay: 2
-  _waterDecay: 0.5
+  _waterDecay: 1
   _blurPasses: 1
 --- !u!114 &2043979318
 MonoBehaviour:

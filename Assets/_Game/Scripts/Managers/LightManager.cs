@@ -124,7 +124,7 @@ namespace OceanGame
                     var fgTd = world.FgGrid.GetTileData(worldPosX, worldPosY);
                     var bgTd = world.BgGrid.GetTileData(worldPosX, worldPosY);
 
-                    if (!fgTd.HasTile && !bgTd.HasTile && world.FluidGrid.GetFluidType(worldPosX, worldPosY) == FluidType.Air)
+                    if (!fgTd.HasTile && !bgTd.HasTile /* && world.FluidGrid.GetFluidType(worldPosX, worldPosY) == FluidType.Air */)
                     {
                         _lightGrid[localX, localY] = _fullBrightness;
                         _solidDepthGrid[localX, localY] = 0;
@@ -163,7 +163,7 @@ namespace OceanGame
                         var fgTd = world.FgGrid.GetTileData(worldNx, worldNy);
                         var bgTd = world.BgGrid.GetTileData(worldNx, worldNy);
 
-                        bool isSolidOrBgOrWater = fgTd.HasTile || bgTd.HasTile || world.FluidGrid.GetFluidType(worldNx, worldNy) == FluidType.Water;
+                        bool isSolidOrBgOrWater = fgTd.HasTile || bgTd.HasTile /* || world.FluidGrid.GetFluidType(worldNx, worldNy) == FluidType.Water */;
 
                         // Increment depth if traveling into solid/BG tile, otherwise reset
                         int nextDepth = isSolidOrBgOrWater ? currDepth + 1 : 0;
@@ -202,7 +202,7 @@ namespace OceanGame
                         var bgTd = world.BgGrid.GetTileData(worldPosX, worldPosY);
                         var fluidType = world.FluidGrid.GetFluidType(worldPosX, worldPosY);
 
-                        if (fgTd.IsAir && bgTd.IsAir && fluidType == FluidType.Air)
+                        if (fgTd.IsAir && bgTd.IsAir /* && fluidType == FluidType.Air */)
                         {
                             _lightGrid[localX, localY] = _fullBrightness;
                         }
@@ -253,7 +253,7 @@ namespace OceanGame
             var fluidType = world.FluidGrid.GetFluidType(worldPosX, worldPosY);
 
             if (fgTd.HasTile) return _solidFgDecay;
-            if (fluidType == FluidType.Water) return _waterDecay;
+            /* if (fluidType == FluidType.Water) return _waterDecay; */
 
             return _baseDecay;
         }
