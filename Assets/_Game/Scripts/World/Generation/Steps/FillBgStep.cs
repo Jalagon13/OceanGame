@@ -24,7 +24,7 @@ namespace OceanGame
             
             for (int x = 0; x < ctx.Width; x++)
             {
-                int surfaceHeight = ctx.SurfaceHeightValues[x];
+                int surfaceHeight = ctx.OceanFloorHeightValues[x];
                 int highestSolidTile = GetHighestFlankedSolidTile(x, surfaceHeight, ctx);
                 surfaceHeight -= _belowSurfaceOffset;
 

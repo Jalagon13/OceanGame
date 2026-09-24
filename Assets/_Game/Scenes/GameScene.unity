@@ -935,7 +935,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 15
+  orthographic size: 17
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2331,7 +2331,7 @@ MonoBehaviour:
   <SwimDashSpeed>k__BackingField: 15
   <SwimDashCooldown>k__BackingField: 3
   <FromWaterJumpSpeed>k__BackingField: 10
-  <MinJumpSpeed>k__BackingField: 7
+  <MinJumpSpeed>k__BackingField: 14
   <MaxJumpHoldDuration>k__BackingField: 0.3
   <AirborneMoveSpeedMultiplier>k__BackingField: 0.65
   <JumpBufferDuration>k__BackingField: 0.15
@@ -3901,7 +3901,7 @@ MonoBehaviour:
   _lightmapFilterMode: 1
   _extraLightmapPadding: 4
   _fullBrightness: 10
-  _decayBuffer: 2
+  _decayBuffer: 1
   _solidFgDecay: 4
   _baseDecay: 2
   _waterDecay: 1

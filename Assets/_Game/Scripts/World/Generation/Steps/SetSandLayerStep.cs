@@ -19,7 +19,7 @@ namespace OceanGame
             {
                 // Start from top of world down to seabed depth limit
                 int startY = ctx.Height - 2;
-                int minYForSand = Mathf.Max(0, ctx.SurfaceHeightValues[x] - _depthOfSandFromSurface);
+                int minYForSand = Mathf.Max(0, ctx.OceanFloorHeightValues[x] - _depthOfSandFromSurface);
 
                 for (int y = startY; y >= minYForSand; y--)
                 {

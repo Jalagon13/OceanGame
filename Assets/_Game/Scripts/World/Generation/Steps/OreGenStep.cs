@@ -80,7 +80,7 @@ namespace OceanGame
 
         private bool IsValidVeinPosition(WorldGenContext ctx, Vector2Int pos, HashSet<Vector2Int> existingPositions)
         {
-            if(pos.y >= ctx.SurfaceHeightValues[pos.x] - _belowSurfaceHeightOffset) return false; // Makes it spawn at least some distance away from the surface
+            if(pos.y >= ctx.OceanFloorHeightValues[pos.x] - _belowSurfaceHeightOffset) return false; // Makes it spawn at least some distance away from the surface
             if(ctx.FgGrid[pos.x, pos.y].IsAir) return false;
         
             foreach (var existingPos in existingPositions)

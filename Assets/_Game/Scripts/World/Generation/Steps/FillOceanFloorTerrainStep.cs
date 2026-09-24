@@ -5,7 +5,7 @@ using UnityEngine;
 namespace OceanGame
 {
     [Serializable]
-    public class FillTerrainStep : WorldGenStep
+    public class FillOceanFloorTerrainStep : WorldGenStep
     {
         [SerializeField] private TileConfigSO _limestoneTile;
     
@@ -13,7 +13,7 @@ namespace OceanGame
         {
             for (int x = 0; x < ctx.Width; x++)
             {
-                int currentSurfaceHeight = ctx.SurfaceHeightValues[x];
+                int currentSurfaceHeight = ctx.OceanFloorHeightValues[x];
             
                 for (int y = 0; y < currentSurfaceHeight; y++)
                 {

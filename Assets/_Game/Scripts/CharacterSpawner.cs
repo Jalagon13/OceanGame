@@ -26,9 +26,9 @@ namespace OceanGame
         public CharacterSpawnCircumstance CurrentCircumstance { get; private set; }
 
         private static readonly Vector2Int _spawnAreaDimensions = new(84, 46);
-        private static readonly Vector2Int _noSpawnAreaDimensions = new(62, 35);
+        private static readonly Vector2Int _noSpawnAreaDimensions = new(62, 36);
         private static readonly Vector2Int _activeAreaDimensions = new(252, 142);
-        private static readonly Vector2Int _timerSafeAreaDimensions = new(60, 34);
+        private static readonly Vector2Int _timerSafeAreaDimensions = new(62, 36);
 
         public CharacterSpawner(ServerCharacter host)
         {
