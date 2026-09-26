@@ -2214,20 +2214,6 @@ MonoBehaviour:
   _startingItems:
   - _ingredient: {fileID: 11400000, guid: ba4a4e198c8a8407c86c4c4ae28df49a, type: 2}
     _amount: 1
-  - _ingredient: {fileID: 11400000, guid: ed13bde50d6d54218b3be409d52464f5, type: 2}
-    _amount: 10
-  - _ingredient: {fileID: 11400000, guid: 7c88a6e8135fd491198a7ef38abd39b0, type: 2}
-    _amount: 10
-  - _ingredient: {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
-    _amount: 123
-  - _ingredient: {fileID: 11400000, guid: 8f118cc58053c4854aa4b9cb6b928fa7, type: 2}
-    _amount: 123
-  - _ingredient: {fileID: 11400000, guid: 1c2c9103005254e2096a71428bc94070, type: 2}
-    _amount: 123
-  - _ingredient: {fileID: 11400000, guid: 210c16a27f4614f9cbf0daa3685d375c, type: 2}
-    _amount: 25
-  - _ingredient: {fileID: 11400000, guid: 86917fe706b784b23bc81550a31b3a3c, type: 2}
-    _amount: 1
 --- !u!114 &1178486984
 MonoBehaviour:
   m_ObjectHideFlags: 0

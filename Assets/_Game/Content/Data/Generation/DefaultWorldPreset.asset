@@ -106,16 +106,16 @@ MonoBehaviour:
       type: {class: SmallIslandsGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
         RunStep: 1
-        _islandTile: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
-        _minIslandWidth: 9
-        _maxIslandWidth: 33
-        _minIslandHeight: 6
+        _islandTile: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
+        _minIslandWidth: 15
+        _maxIslandWidth: 39
+        _minIslandHeight: 9
         _maxIslandHeight: 23
-        _minIslandGap: 0
-        _maxIslandGap: 35
-        _gapBiasPower: 3.5
+        _minIslandGap: 7
+        _maxIslandGap: 40
+        _gapBiasPower: 4.5
         _minIslandSeaLevelOffset: 1
-        _maxIslandSeaLevelOffset: -3
+        _maxIslandSeaLevelOffset: -2
         _noiseFrequency: 0.14
         _noiseInfluence: 0.719
         _densityThreshold: 0.183
