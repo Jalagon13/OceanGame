@@ -20,8 +20,8 @@ namespace OceanGame
         [SerializeField] private TileBase _topTile;
 
         [Header("Tree Generation Settings")]
-        [SerializeField] private int _minHeight = 5;
-        [SerializeField] private int _maxHeight = 10;
+        [field: SerializeField] public int MinHeight { get; private set; } = 5;
+        [field: SerializeField] public int MaxHeight { get; private set; } = 10;
         [SerializeField, Range(0f, 1f)] private float _branchChance = 0.25f;
 
         // Selects the proper sprite/tile according to TileData.State.
@@ -131,59 +131,47 @@ namespace OceanGame
         }
 
         // Attempts to grow a tree at (groundX, groundY). groundY is the soil/ground block the tree stands on.
-        public bool TryGrowTree(TileGrid grid, int groundX, int groundY, System.Random random = null, bool refreshBounds = true)
+        public bool TryGrowTree(WorldGenContext ctx, int groundX, int groundY)
         {
             ushort treeId = GetId();
-            int height = UnityEngine.Random.Range(_minHeight, _maxHeight + 1); // For testing
-            // int height = Mathf.RoundToInt(random.Next(_minHeight, _maxHeight + 1)); // For generation
-            Debug.Log($"Height chosen: {height}");
-            
-            // Clearance Check: Ensure there is empty air above the ground
+            int height = ctx.Random.Next(MinHeight, MaxHeight + 1);
+
+            // Clearance Check
             for (int y = 1; y <= height; y++)
             {
                 int checkY = groundY + y;
-                if (!grid.IsInBounds(groundX, checkY)) return false;
-                
-                TileData tile = grid.GetTileData(groundX, checkY);
-                if (tile.HasTile)
-                {
-                    Debug.Log($"cant grow tree bc Obstructed by another block");
-                    return false; // Obstructed by another block
-                }
+                if (checkY >= ctx.Height || ctx.FgGrid[groundX, checkY].HasTile) return false;
             }
 
-            // Base Segment (sits directly on top of the ground block)
-            grid.SetTileDataDirect(groundX, groundY + 1, new TileData(treeId, state: (byte)TreeSegmentType.Base));
+            // Gen Base
+            ctx.FgGrid[groundX, groundY + 1] = new TileData(treeId, state: (byte)TreeSegmentType.Base);
 
-            // Trunk & Branch Segments
+            // Gen Trunk and Branches
             for (int y = 2; y < height; y++)
             {
                 TreeSegmentType segment = TreeSegmentType.Trunk;
-                
-                // Roll for random branches
-                if (UnityEngine.Random.value < _branchChance) // Use the random parameter later but for now use this for testing
-                {
-                    TreeSegmentType branchSegment = UnityEngine.Random.value < 0.5f ? TreeSegmentType.BranchLeft : TreeSegmentType.BranchRight;
-                    int offset = branchSegment == TreeSegmentType.BranchLeft ? -1 : 1;
 
-                    grid.SetTileDataDirect(groundX + offset, groundY + y, new TileData(treeId, state: (byte)branchSegment));
-                    Debug.Log($"Gen a {branchSegment} branch");
+                if (ctx.Random.NextDouble() < _branchChance)
+                {
+                    TreeSegmentType branchType = ctx.Random.NextDouble() < 0.5
+                        ? TreeSegmentType.BranchLeft
+                        : TreeSegmentType.BranchRight;
+                    int offset = branchType == TreeSegmentType.BranchLeft ? -1 : 1;
+                    int branchX = groundX + offset;
+
+                    // Make sure branch space is clear and within bounds
+                    if (branchX >= 0 && branchX < ctx.Width && !ctx.FgGrid[branchX, groundY + y].HasTile)
+                    {
+                        ctx.FgGrid[branchX, groundY + y] = new TileData(treeId, state: (byte)branchType);
+                    }
                 }
 
-                grid.SetTileDataDirect(groundX, groundY + y, new TileData(treeId, state: (byte)segment));
-                Debug.Log($"Gen a trunk");
+                ctx.FgGrid[groundX, groundY + y] = new TileData(treeId, state: (byte)segment);
             }
 
-            // Top Segment (holds the canopy)
-            grid.SetTileDataDirect(groundX, groundY + height, new TileData(treeId, state: (byte)TreeSegmentType.Top));
-            Debug.Log($"top seg added");
+            // Top
+            ctx.FgGrid[groundX, groundY + height] = new TileData(treeId, state: (byte)TreeSegmentType.Top);
 
-            // Refresh camera bounds if requested so it appears on screen immediately
-            if (refreshBounds && PlayerCamera.Instance.PositionExistsInBounds(groundX, groundY))
-            {
-                PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
-            }
-            
             return true;
         }
 

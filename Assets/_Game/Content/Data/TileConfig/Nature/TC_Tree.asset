@@ -15,21 +15,20 @@ MonoBehaviour:
   <MaxHP>k__BackingField: 50
   <LightLevel>k__BackingField: 0
   <Indestructible>k__BackingField: 0
-  <IsSolid>k__BackingField: 1
+  <IsSolid>k__BackingField: 0
   <Size>k__BackingField: {x: 1, y: 1}
   <DrawTile>k__BackingField: {fileID: 11400000, guid: ba98ee5027e8944fca0aec29ceb6150d, type: 2}
   <DroppedItem>k__BackingField: {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}
   <InteractBehavior>k__BackingField:
     rid: -2
   _woodItem: {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}
-  _woodPerSegment: 1
   _baseTile: {fileID: 11400000, guid: b0cd19a4b586b481bbc7604e708b2f84, type: 2}
   _trunkTile: {fileID: 11400000, guid: ba98ee5027e8944fca0aec29ceb6150d, type: 2}
   _branchLeftTile: {fileID: 11400000, guid: ba98ee5027e8944fca0aec29ceb6150d, type: 2}
   _branchRightTile: {fileID: 11400000, guid: ba98ee5027e8944fca0aec29ceb6150d, type: 2}
   _topTile: {fileID: 11400000, guid: b0cd19a4b586b481bbc7604e708b2f84, type: 2}
-  _minHeight: 5
-  _maxHeight: 10
+  <MinHeight>k__BackingField: 5
+  <MaxHeight>k__BackingField: 10
   _branchChance: 0.25
   references:
     version: 2
