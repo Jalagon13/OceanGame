@@ -18,18 +18,18 @@ MonoBehaviour:
   <IsSolid>k__BackingField: 0
   <Size>k__BackingField: {x: 1, y: 1}
   <DrawTile>k__BackingField: {fileID: 11400000, guid: ba98ee5027e8944fca0aec29ceb6150d, type: 2}
-  <DroppedItem>k__BackingField: {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}
+  <DroppedItem>k__BackingField: {fileID: 11400000, guid: 81a74ab6b5b314aa5a95260481a734d8, type: 2}
   <InteractBehavior>k__BackingField:
     rid: -2
-  _woodItem: {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}
-  _baseTile: {fileID: 11400000, guid: b0cd19a4b586b481bbc7604e708b2f84, type: 2}
-  _trunkTile: {fileID: 11400000, guid: ba98ee5027e8944fca0aec29ceb6150d, type: 2}
-  _branchLeftTile: {fileID: 11400000, guid: ba98ee5027e8944fca0aec29ceb6150d, type: 2}
-  _branchRightTile: {fileID: 11400000, guid: ba98ee5027e8944fca0aec29ceb6150d, type: 2}
-  _topTile: {fileID: 11400000, guid: b0cd19a4b586b481bbc7604e708b2f84, type: 2}
+  _woodItem: {fileID: 11400000, guid: 81a74ab6b5b314aa5a95260481a734d8, type: 2}
+  _baseTile: {fileID: 11400000, guid: db9af0ae5bd824755a35ec9dcf9b0fa5, type: 2}
+  _trunkTile: {fileID: 11400000, guid: 439d13a6f845f49a7a65bb2c5b8fa366, type: 2}
+  _branchLeftTile: {fileID: 0}
+  _branchRightTile: {fileID: 0}
+  _topTile: {fileID: 11400000, guid: 38046957f6cee4639878c78189ad9315, type: 2}
   <MinHeight>k__BackingField: 5
   <MaxHeight>k__BackingField: 10
-  _branchChance: 0.25
+  _branchChance: 0
   references:
     version: 2
     RefIds:
