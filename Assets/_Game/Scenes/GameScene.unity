@@ -1816,6 +1816,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 75d3adf13369b426cbdbcc99aabd6f3d, type: 2}
   - {fileID: 11400000, guid: 7468c0c70321e43ce95a179d9f68e883, type: 2}
   - {fileID: 11400000, guid: 056b279fd47f642cc8e24b2ed62ab624, type: 2}
+  - {fileID: 11400000, guid: 4f515916d235640d480d2b10b7f502af, type: 2}
   _itemDatabase:
   - {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
   - {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}
@@ -2317,7 +2318,7 @@ MonoBehaviour:
   <SwimDashSpeed>k__BackingField: 15
   <SwimDashCooldown>k__BackingField: 3
   <FromWaterJumpSpeed>k__BackingField: 10
-  <MinJumpSpeed>k__BackingField: 14
+  <MinJumpSpeed>k__BackingField: 10
   <MaxJumpHoldDuration>k__BackingField: 0.3
   <AirborneMoveSpeedMultiplier>k__BackingField: 0.65
   <JumpBufferDuration>k__BackingField: 0.15
@@ -3786,8 +3787,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2043979313}
-  - component: {fileID: 2043979315}
   - component: {fileID: 2043979314}
+  - component: {fileID: 2043979315}
   - component: {fileID: 2043979316}
   - component: {fileID: 2043979317}
   - component: {fileID: 2043979318}
@@ -3830,6 +3831,7 @@ MonoBehaviour:
   <WorldGen>k__BackingField: {fileID: 2043979316}
   _foregroundTilemap: {fileID: 1420173610}
   _backgroundTilemap: {fileID: 1608990557}
+  _debugTreeConfig: {fileID: 11400000, guid: 4f515916d235640d480d2b10b7f502af, type: 2}
 --- !u!114 &2043979315
 MonoBehaviour:
   m_ObjectHideFlags: 0

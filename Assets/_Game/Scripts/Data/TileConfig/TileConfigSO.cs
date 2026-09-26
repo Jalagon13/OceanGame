@@ -28,5 +28,49 @@ namespace OceanGame
         {
             return DrawTile;
         }
+
+        // In TileConfigSO.cs
+        public virtual void OnTileDestroyed(TileGrid grid, int x, int y, TileData tileData, bool refreshCurrentBounds = false)
+        {
+            if (IsMultiTile)
+            {
+                // Default Rigid Multi-Tile behavior (e.g. standard multi-tile furniture)
+                int rootX = x - tileData.OffsetX;
+                int rootY = y - tileData.OffsetY;
+
+                for (int ox = 0; ox < Size.x; ox++)
+                {
+                    for (int oy = 0; oy < Size.y; oy++)
+                    {
+                        int targetX = rootX + ox;
+                        int targetY = rootY + oy;
+
+                        if (grid.IsInBounds(targetX, targetY))
+                        {
+                            grid.SetTileDataDirect(targetX, targetY, TileData.Air);
+                            grid.ClearDamage(targetX, targetY);
+                        }
+                    }
+                }
+
+                if (DroppedItem != null)
+                {
+                    Vector2 dropPos = new Vector2(rootX + 0.5f, rootY + 0.5f);
+                    GameManager.Instance.SpawnItem(DroppedItem, 1, dropPos);
+                }
+            }
+            else
+            {
+                // Standard 1x1 tile behavior
+                grid.SetTileDataDirect(x, y, TileData.Air);
+                grid.ClearDamage(x, y);
+
+                if (DroppedItem != null)
+                {
+                    Vector2 dropPos = new Vector2(x + 0.5f, y + 0.5f);
+                    GameManager.Instance.SpawnItem(DroppedItem, 1, dropPos);
+                }
+            }
+        }
     }
 }

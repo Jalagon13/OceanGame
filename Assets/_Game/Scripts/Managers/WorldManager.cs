@@ -17,6 +17,9 @@ namespace OceanGame
         [SerializeField] private Tilemap _foregroundTilemap;
         [SerializeField] private Tilemap _backgroundTilemap;
 
+        [Header("Debug Testing")]
+        [SerializeField] private TreeTileConfigSO _debugTreeConfig;
+
         public enum LayerType { Foreground, Background }
         public FluidGrid FluidGrid { get; private set; }
         public TileGrid FgGrid { get; private set; }
@@ -39,6 +42,15 @@ namespace OceanGame
 
             MouseWorldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             MouseWorldTilePosition = new(Mathf.FloorToInt(MouseWorldPosition.x), Mathf.FloorToInt(MouseWorldPosition.y));
+
+            if (Keyboard.current.tKey.wasPressedThisFrame && _debugTreeConfig != null)
+            {
+                Vector2Int mousePos = MouseWorldTilePosition;
+
+                // Treat mouse position as the ground tile
+                bool success = _debugTreeConfig.TryGrowTree(FgGrid, mousePos.x, mousePos.y, refreshBounds: true);
+                Debug.Log(success ? "Tree planted!" : "Could not plant tree here (obstructed or out of bounds).");
+            }
         }
 
         public void LoadGeneratedWorld(WorldGenContext context)

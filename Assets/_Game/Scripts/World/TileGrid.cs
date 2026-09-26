@@ -36,52 +36,39 @@ namespace OceanGame
         public void DamageTile(int x, int y, int damageAmount, bool refreshCurrentBounds = true)
         {
             if (!IsInBounds(x, y)) return;
-            
+
             TileData targetTile = GetTileData(x, y);
-            
             if (targetTile.IsAir) return;
-            
+
             TileConfigSO tc = targetTile.TileConfig;
-            
             if (tc == null || tc.Indestructible || tc.MaxHP <= 0) return;
 
-            // Handle Multi-Tiles: route damage to the root cell
-            int rootX = tc.IsMultiTile ? x - targetTile.OffsetX : x;
-            int rootY = tc.IsMultiTile ? y - targetTile.OffsetY : y;
-            Vector2Int rootPos = new(rootX, rootY);
+            // For rigid multi-tiles that share HP across the whole structure,
+            // route damage to the root cell. (Trees won't use IsMultiTile so they route damage to (x, y)!)
+            int damageX = tc.IsMultiTile ? x - targetTile.OffsetX : x;
+            int damageY = tc.IsMultiTile ? y - targetTile.OffsetY : y;
+            Vector2Int damagePos = new(damageX, damageY);
 
-            // Try go get the value for it and increment damage
-            DamagedTiles.TryGetValue(rootPos, out int currentDamage);
+            DamagedTiles.TryGetValue(damagePos, out int currentDamage);
             currentDamage += damageAmount;
 
             if (currentDamage >= tc.MaxHP)
             {
-                // Destroy the tile and clear damage record
-                DamagedTiles.Remove(rootPos);
-                
-                DestroyTile(rootX, rootY, refreshCurrentBounds);
-                
-                GameManager.Instance.SpawnItem(targetTile.TileConfig.DroppedItem, 1, rootPos + new Vector2(0.5f, 0.5f));
+                // Clear damage record for this tile/root
+                DamagedTiles.Remove(damagePos);
+
+                // Destroy the tile via DestroyTile (which delegates to TileConfigSO)
+                DestroyTile(x, y, refreshCurrentBounds);
             }
             else
             {
-                // if not destroyed, store current damage done
-                DamagedTiles[rootPos] = currentDamage;
+                DamagedTiles[damagePos] = currentDamage;
 
-                if (refreshCurrentBounds)
+                if (refreshCurrentBounds && PlayerCamera.Instance.PositionExistsInBounds(x, y))
                 {
-                    // If it's a change on screen, refresh the bounds to refresh rendered tiles
-                    if (PlayerCamera.Instance.PositionExistsInBounds(x, y))
-                    {
-                        PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
-                    }
+                    PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
                 }
             }
-        }
-
-        public void ClearDamage(int x, int y)
-        {
-            DamagedTiles.Remove(new Vector2Int(x, y));
         }
 
         public void DestroyTile(int x, int y, bool refreshCurrentBounds = false)
@@ -89,51 +76,31 @@ namespace OceanGame
             if (!IsInBounds(x, y)) return;
 
             TileData targetTile = _tiles[y * _width + x];
-            if (targetTile.IsAir) return; // Nothing to destroy if it's air
+            if (targetTile.IsAir) return;
 
             TileConfigSO tc = targetTile.TileConfig;
 
-            if (tc != null && tc.IsMultiTile)
+            if (tc != null)
             {
-                // Calculate Root position by subtracting local offsets
-                int rootX = x - targetTile.OffsetX;
-                int rootY = y - targetTile.OffsetY;
-
-                Vector2Int size = tc.Size;
-
-                // Loop through all cells belonging to this multi-tile structure and clear them
-                for (int ox = 0; ox < size.x; ox++)
-                {
-                    for (int oy = 0; oy < size.y; oy++)
-                    {
-                        int tileX = rootX + ox;
-                        int tileY = rootY + oy;
-
-                        if (IsInBounds(tileX, tileY))
-                        {
-                            _tiles[tileY * _width + tileX] = TileData.Air;
-                        }
-                    }
-                }
+                // Let the TileConfig handle clearing the cells and dropping items!
+                tc.OnTileDestroyed(this, x, y, targetTile, refreshCurrentBounds);
             }
             else
             {
-                // Single 1x1 tile destruction
+                // Fallback for tiles without config
                 _tiles[y * _width + x] = TileData.Air;
+                ClearDamage(x, y);
             }
-            
-            OnTileDestroyed?.Invoke(new(x, y));
 
-            if (refreshCurrentBounds)
+            // Grid-level event notification (for audio, chunk updates, etc.)
+            OnTileDestroyed?.Invoke(new Vector2Int(x, y));
+
+            if (refreshCurrentBounds && PlayerCamera.Instance.PositionExistsInBounds(x, y))
             {
-                // If it's a change on screen, refresh the bounds to refresh rendered tiles
-                if (PlayerCamera.Instance.PositionExistsInBounds(x, y))
-                {
-                    PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
-                }
+                PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
             }
         }
-        
+
         public void SetTileData(int x, int y, TileData newTileData, bool refreshCurrentBounds = false, bool manualyPlaced = false)
         {
             if (!IsInBounds(x, y)) return;
@@ -149,6 +116,12 @@ namespace OceanGame
             {
                 PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
             }
+        }
+
+        public void SetTileDataDirect(int x, int y, TileData newTileData)
+        {
+            if (!IsInBounds(x, y)) return;
+            _tiles[y * _width + x] = newTileData;
         }
 
         public void ChangeMultiTileData(int x, int y, TileData newTileData, bool refreshCurrentBounds = false)
@@ -255,6 +228,11 @@ namespace OceanGame
             }
 
             return true;
+        }
+
+        public void ClearDamage(int x, int y)
+        {
+            DamagedTiles.Remove(new Vector2Int(x, y));
         }
     }
 
