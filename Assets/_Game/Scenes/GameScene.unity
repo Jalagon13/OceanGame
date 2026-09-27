@@ -3888,10 +3888,10 @@ MonoBehaviour:
   _multiplyMaterial: {fileID: 2100000, guid: c9c44d8d34d4a42d59d850f4cc9d34f9, type: 2}
   _lightOverlay: {fileID: 328273110}
   _showLight: 1
-  _lightmapFilterMode: 1
+  _lightmapFilterMode: 0
   _extraLightmapPadding: 4
   _fullBrightness: 10
-  _decayBuffer: 1
+  _decayBuffer: 2
   _solidFgDecay: 4
   _baseDecay: 2
   _waterDecay: 1
