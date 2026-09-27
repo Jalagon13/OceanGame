@@ -1807,7 +1807,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.GameDataRegistry
   _tileDatabase:
-  - {fileID: 11400000, guid: c05cf26c0c6a34a5abbd9e4f8aa70df3, type: 2}
   - {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
   - {fileID: 11400000, guid: 2e31d17edd4654120875362ed74dbe93, type: 2}
   - {fileID: 11400000, guid: ba3aad1cd917f45aea3a6204b86df04e, type: 2}
@@ -1820,7 +1819,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 22d5dfd214b844b8e8ab2fc5e6b48082, type: 2}
   _itemDatabase:
   - {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
-  - {fileID: 11400000, guid: d61b022529de24c34a3d8feea7bf40ef, type: 2}
+  - {fileID: 11400000, guid: b424afe4dee6641ca97d9b23d029ab30, type: 2}
   - {fileID: 11400000, guid: ba4a4e198c8a8407c86c4c4ae28df49a, type: 2}
   - {fileID: 11400000, guid: ed13bde50d6d54218b3be409d52464f5, type: 2}
   - {fileID: 11400000, guid: 7c88a6e8135fd491198a7ef38abd39b0, type: 2}
@@ -3379,7 +3378,7 @@ Tilemap:
   m_TileColorArray: []
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.43137255, g: 0.43137255, b: 0.49019608, a: 1}
   m_Origin: {x: 0, y: 0, z: 0}
   m_Size: {x: 0, y: 0, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}

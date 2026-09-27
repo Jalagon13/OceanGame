@@ -80,19 +80,30 @@ namespace OceanGame
             if (distanceToPlayer > Player.Instance.InteractRange) return false;
 
             var world = WorldManager.Instance;
-            var targetTileData = world.FgGrid.GetTileData(mouseTilePos.x, mouseTilePos.y);
+            var activeLayer = world.ActiveLayer;
+            var targetGrid = world.ActiveGrid;
+            var tileConfig = tileItem.PlaceTileDataSO;
+
+            // Only 1x1 non-multitile tiles can be placed on the background layer
+            if (activeLayer == WorldManager.LayerType.Background && tileConfig.IsMultiTile)
+            {
+                return false;
+            }
+
+            // Check if the targeted layer already has a tile at this cell
+            var targetTileData = targetGrid.GetTileData(mouseTilePos.x, mouseTilePos.y);
 
             if (!targetTileData.HasTile)
             {
-                var tileToPlaceTd = new TileData(tileItem.PlaceTileDataSO.GetId());
+                var tileToPlaceTd = new TileData(tileConfig.GetId());
 
-                if (tileToPlaceTd.TileConfig != null && tileToPlaceTd.TileConfig.IsMultiTile)
+                if (activeLayer == WorldManager.LayerType.Foreground && tileConfig.IsMultiTile)
                 {
-                    world.FgGrid.PlaceMultiTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true, true);
+                    world.FgGrid.PlaceMultiTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true, manualyPlaced: true);
                 }
                 else
                 {
-                    world.FgGrid.SetTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true, true);
+                    targetGrid.SetTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true, manualyPlaced: true);
                 }
 
                 InventoryInputManager.Instance.GetActiveInvSlot().RemoveFromCurrentAmount(1);

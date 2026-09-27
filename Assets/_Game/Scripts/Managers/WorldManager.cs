@@ -11,6 +11,7 @@ namespace OceanGame
         public static WorldManager Instance { get; private set; }
 
         public event Action OnWorldReady;
+        public event Action<LayerType> OnActiveLayerChanged;
 
         [Header("World References")]
         [field: SerializeField] public WorldGenerator WorldGen { get; private set; }
@@ -24,16 +25,29 @@ namespace OceanGame
         public FluidGrid FluidGrid { get; private set; }
         public TileGrid FgGrid { get; private set; }
         public TileGrid BgGrid { get; private set; }
+        public LayerType ActiveLayer { get; private set; } = LayerType.Foreground;
+        public TileGrid ActiveGrid => ActiveLayer == LayerType.Foreground ? FgGrid : BgGrid;
+        
         public static Vector2Int MouseWorldTilePosition { get; private set; }
         public static Vector2 MouseWorldPosition { get; private set; }
         public bool MouseOverUI { get; private set; }
         public bool IsWorldReady { get; private set; } = false;
         public int SeaLevel { get; private set; }
-       
+
 
         private void Awake()
         {
             Instance = this;
+        }
+        
+        private void Start() 
+        {
+            GameInput.Instance.OnToggleBuildLayer += ToggleBuildLayer;
+        }
+        
+        private void OnDestroy() 
+        {
+            GameInput.Instance.OnToggleBuildLayer -= ToggleBuildLayer;
         }
 
         private void Update()
@@ -42,6 +56,12 @@ namespace OceanGame
 
             MouseWorldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             MouseWorldTilePosition = new(Mathf.FloorToInt(MouseWorldPosition.x), Mathf.FloorToInt(MouseWorldPosition.y));
+        }
+
+        private void ToggleBuildLayer()
+        {
+            ActiveLayer = (ActiveLayer == LayerType.Foreground) ? LayerType.Background : LayerType.Foreground;
+            OnActiveLayerChanged?.Invoke(ActiveLayer);
         }
 
         public void LoadGeneratedWorld(WorldGenContext context)

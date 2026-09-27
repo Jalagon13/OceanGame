@@ -63,7 +63,7 @@ MonoBehaviour:
       type: {class: FillBgStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
         RunStep: 1
-        _sandBgTile: {fileID: 11400000, guid: c05cf26c0c6a34a5abbd9e4f8aa70df3, type: 2}
+        _sandBgTile: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
         _belowSurfaceOffset: 0
         _undergroundBottomLevelOffset: 2
         _minWallPlacementYOffset: 5

@@ -69,6 +69,7 @@ namespace OceanGame
 
                     // Process Foreground Layer
                     var fgTd = world.FgGrid.GetTileData(x, y);
+                    var bgTd = world.BgGrid.GetTileData(x, y);
                     Vector3Int tilePos3D = (Vector3Int)tilePos;
 
                     if (fgTd.HasTile)
@@ -110,42 +111,46 @@ namespace OceanGame
                         world.FgGrid.Tilemap.SetTile(tilePos3D, null);
                     }
 
-                    // NTFS: Make it so it renders any damaged tile that is visible either background or foreground. Right now this only draws visible foreground damaged tiles
                     // Process cracked tile decals
-                    if (world.FgGrid.DamagedTiles.TryGetValue(tilePos, out int currentDamage) && fgTd.HasTile)
-                    {
-                        int maxHp = fgTd.TileConfig.MaxHP;
+                    // Check if the foreground has damage first; if empty or undamaged, check background damage
+                    int currentDamage = 0;
+                    int maxHp = 0;
 
-                        if (maxHp > 0 && _crackTiles != null && _crackTiles.Length > 0)
-                        {
-                            // Calculate damage ratio (0.0 to 1.0)
-                            float damageRatio = Mathf.Clamp01((float)currentDamage / maxHp);
-                            
-                            // Pick stage based on damage ratio
-                            int stageIndex = Mathf.Clamp(Mathf.FloorToInt(damageRatio * _crackTiles.Length), 0, _crackTiles.Length - 1);
-                            _damageOverlayTilemap.SetTile(tilePos3D, _crackTiles[stageIndex]);
-                        }
+                    if (world.FgGrid.DamagedTiles.TryGetValue(tilePos, out int fgDmg) && fgTd.HasTile)
+                    {
+                        currentDamage = fgDmg;
+                        maxHp = fgTd.TileConfig.MaxHP;
+                    }
+                    else if (world.BgGrid.DamagedTiles.TryGetValue(tilePos, out int bgDmg) && bgTd.HasTile)
+                    {
+                        currentDamage = bgDmg;
+                        maxHp = bgTd.TileConfig.MaxHP;
+                    }
+
+                    if (currentDamage > 0 && maxHp > 0 && _crackTiles != null && _crackTiles.Length > 0)
+                    {
+                        float damageRatio = Mathf.Clamp01((float)currentDamage / maxHp);
+                        int stageIndex = Mathf.Clamp(Mathf.FloorToInt(damageRatio * _crackTiles.Length), 0, _crackTiles.Length - 1);
+                        _damageOverlayTilemap.SetTile(tilePos3D, _crackTiles[stageIndex]);
                     }
                     else
                     {
-                        // Clear overlay if tile is undamaged or destroyed (Air)
                         _damageOverlayTilemap.SetTile(tilePos3D, null);
                     }
 
-
                     // Process Background Layer
-                    var bgTd = world.BgGrid.GetTileData(x, y);
-                    
                     if (bgTd.HasTile)
                     {
                         var bgtc = bgTd.TileConfig;
                         
                         if (bgtc != null)
                         {
-                            world.BgGrid.Tilemap.SetTile(tilePos3D, bgtc.DrawTile);
+                            // Use state interpretation so variations/connections match foreground logic
+                            TileBase interpretedTile = bgtc.GetStateInterpretedTileForRendering(bgTd.State);
+                            world.BgGrid.Tilemap.SetTile(tilePos3D, interpretedTile);
                         }
                     }
-                    else if(bgTd.IsAir) // If we are setting it to air
+                    else if (bgTd.IsAir)
                     {
                         world.BgGrid.Tilemap.SetTile(tilePos3D, null);
                     }

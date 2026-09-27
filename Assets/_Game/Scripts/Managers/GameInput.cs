@@ -15,6 +15,7 @@ namespace OceanGame
         public event Action<InputAction.CallbackContext> OnScrollWheel;
         public event Action<InputAction.CallbackContext> OnSelectSlot;
         public event Action OnToggleInventory;
+        public event Action OnToggleBuildLayer;
 
         public Vector2 MoveInput { get; private set; }
         public bool JumpHold { get; private set; }
@@ -41,6 +42,8 @@ namespace OceanGame
             _playerInput.Player.PrimaryAction.canceled += GameInput_OnPrimaryAction;
             _playerInput.Player.SecondaryAction.started += GameInput_OnSecondaryAction;
             _playerInput.Player.SecondaryAction.canceled += GameInput_OnSecondaryAction;
+            
+            _playerInput.Player.ToggleBuildLayer.started += GameInput_OnToggleBuildLayer;
 
             _playerInput.UI.ScrollWheel.performed += PlayerInput_OnScrollWheel;
             _playerInput.UI.SelectSlot.started += PlayerInput_OnSelectSlot;
@@ -67,12 +70,22 @@ namespace OceanGame
             _playerInput.Player.SecondaryAction.started -= GameInput_OnSecondaryAction;
             _playerInput.Player.SecondaryAction.canceled -= GameInput_OnSecondaryAction;
 
+            _playerInput.Player.ToggleBuildLayer.started -= GameInput_OnToggleBuildLayer;
+
             _playerInput.UI.ScrollWheel.performed -= PlayerInput_OnScrollWheel;
             _playerInput.UI.SelectSlot.started -= PlayerInput_OnSelectSlot;
 
             _playerInput.UI.ToggleInventory.started -= PlayerInput_OnToggleInventory;
 
             _playerInput.Disable();
+        }
+
+        private void GameInput_OnToggleBuildLayer(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Started)
+            {
+                OnToggleBuildLayer?.Invoke();
+            }
         }
 
         private void PlayerInput_OnToggleInventory(InputAction.CallbackContext context)

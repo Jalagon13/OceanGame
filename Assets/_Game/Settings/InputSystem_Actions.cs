@@ -133,6 +133,16 @@ namespace OceanGame
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""ToggleBuildLayer"",
+                    ""type"": ""Button"",
+                    ""id"": ""b0870c1d-ea1d-4407-9fe5-f71ab99e08b5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -320,6 +330,17 @@ namespace OceanGame
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""SecondaryAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9c558a1a-01bb-4eac-b275-b29678b62ee2"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""ToggleBuildLayer"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -565,6 +586,7 @@ namespace OceanGame
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
             m_Player_PrimaryAction = m_Player.FindAction("PrimaryAction", throwIfNotFound: true);
             m_Player_SecondaryAction = m_Player.FindAction("SecondaryAction", throwIfNotFound: true);
+            m_Player_ToggleBuildLayer = m_Player.FindAction("ToggleBuildLayer", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
@@ -655,6 +677,7 @@ namespace OceanGame
         private readonly InputAction m_Player_Jump;
         private readonly InputAction m_Player_PrimaryAction;
         private readonly InputAction m_Player_SecondaryAction;
+        private readonly InputAction m_Player_ToggleBuildLayer;
         /// <summary>
         /// Provides access to input actions defined in input action map "Player".
         /// </summary>
@@ -682,6 +705,10 @@ namespace OceanGame
             /// Provides access to the underlying input action "Player/SecondaryAction".
             /// </summary>
             public InputAction @SecondaryAction => m_Wrapper.m_Player_SecondaryAction;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/ToggleBuildLayer".
+            /// </summary>
+            public InputAction @ToggleBuildLayer => m_Wrapper.m_Player_ToggleBuildLayer;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -720,6 +747,9 @@ namespace OceanGame
                 @SecondaryAction.started += instance.OnSecondaryAction;
                 @SecondaryAction.performed += instance.OnSecondaryAction;
                 @SecondaryAction.canceled += instance.OnSecondaryAction;
+                @ToggleBuildLayer.started += instance.OnToggleBuildLayer;
+                @ToggleBuildLayer.performed += instance.OnToggleBuildLayer;
+                @ToggleBuildLayer.canceled += instance.OnToggleBuildLayer;
             }
 
             /// <summary>
@@ -743,6 +773,9 @@ namespace OceanGame
                 @SecondaryAction.started -= instance.OnSecondaryAction;
                 @SecondaryAction.performed -= instance.OnSecondaryAction;
                 @SecondaryAction.canceled -= instance.OnSecondaryAction;
+                @ToggleBuildLayer.started -= instance.OnToggleBuildLayer;
+                @ToggleBuildLayer.performed -= instance.OnToggleBuildLayer;
+                @ToggleBuildLayer.canceled -= instance.OnToggleBuildLayer;
             }
 
             /// <summary>
@@ -994,6 +1027,13 @@ namespace OceanGame
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnSecondaryAction(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "ToggleBuildLayer" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnToggleBuildLayer(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
