@@ -134,7 +134,7 @@ namespace OceanGame
             OnCraftTableInteract?.Invoke(recipes, x, y);
         }
 
-        private void OnToggleInventory()
+        public void OnToggleInventory()
         {
             if (Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
 
