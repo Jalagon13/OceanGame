@@ -10,6 +10,7 @@ namespace OceanGame
         [Header("UI References")]
         [SerializeField] private Image _itemIcon;
         [SerializeField] private Image _placeholderGhostIcon; // Optional faint icon indicating helmet/chest/pants
+        
         private void Start()
         {
             if (Player.Instance == null) return;
@@ -19,6 +20,7 @@ namespace OceanGame
                 OnPlayerReady(Player.Instance.Character);
             }
         }
+        
         private void OnDestroy()
         {
             if (Player.Instance == null) return;
@@ -28,6 +30,7 @@ namespace OceanGame
                 Player.Instance.Equipment.OnEquipmentChanged -= RefreshUI;
             }
         }
+        
         private void OnPlayerReady(ServerCharacter character)
         {
             if (Player.Instance.Equipment != null)
@@ -37,6 +40,7 @@ namespace OceanGame
                 RefreshUI();
             }
         }
+        
         private void RefreshUI()
         {
             if (Player.Instance == null || Player.Instance.Equipment == null)
@@ -60,6 +64,7 @@ namespace OceanGame
                 _placeholderGhostIcon.enabled = !hasItem;
             }
         }
+        
         public void OnPointerClick(PointerEventData eventData)
         {
             if (Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
