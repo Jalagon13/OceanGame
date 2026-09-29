@@ -59,6 +59,7 @@ namespace OceanGame
         {
             if (slot == null) return;
             if (CursorSlot.IsEmpty && slot.IsEmpty) return;
+            
             if (CursorSlot.IsEmpty)
             {
                 CursorSlot = slot.Clone();
@@ -82,13 +83,16 @@ namespace OceanGame
                 slot.AssignItem(CursorSlot.ItemId, CursorSlot.CurrentAmount);
                 CursorSlot.AssignItem(tempId, tempAmount);
             }
+            
             onSlotModified?.Invoke();
             InventoryManager.Instance.RefreshInventory();
         }
+        
         public void HandleSlotRightClick(InventorySlot slot, Action onSlotModified = null)
         {
             if (slot == null) return;
             if (CursorSlot.IsEmpty && slot.IsEmpty) return;
+            
             if (CursorSlot.IsEmpty)
             {
                 int cursorAmount = Mathf.CeilToInt(slot.CurrentAmount * 0.5f);
@@ -105,6 +109,7 @@ namespace OceanGame
                 slot.AddToCurrentAmount(1);
                 CursorSlot.RemoveFromCurrentAmount(1);
             }
+            
             onSlotModified?.Invoke();
             InventoryManager.Instance.RefreshInventory();
         }
@@ -194,9 +199,12 @@ namespace OceanGame
         public void HandleArmorSlotLeftClick(ArmorType armorType)
         {
             if (Player.Instance == null || Player.Instance.Equipment == null) return;
+            
             var equipSlot = Player.Instance.Equipment.GetArmorSlot(armorType);
             if (equipSlot == null) return;
+            
             if (CursorSlot.IsEmpty && equipSlot.IsEmpty) return;
+            
             if (CursorSlot.IsEmpty)
             {
                 // Unequip armor to cursor
@@ -209,8 +217,10 @@ namespace OceanGame
                 // Equip from cursor if type matches
                 ItemSO cursorItem = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
                 if (cursorItem is not ArmorItemSO armorSO || armorSO.ArmorPieceType != armorType) return;
+                
                 ushort itemIdToEquip = CursorSlot.ItemId;
                 CursorSlot.RemoveFromCurrentAmount(1);
+                
                 Player.Instance.Equipment.EquipArmor(armorType, itemIdToEquip);
             }
             else
@@ -218,10 +228,12 @@ namespace OceanGame
                 // Swap currently equipped armor with cursor item
                 ItemSO cursorItem = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
                 if (cursorItem is not ArmorItemSO armorSO || armorSO.ArmorPieceType != armorType) return;
+                
                 if (CursorSlot.CurrentAmount == 1)
                 {
                     ushort oldEquippedId = equipSlot.ItemId;
                     ushort newEquippedId = CursorSlot.ItemId;
+                    
                     CursorSlot.AssignItem(oldEquippedId, 1);
                     Player.Instance.Equipment.EquipArmor(armorType, newEquippedId);
                 }
