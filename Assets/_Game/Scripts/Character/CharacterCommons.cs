@@ -80,8 +80,16 @@ namespace OceanGame
         Pants
     }
 
-    [System.Serializable]
+    [Serializable]
     public struct ArmorStatModifier
+    {
+        public StatType TargetStat;
+        public StatModifierType ModifierType;
+        public float Value;
+    }
+
+    [Serializable]
+    public struct AccessoryStatModifier
     {
         public StatType TargetStat;
         public StatModifierType ModifierType;

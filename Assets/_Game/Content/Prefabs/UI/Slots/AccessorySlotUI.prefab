@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4470502142356049068
+--- !u!1 &413445799862433671
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1137089510343936589}
-  - component: {fileID: 8712407575968360218}
-  - component: {fileID: 141055422907899577}
+  - component: {fileID: 6407984189452872612}
+  - component: {fileID: 4152821268295029004}
+  - component: {fileID: 6155398461765253643}
   m_Layer: 5
   m_Name: GhostIcon
   m_TagString: Untagged
@@ -18,13 +18,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1137089510343936589
+--- !u!224 &6407984189452872612
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4470502142356049068}
+  m_GameObject: {fileID: 413445799862433671}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -37,21 +37,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 35, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &8712407575968360218
+--- !u!222 &4152821268295029004
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4470502142356049068}
+  m_GameObject: {fileID: 413445799862433671}
   m_CullTransparentMesh: 1
---- !u!114 &141055422907899577
+--- !u!114 &6155398461765253643
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4470502142356049068}
+  m_GameObject: {fileID: 413445799862433671}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -8517782184993726709, guid: 38dfef1188c9d472f8fbfab414a92717, type: 3}
+  m_Sprite: {fileID: -8441561919149524748, guid: 38dfef1188c9d472f8fbfab414a92717, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -169,7 +169,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6208680448429095837, guid: 356360d28944b4f9692f3f2d3753f9c3, type: 3}
       propertyPath: m_Name
-      value: OxygenTankSlotUI
+      value: AccessorySlotUI
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3174087706022003324, guid: 356360d28944b4f9692f3f2d3753f9c3, type: 3}
@@ -178,18 +178,18 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5774251868741017237, guid: 356360d28944b4f9692f3f2d3753f9c3, type: 3}
       insertIndex: 1
-      addedObject: {fileID: 1137089510343936589}
+      addedObject: {fileID: 6407984189452872612}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6208680448429095837, guid: 356360d28944b4f9692f3f2d3753f9c3, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -5415558947161420300}
+      addedObject: {fileID: -8558934205430113096}
   m_SourcePrefab: {fileID: 100100000, guid: 356360d28944b4f9692f3f2d3753f9c3, type: 3}
 --- !u!1 &1300865306261324413 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6208680448429095837, guid: 356360d28944b4f9692f3f2d3753f9c3, type: 3}
   m_PrefabInstance: {fileID: 4910106546422249952}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &-5415558947161420300
+--- !u!114 &-8558934205430113096
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -198,10 +198,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1300865306261324413}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cccc2dcf199614fb7ba22adbc23370bc, type: 3}
+  m_Script: {fileID: 11500000, guid: 455243cf6957f4fcb9b59cdda08f88a4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.OxygenTankSlotUI
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.AccessorySlotUI
   _itemIcon: {fileID: 7589899406316595016}
+  _placeholderGhostIcon: {fileID: 6155398461765253643}
 --- !u!224 &1442964531627222901 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5774251868741017237, guid: 356360d28944b4f9692f3f2d3753f9c3, type: 3}

@@ -234,6 +234,68 @@ namespace OceanGame
             HandleArmorSlotLeftClick(armorType);
         }
 
+        public void HandleAccessorySlotLeftClick(int slotIndex)
+        {
+            if (Player.Instance == null || Player.Instance.Equipment == null) return;
+            
+            var equipSlot = Player.Instance.Equipment.GetAccessorySlot(slotIndex);
+            if (equipSlot == null) return;
+            
+            if (CursorSlot.IsEmpty && equipSlot.IsEmpty) return;
+            
+            if (CursorSlot.IsEmpty)
+            {
+                // Unequip accessory to cursor
+                ushort unequippedItemId = equipSlot.ItemId;
+                CursorSlot.AssignItem(unequippedItemId, 1);
+                Player.Instance.Equipment.UnequipAccessory(slotIndex);
+            }
+            else if (equipSlot.IsEmpty)
+            {
+                // Validate cursor item is an AccessoryItemSO
+                ItemSO cursorItem = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
+                if (cursorItem is not AccessoryItemSO) return;
+                
+                // Terraria Rule: Prevent duplicate accessories
+                if (Player.Instance.Equipment.IsAccessoryEquipped(CursorSlot.ItemId, ignoreIndex: slotIndex))
+                {
+                    // Debug.LogWarning("Cannot equip duplicate accessories!");
+                    return;
+                }
+                
+                ushort itemIdToEquip = CursorSlot.ItemId;
+                CursorSlot.RemoveFromCurrentAmount(1);
+                
+                Player.Instance.Equipment.EquipAccessory(slotIndex, itemIdToEquip);
+            }
+            else
+            {
+                // Swap currently equipped accessory with cursor item
+                ItemSO cursorItem = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
+                if (cursorItem is not AccessoryItemSO) return;
+                
+                if (Player.Instance.Equipment.IsAccessoryEquipped(CursorSlot.ItemId, ignoreIndex: slotIndex))
+                {
+                    // Debug.LogWarning("Cannot equip duplicate accessories!");
+                    return;
+                }
+                
+                if (CursorSlot.CurrentAmount == 1)
+                {
+                    ushort oldEquippedId = equipSlot.ItemId;
+                    ushort newEquippedId = CursorSlot.ItemId;
+                    
+                    CursorSlot.AssignItem(oldEquippedId, 1);
+                    Player.Instance.Equipment.EquipAccessory(slotIndex, newEquippedId);
+                }
+            }
+        }
+        
+        public void HandleAccessorySlotRightClick(int slotIndex)
+        {
+            HandleAccessorySlotLeftClick(slotIndex);
+        }
+
         private int MoveAmount(InventorySlot source, InventorySlot target, int maxTargetAmount, int requestedAmount = int.MaxValue)
         {
             if (source == null || target == null || source.IsEmpty || target.IsEmpty)

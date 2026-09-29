@@ -8,15 +8,118 @@ namespace OceanGame
     {
         public event Action OnEquipmentChanged;
 
+        // Oxygen
         public InventorySlot EquippedOxygenTank { get; private set; } = new();
         public OxygenTankItemSO CurrentOxygenTank => EquippedOxygenTank.IsEmpty ? null : GameDataRegistry.Instance.GetItemSOFromItemId(EquippedOxygenTank.ItemId) as OxygenTankItemSO;
         public Buff InAirOxygenBuff { get; private set; }
         public Buff InWaterOxygenBuff { get; private set; }
 
+        // Armor
         public InventorySlot EquippedHelmet { get; private set; } = new();
         public InventorySlot EquippedChestplate { get; private set; } = new();
         public InventorySlot EquippedPants { get; private set; } = new();
         private readonly Dictionary<ArmorType, StatModifier> _appliedDefenseModifiers = new(); // Cache applied defense modifiers so they can be removed cleanly
+
+        // Accessories
+        public List<InventorySlot> EquippedAccessories { get; private set; } = new(); // Dynamic list of accessory slots that automatically expands
+        private readonly Dictionary<int, List<(StatType stat, StatModifier mod)>> _appliedAccessoryModifiers = new(); // Tracks active stat modifiers per slot index so they can be cleanly removed
+
+        public InventorySlot GetAccessorySlot(int index)
+        {
+            EnsureAccessorySlotCount(index + 1);
+            return EquippedAccessories[index];
+        }
+
+        public void EnsureAccessorySlotCount(int count)
+        {
+            while (EquippedAccessories.Count < count)
+            {
+                EquippedAccessories.Add(new InventorySlot());
+            }
+        }
+        
+        public AccessoryItemSO GetEquippedAccessorySO(int index)
+        {
+            var slot = GetAccessorySlot(index);
+            if (slot == null || slot.IsEmpty) return null;
+            return GameDataRegistry.Instance.GetItemSOFromItemId(slot.ItemId) as AccessoryItemSO;
+        }
+        
+        public bool IsAccessoryEquipped(ushort itemId, int ignoreIndex = -1)
+        {
+            for (int i = 0; i < EquippedAccessories.Count; i++)
+            {
+                if (i == ignoreIndex) continue;
+                if (!EquippedAccessories[i].IsEmpty && EquippedAccessories[i].ItemId == itemId)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        public void EquipAccessory(int index, ushort itemId)
+        {
+            EnsureAccessorySlotCount(index + 1);
+            UnequipAccessory(index, refresh: false);
+            
+            var slot = EquippedAccessories[index];
+            slot.AssignItem(itemId, 1);
+            var accessorySO = GetEquippedAccessorySO(index);
+            
+            if (accessorySO != null && Player.Instance.Character != null)
+            {
+                // Apply configured stat boosts to CharacterStats
+                var appliedList = new List<(StatType, StatModifier)>();
+                
+                foreach (var bonus in accessorySO.StatModifiers)
+                {
+                    var stat = Player.Instance.Character.Stats.GetStat(bonus.TargetStat);
+                    var mod = new StatModifier(bonus.ModifierType, bonus.Value);
+                    stat.AddModifier(mod);
+                    appliedList.Add((bonus.TargetStat, mod));
+                }
+                
+                _appliedAccessoryModifiers[index] = appliedList;
+                
+                // Trigger special ability lifecycle hook
+                accessorySO.OnEquip(Player.Instance.Character);
+            }
+            RefreshEquipment();
+        }
+        
+        public void UnequipAccessory(int index, bool refresh = true)
+        {
+            if (index < 0 || index >= EquippedAccessories.Count) return;
+            
+            var slot = EquippedAccessories[index];
+            if (slot.IsEmpty) return;
+            
+            var accessorySO = GetEquippedAccessorySO(index);
+            
+            if (accessorySO != null && Player.Instance.Character != null)
+            {
+                // Remove tracked stat boosts
+                if (_appliedAccessoryModifiers.TryGetValue(index, out var appliedList))
+                {
+                    foreach (var (targetStat, mod) in appliedList)
+                    {
+                        Player.Instance.Character.Stats.GetStat(targetStat).RemoveModifier(mod);
+                    }
+                    _appliedAccessoryModifiers.Remove(index);
+                }
+                
+                // Trigger special ability cleanup hook
+                accessorySO.OnUnequip(Player.Instance.Character);
+            }
+            
+            slot.Clear();
+            
+            if (refresh)
+            {
+                RefreshEquipment();
+            }
+        }
 
         public ArmorItemSO GetEquippedArmorSO(ArmorType type)
         {
