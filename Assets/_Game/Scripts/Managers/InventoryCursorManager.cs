@@ -191,6 +191,49 @@ namespace OceanGame
             }
         }
 
+        public void HandleArmorSlotLeftClick(ArmorType armorType)
+        {
+            if (Player.Instance == null || Player.Instance.Equipment == null) return;
+            var equipSlot = Player.Instance.Equipment.GetArmorSlot(armorType);
+            if (equipSlot == null) return;
+            if (CursorSlot.IsEmpty && equipSlot.IsEmpty) return;
+            if (CursorSlot.IsEmpty)
+            {
+                // Unequip armor to cursor
+                ushort unequippedItemId = equipSlot.ItemId;
+                CursorSlot.AssignItem(unequippedItemId, 1);
+                Player.Instance.Equipment.UnequipArmor(armorType);
+            }
+            else if (equipSlot.IsEmpty)
+            {
+                // Equip from cursor if type matches
+                ItemSO cursorItem = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
+                if (cursorItem is not ArmorItemSO armorSO || armorSO.ArmorPieceType != armorType) return;
+                ushort itemIdToEquip = CursorSlot.ItemId;
+                CursorSlot.RemoveFromCurrentAmount(1);
+                Player.Instance.Equipment.EquipArmor(armorType, itemIdToEquip);
+            }
+            else
+            {
+                // Swap currently equipped armor with cursor item
+                ItemSO cursorItem = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
+                if (cursorItem is not ArmorItemSO armorSO || armorSO.ArmorPieceType != armorType) return;
+                if (CursorSlot.CurrentAmount == 1)
+                {
+                    ushort oldEquippedId = equipSlot.ItemId;
+                    ushort newEquippedId = CursorSlot.ItemId;
+                    CursorSlot.AssignItem(oldEquippedId, 1);
+                    Player.Instance.Equipment.EquipArmor(armorType, newEquippedId);
+                }
+            }
+        }
+
+        public void HandleArmorSlotRightClick(ArmorType armorType)
+        {
+            // Right click in Terraria or slot can quickly unequip to cursor or inventory
+            HandleArmorSlotLeftClick(armorType);
+        }
+
         private int MoveAmount(InventorySlot source, InventorySlot target, int maxTargetAmount, int requestedAmount = int.MaxValue)
         {
             if (source == null || target == null || source.IsEmpty || target.IsEmpty)

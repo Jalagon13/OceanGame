@@ -72,4 +72,19 @@ namespace OceanGame
         BranchRight = 3, // Trunk with branch to the right
         Top = 4, // Top trunk block that holds the canopy
     }
+
+    public enum ArmorType
+    {
+        Helmet,
+        Chestplate,
+        Pants
+    }
+
+    [System.Serializable]
+    public struct ArmorStatModifier
+    {
+        public StatType TargetStat;
+        public StatModifierType ModifierType;
+        public float Value;
+    }
 }
