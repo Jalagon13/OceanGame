@@ -54,6 +54,96 @@ namespace OceanGame
             InventoryManager.Instance.RefreshInventory();
         }
 
+        // Oxygen Tank
+        public void HandleOxygenTankSlotLeftClick()
+        {
+            var equip = Player.Instance.Equipment;
+            
+            HandleGenericEquipmentSlotClick(
+                equip.EquippedOxygenTank,
+                item => item is OxygenTankItemSO,
+                itemId => equip.EquipOxygenTank(itemId),
+                () => equip.UnequipOxygenTank()
+            );
+        }
+
+        public void HandleOxygenTankSlotRightClick()
+        {
+            if (Player.Instance == null || Player.Instance.Equipment == null) return;
+
+            InventorySlot equipSlot = Player.Instance.Equipment.EquippedOxygenTank;
+
+            if (equipSlot == null) return;
+            if (CursorSlot.IsEmpty && equipSlot.IsEmpty) return;
+
+            if (CursorSlot.IsEmpty)
+            {
+                ushort unequippedItemId = equipSlot.ItemId;
+                CursorSlot.AssignItem(unequippedItemId, 1);
+                Player.Instance.Equipment.UnequipOxygenTank();
+            }
+            else if (equipSlot.IsEmpty)
+            {
+                ItemSO itemSO = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
+                if (itemSO is not OxygenTankItemSO) return;
+
+                ushort itemIdToEquip = CursorSlot.ItemId;
+                CursorSlot.RemoveFromCurrentAmount(1);
+                Player.Instance.Equipment.EquipOxygenTank(itemIdToEquip);
+            }
+            else
+            {
+                ItemSO cursorItemSO = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
+                if (cursorItemSO is not OxygenTankItemSO) return;
+
+                if (CursorSlot.CurrentAmount == 1)
+                {
+                    ushort oldEquippedItemId = equipSlot.ItemId;
+                    ushort newEquippedItemId = CursorSlot.ItemId;
+
+                    CursorSlot.AssignItem(oldEquippedItemId, 1);
+                    Player.Instance.Equipment.EquipOxygenTank(newEquippedItemId);
+                }
+            }
+        }
+
+        // Armor (Helmet, Chest, Pants)
+        public void HandleArmorSlotLeftClick(ArmorType armorType)
+        {
+            var equip = Player.Instance.Equipment;
+            
+            HandleGenericEquipmentSlotClick(
+                equip.GetArmorSlot(armorType),
+                item => item is ArmorItemSO armor && armor.ArmorPieceType == armorType,
+                itemId => equip.EquipArmor(armorType, itemId),
+                () => equip.UnequipArmor(armorType)
+            );
+        }
+
+        public void HandleArmorSlotRightClick(ArmorType armorType)
+        {
+            // Right click in Terraria or slot can quickly unequip to cursor or inventory
+            HandleArmorSlotLeftClick(armorType);
+        }
+
+        // Accessories
+        public void HandleAccessorySlotLeftClick(int slotIndex)
+        {
+            var equip = Player.Instance.Equipment;
+            
+            HandleGenericEquipmentSlotClick(
+                equip.GetAccessorySlot(slotIndex),
+                item => item is AccessoryItemSO && !equip.IsAccessoryEquipped(item.GetId(), ignoreIndex: slotIndex),
+                itemId => equip.EquipAccessory(slotIndex, itemId),
+                () => equip.UnequipAccessory(slotIndex)
+            );
+        }
+
+        public void HandleAccessorySlotRightClick(int slotIndex)
+        {
+            HandleAccessorySlotLeftClick(slotIndex);
+        }
+
         // Generic slot handlers that work for Player, Chest, or any container
         public void HandleSlotLeftClick(InventorySlot slot, Action onSlotModified = null)
         {
@@ -114,198 +204,43 @@ namespace OceanGame
             InventoryManager.Instance.RefreshInventory();
         }
 
-        public void HandleOxygenTankSlotLeftClick()
+        private void HandleGenericEquipmentSlotClick(InventorySlot equipSlot, Func<ItemSO, bool> canEquipValidator, Action<ushort> onEquip, Action onUnequip)
         {
-            if (Player.Instance == null || Player.Instance.Equipment == null) return;
-
-            InventorySlot equipSlot = Player.Instance.Equipment.EquippedOxygenTank;
-            
-            if (equipSlot == null) return;
+            if (Player.Instance == null || Player.Instance.Equipment == null || equipSlot == null) return;
             if (CursorSlot.IsEmpty && equipSlot.IsEmpty) return;
 
             if (CursorSlot.IsEmpty)
             {
+                // Unequip to cursor
                 ushort unequippedItemId = equipSlot.ItemId;
                 CursorSlot.AssignItem(unequippedItemId, 1);
-                Player.Instance.Equipment.UnequipOxygenTank();
+                onUnequip?.Invoke();
             }
             else if (equipSlot.IsEmpty)
             {
-                ItemSO itemSO = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
-                
-                if (itemSO is not OxygenTankItemSO) return;
-                
-                ushort itemIdToEquip = CursorSlot.ItemId;
-                CursorSlot.RemoveFromCurrentAmount(1);
-                Player.Instance.Equipment.EquipOxygenTank(itemIdToEquip);
-            }
-            else
-            {
-                ItemSO cursorItemSO = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
-                
-                if (cursorItemSO is not OxygenTankItemSO) return;
-                
-                if (CursorSlot.CurrentAmount == 1)
-                {
-                    ushort oldEquippedItemId = equipSlot.ItemId;
-                    ushort newEquippedItemId = CursorSlot.ItemId;
-
-                    CursorSlot.AssignItem(oldEquippedItemId, 1);
-                    Player.Instance.Equipment.EquipOxygenTank(newEquippedItemId);
-                }
-            }
-        }
-
-        public void HandleOxygenTankSlotRightClick()
-        {
-            if (Player.Instance == null || Player.Instance.Equipment == null) return;
-
-            InventorySlot equipSlot = Player.Instance.Equipment.EquippedOxygenTank;
-            
-            if (equipSlot == null) return;
-            if (CursorSlot.IsEmpty && equipSlot.IsEmpty) return;
-
-            if (CursorSlot.IsEmpty)
-            {
-                ushort unequippedItemId = equipSlot.ItemId;
-                CursorSlot.AssignItem(unequippedItemId, 1);
-                Player.Instance.Equipment.UnequipOxygenTank();
-            }
-            else if (equipSlot.IsEmpty)
-            {
-                ItemSO itemSO = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
-                if (itemSO is not OxygenTankItemSO) return;
-
-                ushort itemIdToEquip = CursorSlot.ItemId;
-                CursorSlot.RemoveFromCurrentAmount(1);
-                Player.Instance.Equipment.EquipOxygenTank(itemIdToEquip);
-            }
-            else
-            {
-                ItemSO cursorItemSO = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
-                if (cursorItemSO is not OxygenTankItemSO) return;
-
-                if (CursorSlot.CurrentAmount == 1)
-                {
-                    ushort oldEquippedItemId = equipSlot.ItemId;
-                    ushort newEquippedItemId = CursorSlot.ItemId;
-
-                    CursorSlot.AssignItem(oldEquippedItemId, 1);
-                    Player.Instance.Equipment.EquipOxygenTank(newEquippedItemId);
-                }
-            }
-        }
-
-        public void HandleArmorSlotLeftClick(ArmorType armorType)
-        {
-            if (Player.Instance == null || Player.Instance.Equipment == null) return;
-            
-            var equipSlot = Player.Instance.Equipment.GetArmorSlot(armorType);
-            if (equipSlot == null) return;
-            
-            if (CursorSlot.IsEmpty && equipSlot.IsEmpty) return;
-            
-            if (CursorSlot.IsEmpty)
-            {
-                // Unequip armor to cursor
-                ushort unequippedItemId = equipSlot.ItemId;
-                CursorSlot.AssignItem(unequippedItemId, 1);
-                Player.Instance.Equipment.UnequipArmor(armorType);
-            }
-            else if (equipSlot.IsEmpty)
-            {
-                // Equip from cursor if type matches
+                // Equip from cursor
                 ItemSO cursorItem = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
-                if (cursorItem is not ArmorItemSO armorSO || armorSO.ArmorPieceType != armorType) return;
-                
+                if (canEquipValidator != null && !canEquipValidator(cursorItem)) return;
+
                 ushort itemIdToEquip = CursorSlot.ItemId;
                 CursorSlot.RemoveFromCurrentAmount(1);
-                
-                Player.Instance.Equipment.EquipArmor(armorType, itemIdToEquip);
+                onEquip?.Invoke(itemIdToEquip);
             }
             else
             {
-                // Swap currently equipped armor with cursor item
+                // Swap cursor item with equipped item
                 ItemSO cursorItem = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
-                if (cursorItem is not ArmorItemSO armorSO || armorSO.ArmorPieceType != armorType) return;
-                
+                if (canEquipValidator != null && !canEquipValidator(cursorItem)) return;
+
                 if (CursorSlot.CurrentAmount == 1)
                 {
                     ushort oldEquippedId = equipSlot.ItemId;
                     ushort newEquippedId = CursorSlot.ItemId;
-                    
-                    CursorSlot.AssignItem(oldEquippedId, 1);
-                    Player.Instance.Equipment.EquipArmor(armorType, newEquippedId);
-                }
-            }
-        }
 
-        public void HandleArmorSlotRightClick(ArmorType armorType)
-        {
-            // Right click in Terraria or slot can quickly unequip to cursor or inventory
-            HandleArmorSlotLeftClick(armorType);
-        }
-
-        public void HandleAccessorySlotLeftClick(int slotIndex)
-        {
-            if (Player.Instance == null || Player.Instance.Equipment == null) return;
-            
-            var equipSlot = Player.Instance.Equipment.GetAccessorySlot(slotIndex);
-            if (equipSlot == null) return;
-            
-            if (CursorSlot.IsEmpty && equipSlot.IsEmpty) return;
-            
-            if (CursorSlot.IsEmpty)
-            {
-                // Unequip accessory to cursor
-                ushort unequippedItemId = equipSlot.ItemId;
-                CursorSlot.AssignItem(unequippedItemId, 1);
-                Player.Instance.Equipment.UnequipAccessory(slotIndex);
-            }
-            else if (equipSlot.IsEmpty)
-            {
-                // Validate cursor item is an AccessoryItemSO
-                ItemSO cursorItem = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
-                if (cursorItem is not AccessoryItemSO) return;
-                
-                // Terraria Rule: Prevent duplicate accessories
-                if (Player.Instance.Equipment.IsAccessoryEquipped(CursorSlot.ItemId, ignoreIndex: slotIndex))
-                {
-                    // Debug.LogWarning("Cannot equip duplicate accessories!");
-                    return;
-                }
-                
-                ushort itemIdToEquip = CursorSlot.ItemId;
-                CursorSlot.RemoveFromCurrentAmount(1);
-                
-                Player.Instance.Equipment.EquipAccessory(slotIndex, itemIdToEquip);
-            }
-            else
-            {
-                // Swap currently equipped accessory with cursor item
-                ItemSO cursorItem = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
-                if (cursorItem is not AccessoryItemSO) return;
-                
-                if (Player.Instance.Equipment.IsAccessoryEquipped(CursorSlot.ItemId, ignoreIndex: slotIndex))
-                {
-                    // Debug.LogWarning("Cannot equip duplicate accessories!");
-                    return;
-                }
-                
-                if (CursorSlot.CurrentAmount == 1)
-                {
-                    ushort oldEquippedId = equipSlot.ItemId;
-                    ushort newEquippedId = CursorSlot.ItemId;
-                    
                     CursorSlot.AssignItem(oldEquippedId, 1);
-                    Player.Instance.Equipment.EquipAccessory(slotIndex, newEquippedId);
+                    onEquip?.Invoke(newEquippedId);
                 }
             }
-        }
-        
-        public void HandleAccessorySlotRightClick(int slotIndex)
-        {
-            HandleAccessorySlotLeftClick(slotIndex);
         }
 
         private int MoveAmount(InventorySlot source, InventorySlot target, int maxTargetAmount, int requestedAmount = int.MaxValue)
