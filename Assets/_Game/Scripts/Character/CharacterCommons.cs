@@ -95,4 +95,11 @@ namespace OceanGame
         public StatModifierType ModifierType;
         public float Value;
     }
+
+    public enum ProjectileFaction
+    {
+        Friendly, // Damages enemies / hostile NPCs
+        Hostile, // Damages players / friendly NPCs
+        Neutral // Damages all or none (environmental hazard)
+    }
 }
