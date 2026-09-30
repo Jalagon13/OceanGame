@@ -80,7 +80,7 @@ namespace OceanGame
             }
 
             // Custom trajectory & velocity modification hook (gravity, homing, drag)
-            UpdateBehavior(fixedDeltaTime);
+            OnUpdateBehavior(fixedDeltaTime);
 
             // Move and resolve tile collisions via Entity base (GridPhysics.MoveAndResolve)
             base.FixedTick(fixedDeltaTime);
@@ -208,7 +208,7 @@ namespace OceanGame
         protected virtual void OnInit() { }
 
         // Modify Velocity here every fixed frame (apply gravity, drag, homing, or acceleration).
-        protected virtual void UpdateBehavior(float fixedDeltaTime) { }
+        protected virtual void OnUpdateBehavior(float fixedDeltaTime) { }
 
         // Called when the projectile contacts a solid tile. By default, it destroys the projectile.
         protected virtual void OnTileCollide(GridPhysics.CollisionResult collision)
