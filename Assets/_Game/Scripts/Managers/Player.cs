@@ -40,6 +40,7 @@ namespace OceanGame
         public float SwimDashCooldownTimer { get; set; }
         public Vector2 RespawnPoint { get; private set; }
         public PlayerArmHandler ArmHandler { get; private set; }
+        public PlayerRangedHandler RangedHandler { get; private set; }
         public ServerCharacter Character { get; private set; }
         public PlayerEquipment Equipment { get; private set; }
         
@@ -96,6 +97,7 @@ namespace OceanGame
 
             Equipment = Character.GetComponent<PlayerEquipment>();
             ArmHandler = Character.GetComponent<PlayerArmHandler>();
+            RangedHandler = Character.GetComponent<PlayerRangedHandler>();
 
             PlayerReady?.Invoke(Character);
         }

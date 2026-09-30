@@ -8,7 +8,7 @@ namespace OceanGame
         public static Projectile SpawnProjectile(
             ProjectileSO projectileSO,
             Vector2 position,
-            Vector2 velocity,
+            Vector2 initialVelocity,
             Entity sourceEntity = null,
             int? damageOverride = null,
             int? knockbackOverride = null,
@@ -33,7 +33,7 @@ namespace OceanGame
             // Initialize stats (SO defaults + optional weapon overrides)
             projectile.Initialize(
                 so: projectileSO,
-                initialVelocity: velocity,
+                initialVelocity: initialVelocity,
                 source: sourceEntity,
                 damage: damageOverride ?? projectileSO.BaseDamage,
                 knockback: knockbackOverride ?? projectileSO.BaseKnockbackForce,
@@ -48,7 +48,7 @@ namespace OceanGame
                     netObj.Spawn(destroyWithScene: true);
                 }
             }
-
+            
             return projectile;
         }
 

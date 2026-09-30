@@ -111,6 +111,12 @@ namespace OceanGame
             OnPlayerInventoryChanged?.Invoke();
             return amount;
         }
+        
+        public bool RemoveItem(ItemSO item, int amount)
+        {
+            var id = item.GetId();
+            return RemoveItem(id, amount);
+        }
 
         public bool RemoveItem(int itemId, int amount)
         {
@@ -143,6 +149,12 @@ namespace OceanGame
             }
             OnPlayerInventoryChanged?.Invoke();
             return true;
+        }
+        
+        public int GetTotalItemCount(ItemSO item)
+        {
+            var id = item.GetId();
+            return GetTotalItemCount(id);
         }
 
         public int GetTotalItemCount(int itemId)

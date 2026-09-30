@@ -20,6 +20,7 @@ namespace OceanGame
 
         [Header("Debug Testing")]
         [SerializeField] private TreeTileConfigSO _debugTreeConfig;
+        [SerializeField] private ProjectileSO _testProjectile;
 
         public enum LayerType { Foreground, Background }
         public FluidGrid FluidGrid { get; private set; }
@@ -56,6 +57,12 @@ namespace OceanGame
 
             MouseWorldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             MouseWorldTilePosition = new(Mathf.FloorToInt(MouseWorldPosition.x), Mathf.FloorToInt(MouseWorldPosition.y));
+
+            if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
+            {
+                ProjectileManager.SpawnProjectile(_testProjectile, Player.Instance.Character.transform.position, Vector2.right, sourceEntity: Player.Instance.Character);
+            }
+            
         }
 
         private void ToggleBuildLayer()

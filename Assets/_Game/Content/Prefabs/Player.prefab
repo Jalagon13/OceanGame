@@ -81,6 +81,7 @@ GameObject:
   - component: {fileID: 8488650257111462904}
   - component: {fileID: 4397858196725711225}
   - component: {fileID: 1260414927922091770}
+  - component: {fileID: 8607429953159819184}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -275,6 +276,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b497c61b08fb40989d30081c8a7b051, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.PlayerEquipment
+--- !u!114 &8607429953159819184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2708704097900981217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14559271611c64fed924242256413626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.PlayerRangedHandler
 --- !u!1 &5752291961946935962
 GameObject:
   m_ObjectHideFlags: 0

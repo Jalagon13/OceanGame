@@ -2361,6 +2361,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4fcd6e93ddb604f51af1026081d52a6b, type: 2}
   - {fileID: 11400000, guid: 2fe402dcdc528422c85d317219eef80d, type: 2}
   - {fileID: 11400000, guid: e16036ede1b4c4592ba3ee0d12ce338a, type: 2}
+  - {fileID: 11400000, guid: e7abd829c61264bd08d0508539b98356, type: 2}
+  - {fileID: 11400000, guid: dbcbcd20bffa749e2920a1db8a6a1792, type: 2}
 --- !u!114 &970924661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2752,18 +2754,10 @@ MonoBehaviour:
   _startingItems:
   - _ingredient: {fileID: 11400000, guid: ba4a4e198c8a8407c86c4c4ae28df49a, type: 2}
     _amount: 1
-  - _ingredient: {fileID: 11400000, guid: 8546a0373cc304100bf54c76c1fc19b5, type: 2}
-    _amount: 12
-  - _ingredient: {fileID: 11400000, guid: d86b50bd74a1a43efbc5d95c02f509e0, type: 2}
+  - _ingredient: {fileID: 11400000, guid: e7abd829c61264bd08d0508539b98356, type: 2}
     _amount: 1
-  - _ingredient: {fileID: 11400000, guid: 3ccefb67db54445738c227c18048a98a, type: 2}
-    _amount: 1
-  - _ingredient: {fileID: 11400000, guid: 4fcd6e93ddb604f51af1026081d52a6b, type: 2}
-    _amount: 1
-  - _ingredient: {fileID: 11400000, guid: 2fe402dcdc528422c85d317219eef80d, type: 2}
-    _amount: 2
-  - _ingredient: {fileID: 11400000, guid: e16036ede1b4c4592ba3ee0d12ce338a, type: 2}
-    _amount: 2
+  - _ingredient: {fileID: 11400000, guid: dbcbcd20bffa749e2920a1db8a6a1792, type: 2}
+    _amount: 31
 --- !u!114 &1178486984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4915,6 +4909,7 @@ MonoBehaviour:
   _foregroundTilemap: {fileID: 1420173610}
   _backgroundTilemap: {fileID: 1608990557}
   _debugTreeConfig: {fileID: 11400000, guid: 4f515916d235640d480d2b10b7f502af, type: 2}
+  _testProjectile: {fileID: 11400000, guid: b5e08a065994447879f5911de6519ca2, type: 2}
 --- !u!114 &2043979315
 MonoBehaviour:
   m_ObjectHideFlags: 0
