@@ -85,8 +85,18 @@ namespace OceanGame
             
             if (tileData.HasTile)
             {
+                TileConfigSO tileConfig = tileData.TileConfig;
+                if (tileConfig == null) return false;
+
+                // If the tile requires a specific tool, verify the equipped tool matches
+                if (tileConfig.RequiredHarvestType != HarvestType.None && tool.HarvestType != tileConfig.RequiredHarvestType)
+                {
+                    return false; // Incompatible tool (e.g. pickaxe hitting tree, axe hitting stone)
+                }
+
                 WorldManager.Instance.DamageTile(mouseTilePos, tool.MiningDamage, targetLayer, refreshCurrentBounds: true);
                 
+                // Set interval
                 float interval = tool.MineTicksPerSecond > 0f ? 1f / tool.MineTicksPerSecond : 0.25f;
                 _nextMineTime = Time.time + interval;
                 

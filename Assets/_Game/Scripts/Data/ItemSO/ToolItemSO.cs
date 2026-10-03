@@ -6,15 +6,16 @@ namespace OceanGame
     public class ToolItemSO : ItemSO
     {
         [field: Header("Tool Settings")]
+        [field: SerializeField] public HarvestType HarvestType { get; private set; } = HarvestType.None;
         [field: SerializeField] public int MiningDamage { get; private set; } = 15;
         [field: SerializeField] public float MineTicksPerSecond { get; private set; } = 4;
         [field: SerializeField] public WorldManager.LayerType TargetLayer { get; private set; } = WorldManager.LayerType.Foreground;
 
         [Header("Melee & Hitbox Settings")]
-        [SerializeField] public int MeleeDamage = 10;
-        [SerializeField] public int KnockbackForce = 15;
-        [SerializeField] public float HitboxOffset = 1.0f; // Distance from pivot to blade center
-        [SerializeField] public Vector2 HitboxSize = new Vector2(1.2f, 1.2f);
+        [field: SerializeField] public int MeleeDamage { get; private set; } = 10;
+        [field: SerializeField] public int KnockbackForce { get; private set; } = 15;
+        [field: SerializeField] public float HitboxOffset { get; private set; } = 1.0f; // Distance from pivot to blade center
+        [field: SerializeField] public Vector2 HitboxSize { get; private set; } = new Vector2(1.2f, 1.2f);
 
         [field: Header("Swing Settings")]
         [field: SerializeField] public int SwingArcAngle { get; private set; } = 120;
@@ -27,11 +28,13 @@ namespace OceanGame
             player.ArmHandler.StartPrimaryAction(this);
             MiningManager.Instance.StartMining(this);
         }
+        
         public override void OnPrimaryActionHeld(Player player)
         {
             player.ArmHandler.HoldPrimaryAction(this);
             MiningManager.Instance.TickMining(this);
         }
+        
         public override void OnPrimaryActionRelease(Player player)
         {
             player.ArmHandler.ReleasePrimaryAction(this);

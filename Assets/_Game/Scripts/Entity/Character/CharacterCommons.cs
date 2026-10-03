@@ -102,4 +102,11 @@ namespace OceanGame
         Hostile, // Damages players / friendly NPCs
         Neutral // Damages all or none (environmental hazard)
     }
+
+    public enum HarvestType
+    {
+        None = 0, // Can be mined by any tool (or bare hands / weapons: e.g. torches, vines, grass)
+        Pickaxe = 1, // Stone, ores, minerals, bricks
+        Axe = 2, // Trees, logs, wooden structures
+    }
 }

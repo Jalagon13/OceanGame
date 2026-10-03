@@ -2754,10 +2754,6 @@ MonoBehaviour:
   _startingItems:
   - _ingredient: {fileID: 11400000, guid: ba4a4e198c8a8407c86c4c4ae28df49a, type: 2}
     _amount: 1
-  - _ingredient: {fileID: 11400000, guid: e7abd829c61264bd08d0508539b98356, type: 2}
-    _amount: 1
-  - _ingredient: {fileID: 11400000, guid: dbcbcd20bffa749e2920a1db8a6a1792, type: 2}
-    _amount: 31
 --- !u!114 &1178486984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2860,8 +2856,8 @@ MonoBehaviour:
   <SwimmingBoxColliderSize>k__BackingField: {x: 0.75, y: 1.25}
   <SwimDashSpeed>k__BackingField: 15
   <SwimDashCooldown>k__BackingField: 3
-  <FromWaterJumpSpeed>k__BackingField: 10
-  <MinJumpSpeed>k__BackingField: 10
+  <FromWaterJumpSpeed>k__BackingField: 7
+  <MinJumpSpeed>k__BackingField: 7
   <MaxJumpHoldDuration>k__BackingField: 0.3
   <AirborneMoveSpeedMultiplier>k__BackingField: 0.65
   <JumpBufferDuration>k__BackingField: 0.15
