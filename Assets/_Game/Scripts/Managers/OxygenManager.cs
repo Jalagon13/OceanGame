@@ -15,10 +15,18 @@ namespace OceanGame
         [SerializeField] private float _airRefillDuration = 2.5f;
         
         [Tooltip("Oxygen consumed per second while underwater.")]
-        [SerializeField] private float _underwaterDrainRate = 1f; 
+        [SerializeField] private float _underwaterDrainRate = 1f;
 
-        [Header("Suffocation / DOT")]
-        [Tooltip("Damage dealt per tick when oxygen reaches 0.")]
+        [Header("Warning Threshold")]
+        [Tooltip("Percentage threshold (0 to 1) where low oxygen warning fires. Example: 0.25 = 25%.")]
+        [Range(0.05f, 0.5f)]
+        [SerializeField] private float _lowOxygenWarningPercentage = 0.25f;
+
+        [Header("Suffocation & Grace Period")]
+        [Tooltip("Grace period in seconds after oxygen reaches 0 before damage/suffocation begins.")]
+        [SerializeField] private float _suffocationGraceDuration = 3f;
+        
+        [Tooltip("Damage dealt per tick once the grace period expires.")]
         [SerializeField] private int _drowningDamage = 5;
         
         [Tooltip("Interval in seconds between drowning damage ticks.")]
@@ -27,32 +35,37 @@ namespace OceanGame
         [Tooltip("Debuff icon shown in BuffUI while suffocating.")]
         [SerializeField] private Sprite _drowningBuffIcon;
 
-        public event Action<float, float> OnOxygenChanged; // (current, max)
         public Stat MaxOxygen { get; private set; }
         public float CurrentOxygen { get; private set; }
+        public float OxygenPercentage => MaxOxygen != null && MaxOxygen.GetValue() > 0 ? CurrentOxygen / MaxOxygen.GetValue() : 0f;
+
+        // Events
+        public event Action<float, float> OnOxygenChanged; // (current, max)
+        public event Action OnOxygenLowWarning; // Triggered once when dropping below warning threshold
+        public event Action OnOxygenRefilled; // Triggered when oxygen recovers above warning threshold (to hide UI warnings)
 
         private Buff _drowningBuff;
         private StatModifier _currentTankModifier;
-        private float _drowningTimer;
-        private bool _isDrowning; // Maybe make a property of this
+        private float _drowningDamageTimer;
+        private float _graceTimer;
+        private bool _isDrowning;
+        private bool _hasTriggeredLowWarning;
 
         private void Awake()
         {
             Instance = this;
-            
             MaxOxygen = new Stat(_baseMaxOxygen);
             CurrentOxygen = _baseMaxOxygen;
+            _graceTimer = _suffocationGraceDuration;
         }
 
         private void Start()
         {
-            var player = Player.Instance;
-        
-            if (player == null) return;
+            if (Player.Instance == null) return;
 
-            player.PlayerReady += OnPlayerReady;
+            Player.Instance.PlayerReady += OnPlayerReady;
 
-            if (player.Character != null)
+            if (Player.Instance.Character != null)
             {
                 OnPlayerReady(Player.Instance.Character);
             }
@@ -60,16 +73,14 @@ namespace OceanGame
 
         private void OnDestroy()
         {
-            var player = Player.Instance;
+            if (Player.Instance == null) return;
 
-            if (player == null) return;
-
-            if (player.Character != null)
+            if (Player.Instance.Character != null)
             {
-                player.Character.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
+                Player.Instance.Character.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
             }
 
-            player.PlayerReady -= OnPlayerReady;
+            Player.Instance.PlayerReady -= OnPlayerReady;
         }
 
         private void OnPlayerReady(ServerCharacter player)
@@ -77,7 +88,6 @@ namespace OceanGame
             player.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
             player.Health.CurrentLifeState.OnValueChanged += OnLifeStateChanged;
 
-            // Broadcast initial state to UI
             OnOxygenChanged?.Invoke(CurrentOxygen, MaxOxygen.GetValue());
         }
 
@@ -86,10 +96,10 @@ namespace OceanGame
             if (newValue == LifeState.Dead)
             {
                 StopDrowning();
+                ResetGracePeriod();
             }
             else if (previousValue == LifeState.Dead && newValue == LifeState.Alive)
             {
-                // Refill oxygen when player respawns
                 RefillToMax();
             }
         }
@@ -103,55 +113,88 @@ namespace OceanGame
             int maxOxygen = MaxOxygen.GetValue();
             bool canBreathe = !Player.Instance.IsInWater() || Player.Instance.IsHeadInAir();
 
-            if (canBreathe) // Surfaced or on land: stop suffocating and refill rapidly
+            if (canBreathe)
             {
+                // In air: stop drowning, reset timers
                 if (_isDrowning)
                 {
                     StopDrowning();
                 }
+                
+                ResetGracePeriod();
 
                 if (CurrentOxygen < maxOxygen)
                 {
                     float refillSpeed = maxOxygen / Mathf.Max(0.1f, _airRefillDuration);
                     CurrentOxygen = Mathf.Min(maxOxygen, CurrentOxygen + refillSpeed * Time.deltaTime);
                     OnOxygenChanged?.Invoke(CurrentOxygen, maxOxygen);
+
+                    // Reset warning trigger flag once recovered above threshold
+                    if (_hasTriggeredLowWarning && (CurrentOxygen / maxOxygen) > _lowOxygenWarningPercentage)
+                    {
+                        _hasTriggeredLowWarning = false;
+                        OnOxygenRefilled?.Invoke();
+                    }
                 }
             }
-            else // Submerged: drain oxygen
+            else
             {
+                // Underwater: consume oxygen
                 if (CurrentOxygen > 0f)
                 {
                     CurrentOxygen = Mathf.Max(0f, CurrentOxygen - _underwaterDrainRate * Time.deltaTime);
                     OnOxygenChanged?.Invoke(CurrentOxygen, maxOxygen);
-                }
 
-                // Empty oxygen: suffocation debuff & DOT
-                if (CurrentOxygen <= 0f)
-                {
-                    if (!_isDrowning)
+                    // Check percentage threshold for warning
+                    float percentage = CurrentOxygen / maxOxygen;
+                    if (!_hasTriggeredLowWarning && percentage <= _lowOxygenWarningPercentage)
                     {
-                        StartDrowning();
+                        _hasTriggeredLowWarning = true;
+                        OnOxygenLowWarning?.Invoke();
                     }
 
-                    _drowningTimer -= Time.deltaTime;
-                    if (_drowningTimer <= 0f)
+                    // While player still has oxygen, keep grace period timer reset
+                    ResetGracePeriod();
+                }
+                else
+                {
+                    // Oxygen reached 0: Count down grace period
+                    if (_graceTimer > 0f)
                     {
-                        _drowningTimer = _drowningDamageInterval;
-                        Player.Instance.Character.Health.TakeDamage(_drowningDamage, triggerIFrame: false);
+                        _graceTimer -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        // Grace period reached 0 -> Start DOT and Buff
+                        if (!_isDrowning)
+                        {
+                            StartDrowning();
+                        }
+
+                        _drowningDamageTimer -= Time.deltaTime;
+                        if (_drowningDamageTimer <= 0f)
+                        {
+                            _drowningDamageTimer = _drowningDamageInterval;
+                            Player.Instance.Character.Health.TakeDamage(_drowningDamage, triggerIFrame: false);
+                        }
                     }
                 }
             }
         }
 
+        private void ResetGracePeriod()
+        {
+            _graceTimer = _suffocationGraceDuration;
+        }
+
         private void StartDrowning()
         {
             _isDrowning = true;
-            _drowningTimer = _drowningDamageInterval;
+            _drowningDamageTimer = _drowningDamageInterval;
 
             if (_drowningBuff == null)
             {
-                // Flat/percent 0 won't modify any stats, but registers the active debuff icon in BuffUI
-                _drowningBuff = new Buff("Suffocating", StatType.MoveSpeed, flatAmount: 0, percentAmount: 0f, duration: -1f, icon: _drowningBuffIcon); // Could just cache this on awake or something but like its fine right now like this
+                _drowningBuff = new Buff("Suffocating", StatType.MoveSpeed, flatAmount: 0, percentAmount: 0f, duration: -1f, icon: _drowningBuffIcon);
             }
 
             Player.Instance.Character.Stats.StartBuff(_drowningBuff);
@@ -160,7 +203,7 @@ namespace OceanGame
         private void StopDrowning()
         {
             _isDrowning = false;
-            _drowningTimer = 0f;
+            _drowningDamageTimer = 0f;
 
             if (_drowningBuff != null && Player.Instance.Character != null)
             {
@@ -189,7 +232,6 @@ namespace OceanGame
                 _currentTankModifier = default;
             }
 
-            // Clamp current oxygen so it doesn't exceed the lower max
             int max = MaxOxygen.GetValue();
             if (CurrentOxygen > max)
             {
@@ -202,8 +244,11 @@ namespace OceanGame
         public void RefillToMax()
         {
             StopDrowning();
+            ResetGracePeriod();
+            _hasTriggeredLowWarning = false;
             CurrentOxygen = MaxOxygen.GetValue();
             OnOxygenChanged?.Invoke(CurrentOxygen, MaxOxygen.GetValue());
+            OnOxygenRefilled?.Invoke();
         }
     }
 }
