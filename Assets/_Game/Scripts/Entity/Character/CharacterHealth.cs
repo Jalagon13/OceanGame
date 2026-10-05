@@ -80,6 +80,34 @@ namespace OceanGame
             }
         }
 
+        public void RestoreHealth(int amount)
+        {
+            if (amount <= 0 || CurrentLifeState.Value == LifeState.Dead) return;
+
+            int maxHp = _character.Stats.MaxHealth.GetValue();
+            if (CurrentHealth.Value >= maxHp) return;
+
+            if (IsServer)
+            {
+                CurrentHealth.Value = Mathf.Min(maxHp, CurrentHealth.Value + amount);
+                Debug.Log($"{name} Restored {amount} HP. {CurrentHealth.Value}/{maxHp}");
+            }
+            else
+            {
+                RestoreHealthServerRpc(amount);
+            }
+        }
+
+        [Rpc(SendTo.Server)]
+        private void RestoreHealthServerRpc(int amount)
+        {
+            if (amount <= 0 || CurrentLifeState.Value == LifeState.Dead) return;
+
+            int maxHp = _character.Stats.MaxHealth.GetValue();
+            CurrentHealth.Value = Mathf.Min(maxHp, CurrentHealth.Value + amount);
+            Debug.Log($"{name} Restored {amount} HP on Server. {CurrentHealth.Value}/{maxHp}");
+        }
+
         private IEnumerator IFrameRoutine()
         {
             CurrentLifeState.Value = LifeState.IFrame;

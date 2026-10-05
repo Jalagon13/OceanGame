@@ -58,6 +58,19 @@ namespace OceanGame
             OnBuffStopped?.Invoke(buff);
         }
 
+        public bool HasBuff(string buffName)
+        {
+            for (int i = 0; i < _activeBuffs.Count; i++)
+            {
+                if (_activeBuffs[i].Name.Equals(buffName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
         public Stat GetStat(StatType type)
         {
             return type switch
