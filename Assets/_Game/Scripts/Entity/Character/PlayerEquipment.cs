@@ -11,8 +11,6 @@ namespace OceanGame
         // Oxygen
         public InventorySlot EquippedOxygenTank { get; private set; } = new();
         public OxygenTankItemSO CurrentOxygenTank => EquippedOxygenTank.IsEmpty ? null : GameDataRegistry.Instance.GetItemSOFromItemId(EquippedOxygenTank.ItemId) as OxygenTankItemSO;
-        public Buff InAirOxygenBuff { get; private set; }
-        public Buff InWaterOxygenBuff { get; private set; }
 
         // Armor
         public InventorySlot EquippedHelmet { get; private set; } = new();
@@ -196,22 +194,25 @@ namespace OceanGame
         {
             EquippedOxygenTank.AssignItem(itemId, 1);
 
-            InAirOxygenBuff = CurrentOxygenTank.CreateInfiniteBuffInstance();
-            InWaterOxygenBuff = CurrentOxygenTank.CreateFiniteBuffInstance();
+            var tankSO = CurrentOxygenTank;
+            if (tankSO != null && OxygenManager.Instance != null)
+            {
+                OxygenManager.Instance.ApplyTankModifier(tankSO.AdditionalOxygen);
+            }
 
             RefreshEquipment();
         }
 
         public void UnequipOxygenTank()
         {
+            if (EquippedOxygenTank.IsEmpty) return;
+
+            if (OxygenManager.Instance != null)
+            {
+                OxygenManager.Instance.RemoveTankModifier();
+            }
+
             EquippedOxygenTank.Clear();
-            
-            Player.Instance.Character.Stats.StopBuff(InAirOxygenBuff);
-            Player.Instance.Character.Stats.StopBuff(InWaterOxygenBuff);
-
-            InAirOxygenBuff = null;
-            InWaterOxygenBuff = null;
-
             RefreshEquipment();
         }
 

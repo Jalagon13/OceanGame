@@ -72,39 +72,11 @@ namespace OceanGame
             // On Grounded Animation set here
             _player = Player.Instance;
             _ctx.ColliderSize = Player.Instance.WalkingBoxColliderSize;
-
-            var swimmingOxygenBuff = _player.Equipment.InWaterOxygenBuff;
-            var airOxygenBuff = _player.Equipment.InAirOxygenBuff;
-
-            if (airOxygenBuff != null)
-            {
-                _player.Character.Stats.StopBuff(swimmingOxygenBuff);
-            }
-
-            if (swimmingOxygenBuff != null)
-            {
-                _player.Character.Stats.StartBuff(airOxygenBuff);
-            }
-            
-            _player.Equipment.OnEquipmentChanged += UpdateBuffs;
         }
 
         protected override void OnExit()
         {
-            _player.Equipment.OnEquipmentChanged -= UpdateBuffs;
-        }
-
-        private void UpdateBuffs()
-        {
-            var airOxygenBuff = _player.Equipment.InAirOxygenBuff;
             
-            _player.Character.Stats.StopBuff(_player.Equipment.InWaterOxygenBuff);
-            _player.Character.Stats.StopBuff(airOxygenBuff);
-
-            if (airOxygenBuff != null)
-            {
-                _player.Character.Stats.StartBuff(airOxygenBuff);
-            }
         }
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
@@ -172,8 +144,6 @@ namespace OceanGame
             _coyoteJumpRequested = false;
             _topTouchedFlag = false;
 
-            UpdateBuffs();
-
             // On Jump Animation set here
             if (GameInput.Instance.JumpHold && _ctx.Velocity.y > 0)
             {
@@ -182,7 +152,6 @@ namespace OceanGame
             }
             
             GameInput.Instance.OnJumpPressed += OnJumpPressed;
-            _player.Equipment.OnEquipmentChanged += UpdateBuffs;
         }
 
         protected override void OnExit()
@@ -194,20 +163,6 @@ namespace OceanGame
             _topTouchedFlag = false;
 
             GameInput.Instance.OnJumpPressed -= OnJumpPressed;
-            _player.Equipment.OnEquipmentChanged -= UpdateBuffs;
-        }
-
-        private void UpdateBuffs()
-        {
-            var airOxygenBuff = _player.Equipment.InAirOxygenBuff;
-            
-            _player.Character.Stats.StopBuff(_player.Equipment.InWaterOxygenBuff);
-            _player.Character.Stats.StopBuff(airOxygenBuff);
-
-            if (airOxygenBuff != null)
-            {
-                _player.Character.Stats.StartBuff(airOxygenBuff);
-            }
         }
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
@@ -334,17 +289,7 @@ namespace OceanGame
             _player = Player.Instance;
             _ctx.ColliderSize = _player.SwimmingBoxColliderSize;
 
-            UpdateBuffs();
-            
-            var swimmingOxygenBuff = _player.Equipment.InWaterOxygenBuff;
-
-            if (swimmingOxygenBuff != null)
-            {
-                _player.Character.Stats.StartBuff(swimmingOxygenBuff);
-            }
-
             GameInput.Instance.OnJumpPressed += ExecuteDash;
-            _player.Equipment.OnEquipmentChanged += UpdateBuffs;
         }
 
         protected override void OnExit()
@@ -352,13 +297,6 @@ namespace OceanGame
             _ctx.VisualsGO.transform.up = Vector2.up;
 
             GameInput.Instance.OnJumpPressed -= ExecuteDash;
-            _player.Equipment.OnEquipmentChanged -= UpdateBuffs;
-        }
-
-        private void UpdateBuffs()
-        {
-            _player.Character.Stats.StopBuff(_player.Equipment.InAirOxygenBuff);
-            _player.Character.Stats.StopBuff(_player.Equipment.InWaterOxygenBuff);
         }
 
         protected override void OnFixedUpdate(float fixedDeltaTime)

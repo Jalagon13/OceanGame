@@ -66,14 +66,15 @@ namespace OceanGame
             }
         }
 
-        public void TakeDamage(int netDamage)
+        public void TakeDamage(int netDamage, bool triggerIFrame = true)
         {
-            if(!IsServer || netDamage <= 0 || CurrentLifeState.Value == LifeState.IFrame) return;
-        
+            if (!IsServer || netDamage <= 0) return;
+            if (triggerIFrame && CurrentLifeState.Value == LifeState.IFrame) return;
+
             CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - netDamage);
             Debug.Log($"{name} Took {netDamage} Damage. {CurrentHealth.Value}/{_character.Stats.MaxHealth.GetValue()}");
-            
-            if(CurrentLifeState.Value == LifeState.Alive)
+
+            if (triggerIFrame && CurrentLifeState.Value == LifeState.Alive)
             {
                 StartCoroutine(IFrameRoutine());
             }

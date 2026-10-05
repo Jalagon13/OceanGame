@@ -6,27 +6,48 @@ namespace OceanGame
     public class PlayerStatsDisplayUI : MonoBehaviour
     {
         [SerializeField] private StatBarUI _healthBar;
-        
+        [SerializeField] private StatBarUI _oxygenBar; 
+
         private void Start()
         {
-            if (Player.Instance == null) return;
+            var player = Player.Instance;
+        
+            if (player == null) return;
 
-            Player.Instance.PlayerReady += OnPlayerReady;
+            player.PlayerReady += OnPlayerReady;
 
-            if (Player.Instance.Character != null)
-                OnPlayerReady(Player.Instance.Character);
+            if (player.Character != null)
+                OnPlayerReady(player.Character);
+
+            if (OxygenManager.Instance != null)
+            {
+                OxygenManager.Instance.OnOxygenChanged += OnOxygenChanged;
+                if (_oxygenBar != null)
+                {
+                    _oxygenBar.UpdateBar(OxygenManager.Instance.CurrentOxygen, OxygenManager.Instance.MaxOxygen.GetValue());
+                }
+            }
         }
 
         private void OnDestroy()
         {
-            if (Player.Instance == null) return;
+            var player = Player.Instance;
+        
+            if (player == null) return;
 
-            if(Player.Instance.Character != null)
-                Player.Instance.Character.Health.OnHealthChanged -= OnHealthChanged;
-                
-            Player.Instance.PlayerReady -= OnPlayerReady;
-            Player.Instance.Character.Stats.OnBuffStarted -= UpdateStatBar;
-            Player.Instance.Character.Stats.OnBuffStopped -= UpdateStatBar;
+            if (player.Character != null)
+            {
+                player.Character.Health.OnHealthChanged -= OnHealthChanged;
+                player.Character.Stats.OnBuffStarted -= UpdateStatBar;
+                player.Character.Stats.OnBuffStopped -= UpdateStatBar;
+            }
+
+            if (OxygenManager.Instance != null)
+            {
+                OxygenManager.Instance.OnOxygenChanged -= OnOxygenChanged;
+            }
+
+            player.PlayerReady -= OnPlayerReady;
         }
 
         private void OnPlayerReady(ServerCharacter player)
@@ -34,7 +55,7 @@ namespace OceanGame
             player.Health.OnHealthChanged += OnHealthChanged;
             player.Stats.OnBuffStarted += UpdateStatBar;
             player.Stats.OnBuffStopped += UpdateStatBar;
-            
+
             _healthBar.UpdateBar(player.Health.CurrentHealth.Value, player.Stats.MaxHealth.GetValue());
         }
 
@@ -46,6 +67,11 @@ namespace OceanGame
         private void OnHealthChanged(object sender, CharacterHealth.HealthChangedArgs e)
         {
             _healthBar.UpdateBar(e.CurrentHp, e.MaxHP);
+        }
+
+        private void OnOxygenChanged(float currentOxygen, float maxOxygen)
+        {
+            _oxygenBar.UpdateBar(currentOxygen, maxOxygen);
         }
     }
 }
