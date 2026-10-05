@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1789cce2ee3144d3f896586a04761dd0, type: 3}
-  m_Name: CrabData
+  m_Name: JellyfishData
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.CharacterSO
-  <BodyColliderSize>k__BackingField: {x: 1, y: 1}
-  <BaseMaxHealth>k__BackingField: 10
+  <BodyColliderSize>k__BackingField: {x: 0.75, y: 0.75}
+  <BaseMaxHealth>k__BackingField: 14
   <BaseDefense>k__BackingField: 0
   <BaseDamage>k__BackingField: 4
   <KnockbackForce>k__BackingField: 10

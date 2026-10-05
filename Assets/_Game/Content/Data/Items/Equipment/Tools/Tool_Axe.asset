@@ -18,13 +18,13 @@ MonoBehaviour:
   <IsStackable>k__BackingField: 0
   <HarvestType>k__BackingField: 2
   <TargetLayer>k__BackingField: 0
-  <MiningDamage>k__BackingField: 15
-  <MineTicksPerSecond>k__BackingField: 8
+  <MiningDamage>k__BackingField: 20
+  <MineTicksPerSecond>k__BackingField: 3
   <MeleeDamage>k__BackingField: 10
   <KnockbackForce>k__BackingField: 15
   <HitboxOffset>k__BackingField: 1
   <HitboxSize>k__BackingField: {x: 1.2, y: 1.2}
-  <SwingArcAngle>k__BackingField: 120
-  <SwingDuration>k__BackingField: 0.3
-  <SwingEndArcAngle>k__BackingField: 10
-  <SwingEndDuration>k__BackingField: 0.2
+  <SwingArcAngle>k__BackingField: 100
+  <SwingDuration>k__BackingField: 0.425
+  <SwingEndArcAngle>k__BackingField: 5
+  <SwingEndDuration>k__BackingField: 0.1

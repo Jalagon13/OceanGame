@@ -10,12 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93c73fdc83b114b56a5d587022066f87, type: 3}
-  m_Name: TC_Lamp
+  m_Name: TC_SeaTorch
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.TileDataSO
+  <RequiredHarvestType>k__BackingField: 0
   <MaxHP>k__BackingField: 50
   <LightLevel>k__BackingField: 1
   <Indestructible>k__BackingField: 0
+  <IsSolid>k__BackingField: 0
   <Size>k__BackingField: {x: 1, y: 1}
   <DrawTile>k__BackingField: {fileID: 11400000, guid: c085640d10a1d4797818080cb3fc6f40, type: 2}
   <DroppedItem>k__BackingField: {fileID: 11400000, guid: 1c2c9103005254e2096a71428bc94070, type: 2}
-  <IsSolid>k__BackingField: 1
+  <InteractBehavior>k__BackingField:
+    rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

@@ -12,6 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93c73fdc83b114b56a5d587022066f87, type: 3}
   m_Name: TC_Limestone
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.TileDataSO
+  <RequiredHarvestType>k__BackingField: 1
+  <MaxHP>k__BackingField: 100
+  <LightLevel>k__BackingField: 0
+  <Indestructible>k__BackingField: 0
+  <IsSolid>k__BackingField: 1
   <Size>k__BackingField: {x: 1, y: 1}
   <DrawTile>k__BackingField: {fileID: 11400000, guid: 4acdf8bdeeadb4fc1986f895489c236f, type: 2}
   <DroppedItem>k__BackingField: {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
+  <InteractBehavior>k__BackingField:
+    rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

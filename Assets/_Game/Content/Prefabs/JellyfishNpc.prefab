@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7179942279974174629}
   - component: {fileID: 3454599396775519568}
   m_Layer: 0
-  m_Name: CrabNpc
+  m_Name: JellyfishNpc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,6 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb2c4941128cc45218cebb54ebf1a3b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ServerCharacter
+  ShowTopMostFoldoutHeaderGroup: 1
   _ignoreCollision: 0
   Velocity: {x: 0, y: 0}
   ColliderSize: {x: 0, y: 0}
@@ -201,8 +202,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 5323533958294135581, guid: 2f87ce7e588154a76acbf2c4eda5fff0, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 4424441914307035889, guid: 2f87ce7e588154a76acbf2c4eda5fff0, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
