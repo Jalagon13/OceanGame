@@ -10,27 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93c73fdc83b114b56a5d587022066f87, type: 3}
-  m_Name: TC_WorkShop
+  m_Name: TC_Furnace
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.TileConfigSO
-  <RequiredHarvestType>k__BackingField: 0
+  <RequiredHarvestType>k__BackingField: 1
   <MaxHP>k__BackingField: 50
   <LightLevel>k__BackingField: 0
   <Indestructible>k__BackingField: 0
   <IsSolid>k__BackingField: 0
-  <Size>k__BackingField: {x: 2, y: 1}
-  <DrawTile>k__BackingField: {fileID: 11400000, guid: 5301ff395c3a74abd8f8391d60829b19, type: 2}
+  <Size>k__BackingField: {x: 1, y: 1}
+  <DrawTile>k__BackingField: {fileID: 11400000, guid: 87e8a23082c444545a383b5e75ab89d7, type: 2}
   <InteractBehavior>k__BackingField:
-    rid: 2895663963195310374
-  LootDrops: []
+    rid: 2783293967076425881
+  LootDrops:
+  - _item: {fileID: 11400000, guid: 6f393675a7658455ca34e97ac758ccee, type: 2}
+    _dropChance: 1
+    _minAmount: 1
+    _maxAmount: 1
   references:
     version: 2
     RefIds:
-    - rid: 2895663963195310374
+    - rid: 2783293967076425881
       type: {class: CrafterIB, ns: OceanGame, asm: Assembly-CSharp}
       data:
         <Recipes>k__BackingField:
-        - {fileID: 11400000, guid: f66fba809f0ce4b0485e7905e0247b1d, type: 2}
-        - {fileID: 11400000, guid: 32f2a8d6efd894ce7a9cd6e0ac408b05, type: 2}
-        - {fileID: 11400000, guid: 2f9ef216a9c4e4eba89412a9815cf8e2, type: 2}
-        - {fileID: 11400000, guid: 8fa80f7554cc0491393cbd9343f9203f, type: 2}
-        - {fileID: 11400000, guid: b46a18b468f5a4b3fb019285769d1622, type: 2}
+        - {fileID: 11400000, guid: e00f5bc7e6f8e46948589dc76b91f4ad, type: 2}
+        - {fileID: 11400000, guid: 26a9ae689271b48ed8e6164fd780819c, type: 2}
