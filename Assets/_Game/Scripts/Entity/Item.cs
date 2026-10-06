@@ -88,7 +88,7 @@ namespace OceanGame
         {
             if (!Ctx.CanBeCollected || Ctx.HasBeenCollected || Ctx.ItemSlot == null) return;
             if (other is not ServerCharacter character) return;
-            if (character.StateMachineType != StateMachineType.Player) return;
+            if (character.gameObject.layer != 3) return;
             if (character.Health != null && character.Health.CurrentLifeState.Value != LifeState.Alive) return;
 
             bool canThisPlayerAcceptThisItem = InventoryManager.Instance.CanAcceptItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.CurrentAmount);
@@ -120,7 +120,7 @@ namespace OceanGame
                     Entity entity = entities[i];
                     if (entity == null || entity == this) continue;
 
-                    if (entity is ServerCharacter character && character.StateMachineType == StateMachineType.Player)
+                    if (entity is ServerCharacter character && character.gameObject.layer == 3)
                     {
                         if (character.Health != null && character.Health.CurrentLifeState.Value != LifeState.Alive) continue;
 

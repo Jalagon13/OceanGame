@@ -6,20 +6,23 @@ namespace OceanGame
     #region Root State
 
     [Serializable]
-    public class PlayerRootState : State
+    public class PlayerRootState : CharacterRootState
     {
-        public readonly PlayerGroundedState Grounded;
-        public readonly PlayerAirborneState Airborne;
-        public readonly PlayerSwimmingState Swimming;
+        public PlayerGroundedState Grounded { get; private set; }
+        public PlayerAirborneState Airborne { get; private set; }
+        public PlayerSwimmingState Swimming { get; private set; }
 
-        private readonly ServerCharacter _ctx;
+        // Parameterless constructor for Unity serialization
+        public PlayerRootState() : base() { }
 
-        public PlayerRootState(StateMachine m, ServerCharacter ctx) : base(m, null)
+        public override void Initialize(ServerCharacter ctx)
         {
-            _ctx = ctx;
-            Grounded = new PlayerGroundedState(m, this, ctx);
-            Airborne = new PlayerAirborneState(m, this, ctx);
-            Swimming = new PlayerSwimmingState(m, this, ctx);
+            base.Initialize(ctx);
+            
+            // Construct child states once the context is available
+            Grounded = new PlayerGroundedState(null, this, ctx);
+            Airborne = new PlayerAirborneState(null, this, ctx);
+            Swimming = new PlayerSwimmingState(null, this, ctx);
         }
 
         protected override State GetInitialState() => Grounded;

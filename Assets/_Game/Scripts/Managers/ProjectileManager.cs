@@ -56,7 +56,7 @@ namespace OceanGame
         {
             if (source is ServerCharacter character)
             {
-                return character.StateMachineType == StateMachineType.Player ? ProjectileFaction.Friendly : ProjectileFaction.Hostile;
+                return character.gameObject.layer == 3 ? ProjectileFaction.Friendly : ProjectileFaction.Hostile;
             }
 
             return defaultFaction;

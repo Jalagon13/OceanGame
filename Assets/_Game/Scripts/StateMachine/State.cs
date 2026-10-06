@@ -74,4 +74,19 @@ namespace OceanGame
             for(State s = this; s != null; s = s.Parent) yield return s;
         }
     }
+
+    [Serializable]
+    public abstract class CharacterRootState : State
+    {
+        protected ServerCharacter _ctx;
+        
+        // Parameterless constructor so Unity can instantiate it in the inspector
+        public CharacterRootState() : base(null, null) { }
+        
+        // Called on spawn to hook up the character context and initialize child states
+        public virtual void Initialize(ServerCharacter ctx)
+        {
+            _ctx = ctx;
+        }
+    }
 }

@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3042516918
+  GlobalObjectIdHash: 3082536240
   InScenePlacedSourceGlobalObjectIdHash: 0
   m_InScenePlacedDisabledByDefault: 0
   DeferredDespawnTick: 0
@@ -115,12 +115,24 @@ MonoBehaviour:
   _ignoreCollision: 0
   Velocity: {x: 0, y: 0}
   ColliderSize: {x: 0, y: 0}
-  _stateType: 1
+  RootState:
+    rid: 2783293967076425866
   _data: {fileID: 11400000, guid: 2a9db1f511b6a4888a49dd1d2f56bd26, type: 2}
   _visualsGO: {fileID: 6902626330650952792}
   _debugStateOn: 0
   DesiredDirection: {x: 0, y: 0}
   KnockbackVelocity: {x: 0, y: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: 2783293967076425866
+      type: {class: JellyfishRootState, ns: OceanGame, asm: Assembly-CSharp}
+      data:
+        DashStrength: 6
+        DashDeceleration: 4
+        TimeBetweenDashes: 1.5
+        GravityForce: 20
+        TerminalVelocity: -18
 --- !u!1 &6902626330650952792
 GameObject:
   m_ObjectHideFlags: 0

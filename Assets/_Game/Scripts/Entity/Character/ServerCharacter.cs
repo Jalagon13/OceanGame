@@ -6,10 +6,10 @@ namespace OceanGame
     [RequireComponent(typeof(CharacterHealth), typeof(DamageReceiver))]
     public class ServerCharacter : Entity
     {
-        [Header("Character Settings")]
-        [SerializeField] private StateMachineType _stateType;
-        public StateMachineType StateMachineType => _stateType;
-        
+        [Header("AI State Machine")]
+        [SerializeReference]
+        public CharacterRootState RootState;
+
         [SerializeField] private CharacterSO _data;
         public CharacterSO Data => _data;
         
@@ -44,10 +44,17 @@ namespace OceanGame
 
         public override void OnNetworkSpawn()
         {
-            State rootState = CharacterCommons.GetNpcHSMRootState(this, _stateType);
-            if (rootState == null) return;
+            State stateToRun = null;
 
-            Machine = new StateMachineBuilder(rootState).Build(_debugStateOn);
+            if (RootState != null)
+            {
+                RootState.Initialize(this);
+                stateToRun = RootState;
+            }
+
+            if (stateToRun == null) return;
+
+            Machine = new StateMachineBuilder(stateToRun).Build(_debugStateOn);
             Machine.Start();
         }
 

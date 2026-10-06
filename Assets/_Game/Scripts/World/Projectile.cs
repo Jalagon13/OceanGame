@@ -156,7 +156,7 @@ namespace OceanGame
 
         private bool CanDamageTarget(ServerCharacter target)
         {
-            bool isPlayer = target.StateMachineType == StateMachineType.Player;
+            bool isPlayer = target.gameObject.layer == 3;
 
             switch (Faction)
             {
