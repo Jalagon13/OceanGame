@@ -821,6 +821,27 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
+  - name: npc_bubble_buddy
+    originalName: 
+    pivot: {x: 0.5, y: 0.25}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 112
+      y: 16
+      width: 16
+      height: 32
+    spriteID: 35fad0c60e9d34527833ba9db3d45ad8
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
   tileSetImportData: []
   asepriteLayers:
   - layerIndex: 0
@@ -841,7 +862,7 @@ ScriptedImporter:
       cellRect:
         x: 0
         y: 0
-        width: 127
+        width: 128
         height: 80
       spriteId: 29e30dac0e8574e0bb07847e539baa65
     linkedCells: []
