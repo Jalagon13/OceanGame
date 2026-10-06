@@ -60,9 +60,15 @@ namespace OceanGame
         {
             OnHealthChanged?.Invoke(this, new(_character.Stats.MaxHealth.GetValue(), CurrentHealth.Value, previousValue));
             
-            if(CurrentHealth.Value <= 0)
+            if (CurrentHealth.Value <= 0 && CurrentLifeState.Value != LifeState.Dead)
             {
                 CurrentLifeState.Value = LifeState.Dead;
+
+                // Server-authoritative loot drop on death
+                if (IsServer && _character != null && _character.Data != null)
+                {
+                    _character.Data.DropLoot(_character.transform.position);
+                }
             }
         }
 

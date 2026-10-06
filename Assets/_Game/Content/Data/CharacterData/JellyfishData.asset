@@ -25,3 +25,8 @@ MonoBehaviour:
   <CanDie>k__BackingField: 1
   <CanDamagePlayerOnTouch>k__BackingField: 1
   <CharacterPrefab>k__BackingField: {fileID: 3454599396775519568, guid: 97551924553cd4e8a94609e9d830e17f, type: 3}
+  LootDrops:
+  - _item: {fileID: 11400000, guid: 278c74882f6fb40319f2f4c99b2f71ff, type: 2}
+    _dropChance: 1
+    _minAmount: 1
+    _maxAmount: 2

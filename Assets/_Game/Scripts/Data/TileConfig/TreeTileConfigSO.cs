@@ -9,9 +9,6 @@ namespace OceanGame
     [CreateAssetMenu(fileName = "New TreeTileConfigSO", menuName = "OceanGame/TileConfig/TreeTileConfigSO")]
     public class TreeTileConfigSO : TileConfigSO
     {
-        [Header("Tree Drop Settings")]
-        [SerializeField] private ItemSO _woodItem;
-
         [Header("Segment Visuals (TileBase for each segment)")]
         [SerializeField] private TileBase _baseTile;
         [SerializeField] private TileBase _trunkTile;
@@ -124,10 +121,7 @@ namespace OceanGame
         {
             Vector2 tileCenterPos = new Vector2(curr.x + 0.5f, curr.y + 0.5f);
 
-            if (_woodItem != null)
-            {
-                GameManager.Instance.SpawnItem(_woodItem, 1, tileCenterPos);
-            }
+            DropLoot(tileCenterPos);
         }
 
         // Attempts to grow a tree at (groundX, groundY). groundY is the soil/ground block the tree stands on.

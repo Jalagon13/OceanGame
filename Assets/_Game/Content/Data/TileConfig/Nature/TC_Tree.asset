@@ -19,10 +19,13 @@ MonoBehaviour:
   <IsSolid>k__BackingField: 0
   <Size>k__BackingField: {x: 1, y: 1}
   <DrawTile>k__BackingField: {fileID: 11400000, guid: ba98ee5027e8944fca0aec29ceb6150d, type: 2}
-  <DroppedItem>k__BackingField: {fileID: 11400000, guid: 81a74ab6b5b314aa5a95260481a734d8, type: 2}
   <InteractBehavior>k__BackingField:
     rid: -2
-  _woodItem: {fileID: 11400000, guid: 81a74ab6b5b314aa5a95260481a734d8, type: 2}
+  LootDrops:
+  - _item: {fileID: 11400000, guid: 81a74ab6b5b314aa5a95260481a734d8, type: 2}
+    _dropChance: 1
+    _minAmount: 1
+    _maxAmount: 2
   _baseTile: {fileID: 11400000, guid: db9af0ae5bd824755a35ec9dcf9b0fa5, type: 2}
   _trunkTile: {fileID: 11400000, guid: 439d13a6f845f49a7a65bb2c5b8fa366, type: 2}
   _branchLeftTile: {fileID: 0}

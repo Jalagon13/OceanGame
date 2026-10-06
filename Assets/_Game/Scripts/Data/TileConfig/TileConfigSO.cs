@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -14,9 +15,11 @@ namespace OceanGame
         [field: SerializeField] public bool IsSolid { get; private set; } = true;
         [field: SerializeField] public Vector2Int Size { get; private set; } = new(1, 1);
         [field: SerializeField] public TileBase DrawTile { get; private set; }
-        [field: SerializeField] public ItemSO DroppedItem { get; private set; }
+
         [field: SerializeReference]
         [field: SerializeField] public InteractBehavior InteractBehavior { get; private set; }
+
+        [field: SerializeField] public List<LootDropEntry> LootDrops = new();
 
         public bool IsMultiTile => Size != new Vector2Int(1, 1);
 
@@ -30,12 +33,12 @@ namespace OceanGame
             return DrawTile;
         }
 
-        // In TileConfigSO.cs
         public virtual void OnTileDestroyed(TileGrid grid, int x, int y, TileData tileData, bool refreshCurrentBounds = false)
         {
+            Vector2 dropPos;
+
             if (IsMultiTile)
             {
-                // Default Rigid Multi-Tile behavior (e.g. standard multi-tile furniture)
                 int rootX = x - tileData.OffsetX;
                 int rootY = y - tileData.OffsetY;
 
@@ -54,23 +57,27 @@ namespace OceanGame
                     }
                 }
 
-                if (DroppedItem != null)
-                {
-                    Vector2 dropPos = new Vector2(rootX + 0.5f, rootY + 0.5f);
-                    GameManager.Instance.SpawnItem(DroppedItem, 1, dropPos);
-                }
+                dropPos = new Vector2(rootX + (Size.x * 0.5f), rootY + (Size.y * 0.5f));
             }
             else
             {
-                // Standard 1x1 tile behavior
                 grid.SetTileDataDirect(x, y, TileData.Air);
                 grid.ClearDamage(x, y);
 
-                if (DroppedItem != null)
-                {
-                    Vector2 dropPos = new Vector2(x + 0.5f, y + 0.5f);
-                    GameManager.Instance.SpawnItem(DroppedItem, 1, dropPos);
-                }
+                dropPos = new Vector2(x + 0.5f, y + 0.5f);
+            }
+
+            // Roll and drop each entry in the loot table
+            DropLoot(dropPos);
+        }
+
+        public void DropLoot(Vector2 position)
+        {
+            if (LootDrops == null) return;
+
+            for (int i = 0; i < LootDrops.Count; i++)
+            {
+                LootDrops[i].TryDrop(position);
             }
         }
     }

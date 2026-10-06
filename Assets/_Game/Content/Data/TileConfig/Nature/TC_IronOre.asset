@@ -12,9 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93c73fdc83b114b56a5d587022066f87, type: 3}
   m_Name: TC_IronOre
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.TileDataSO
+  <RequiredHarvestType>k__BackingField: 0
   <MaxHP>k__BackingField: 70
+  <LightLevel>k__BackingField: 0
   <Indestructible>k__BackingField: 0
+  <IsSolid>k__BackingField: 1
   <Size>k__BackingField: {x: 1, y: 1}
   <DrawTile>k__BackingField: {fileID: 11400000, guid: b0cd19a4b586b481bbc7604e708b2f84, type: 2}
-  <DroppedItem>k__BackingField: {fileID: 11400000, guid: 8f118cc58053c4854aa4b9cb6b928fa7, type: 2}
-  <IsSolid>k__BackingField: 1
+  <InteractBehavior>k__BackingField:
+    rid: -2
+  LootDrops:
+  - _item: {fileID: 11400000, guid: 8f118cc58053c4854aa4b9cb6b928fa7, type: 2}
+    _dropChance: 1
+    _minAmount: 1
+    _maxAmount: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
