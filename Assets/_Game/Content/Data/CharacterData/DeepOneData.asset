@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1789cce2ee3144d3f896586a04761dd0, type: 3}
   m_Name: DeepOneData
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.CharacterSO
-  <BodyColliderSize>k__BackingField: {x: 0.75, y: 1.5}
+  <BodyColliderSize>k__BackingField: {x: 0.75, y: 1.25}
   <BaseMaxHealth>k__BackingField: 25
   <BaseDefense>k__BackingField: 0
   <BaseDamage>k__BackingField: 6
