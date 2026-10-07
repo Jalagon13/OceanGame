@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7179942279974174629}
   - component: {fileID: 3454599396775519568}
   m_Layer: 0
-  m_Name: BubbleBuddyNpc
+  m_Name: SeagullNpc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3667693200
+  GlobalObjectIdHash: 873239468
   InScenePlacedSourceGlobalObjectIdHash: 0
   m_InScenePlacedDisabledByDefault: 0
   DeferredDespawnTick: 0
@@ -116,7 +116,7 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0}
   ColliderSize: {x: 0, y: 0}
   RootState:
-    rid: 2783293993100771328
+    rid: 2783294011057373274
   _data: {fileID: 11400000, guid: 887e9bbb18cc241e8afc54a9c9925063, type: 2}
   _visualsGO: {fileID: 6902626330650952792}
   _debugStateOn: 0
@@ -125,8 +125,8 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2783293993100771328
-      type: {class: BubbleBuddyRootState, ns: OceanGame, asm: Assembly-CSharp}
+    - rid: 2783294011057373274
+      type: {class: SeagullRootState, ns: OceanGame, asm: Assembly-CSharp}
       data:
         BounceDamping: 0.6
         DetectionRadius: 30

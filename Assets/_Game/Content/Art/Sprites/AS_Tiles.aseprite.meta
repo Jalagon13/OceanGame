@@ -823,16 +823,16 @@ ScriptedImporter:
     uvTransform: {x: 0, y: 0}
   - name: npc_bubble_buddy
     originalName: 
-    pivot: {x: 0.5, y: 0.25}
+    pivot: {x: 0.5, y: 0.5}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
       x: 112
-      y: 16
+      y: 32
       width: 16
-      height: 32
+      height: 16
     spriteID: 35fad0c60e9d34527833ba9db3d45ad8
     spriteBone: []
     spriteOutline: []
