@@ -5513,6 +5513,10 @@ MonoBehaviour:
   _tempSpawnEntries:
   - _character: {fileID: 11400000, guid: 887e9bbb18cc241e8afc54a9c9925063, type: 2}
     _weight: 1
+    _environment: 2
+  - _character: {fileID: 11400000, guid: 2a9db1f511b6a4888a49dd1d2f56bd26, type: 2}
+    _weight: 1
+    _environment: 0
 --- !u!114 &2043979321
 MonoBehaviour:
   m_ObjectHideFlags: 0

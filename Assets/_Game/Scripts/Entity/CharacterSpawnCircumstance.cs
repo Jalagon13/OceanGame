@@ -4,6 +4,13 @@ using UnityEngine;
 
 namespace OceanGame
 {
+    public enum CharacterSpawnEnvironment
+    {
+        Water,
+        Air,
+        Both,
+    }
+
     public readonly struct CharacterSpawnCircumstance
     {
         public int MaxCharacterCount { get; }
@@ -16,6 +23,7 @@ namespace OceanGame
             PerSecondSpawnChance = perSecondSpawnChance;
             SpawnPool = spawnPool;
         }
+        
     }
 
     public sealed class CharacterSpawnPool
@@ -69,9 +77,11 @@ namespace OceanGame
     public sealed class CharacterSpawnEntry
     {
         [SerializeField] private CharacterSO _character;
-        [SerializeField, Min(0f)] private float _weight = 1f;
+        [SerializeField, Range(0f, 1f)] private float _weight = 1f;
+        [SerializeField] private CharacterSpawnEnvironment _environment = CharacterSpawnEnvironment.Water;
 
         public CharacterSO Character => _character;
         public float Weight => _weight;
+        public CharacterSpawnEnvironment Environment => _environment;
     }
 }

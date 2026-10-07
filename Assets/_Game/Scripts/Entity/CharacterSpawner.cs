@@ -134,10 +134,32 @@ namespace OceanGame
 
                     if (tile.IsSolid)
                         return false;
+
+                    FluidType fluid = WorldManager.Instance.FluidGrid.GetFluidType(x, y);
+                    if (!IsAllowedEnvironment(spawnEntry.Environment, fluid))
+                        return false;
                 }
             }
 
             return true;
+        }
+
+        private bool IsAllowedEnvironment(CharacterSpawnEnvironment environment, FluidType fluid)
+        {
+            switch (environment)
+            {
+                case CharacterSpawnEnvironment.Both:
+                    return fluid == FluidType.Air || fluid == FluidType.Water;
+
+                case CharacterSpawnEnvironment.Air:
+                    return fluid == FluidType.Air;
+
+                case CharacterSpawnEnvironment.Water:
+                    return fluid == FluidType.Water;
+
+                default:
+                    return false;
+            }
         }
 
         private bool TryFindGround(Vector2Int candidate, out Vector2Int spawnSpot)

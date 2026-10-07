@@ -13,7 +13,6 @@ namespace OceanGame
         public float DetectionRangeTiles = 100f;
 
         [Header("Movement")]
-        public float MoveSpeed = 3f;
         public float JumpSpeed = 8f;
         
         [Header("Gravity")]
@@ -84,9 +83,7 @@ namespace OceanGame
             if (_ctx.IsKnockedBack)
             {
                 _ctx.KnockbackVelocity.y -= _root.GravityForce * fixedDeltaTime;
-                _ctx.KnockbackVelocity.y = Mathf.Max(
-                    _ctx.KnockbackVelocity.y,
-                    _root.TerminalVelocity);
+                _ctx.KnockbackVelocity.y = Mathf.Max(_ctx.KnockbackVelocity.y, _root.TerminalVelocity);
                 return;
             }
 
@@ -112,8 +109,7 @@ namespace OceanGame
 
                 if (target != null)
                 {
-                    Vector2 targetOffset =
-                        (Vector2)target.transform.position - (Vector2)_ctx.transform.position;
+                    Vector2 targetOffset = (Vector2)target.transform.position - (Vector2)_ctx.transform.position;
 
                     if (targetOffset.sqrMagnitude > 0.0025f)
                     {
@@ -123,16 +119,13 @@ namespace OceanGame
 
                 float swimSpeed = _ctx.Stats.MoveSpeed.GetValue();
 
-                _ctx.Velocity = Vector2.Lerp(
-                    _ctx.Velocity,
-                    swimDirection * swimSpeed,
-                    fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
+                _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, swimDirection * swimSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
 
                 return;
             }
 
             // Move and try to jump
-            _ctx.Velocity.x = direction * _root.MoveSpeed;
+            _ctx.Velocity.x = direction * _ctx.Data.BaseSpeed;
 
             bool grounded = _ctx.CollisionResult.TouchingBottom;
             bool hitWall = (direction < 0f && _ctx.CollisionResult.TouchingLeft) || (direction > 0f && _ctx.CollisionResult.TouchingRight);

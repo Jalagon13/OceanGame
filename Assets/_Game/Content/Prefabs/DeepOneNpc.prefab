@@ -129,7 +129,6 @@ MonoBehaviour:
       type: {class: DeepOneRootState, ns: OceanGame, asm: Assembly-CSharp}
       data:
         DetectionRangeTiles: 100
-        MoveSpeed: 3
         JumpSpeed: 10
         GravityForce: 20
         TerminalVelocity: -18
