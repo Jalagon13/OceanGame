@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7179942279974174629}
   - component: {fileID: 3454599396775519568}
   m_Layer: 0
-  m_Name: SeagullNpc
+  m_Name: DeepOneNpc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

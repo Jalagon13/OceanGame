@@ -7,7 +7,7 @@ namespace OceanGame
     #region Root State
 
     [Serializable]
-    public class SeagullRootState : CharacterRootState
+    public class DeepOneRootState : CharacterRootState
     {
         
     }
