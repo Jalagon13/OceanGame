@@ -9,14 +9,14 @@ namespace OceanGame
         [Tooltip("The item ScriptableObject to drop.")]
         [SerializeField] private ItemSO _item;
 
-        [Tooltip("Drop probability: 1 = 100%, 0.5 = 50%, 0.05 = 5%, etc.")]
-        [SerializeField, Range(0f, 1f)] private float _dropChance;
-
         [Tooltip("Minimum amount dropped when the roll succeeds.")]
         [SerializeField] private int _minAmount;
 
         [Tooltip("Maximum amount dropped when the roll succeeds.")]
         [SerializeField] private int _maxAmount;
+
+        [Tooltip("Drop probability: 1 = 100%, 0.5 = 50%, 0.05 = 5%, etc.")]
+        [SerializeField, Range(0f, 1f)] private float _dropChance;
 
         public readonly ItemSO Item => _item;
         public readonly float DropChance => _dropChance;

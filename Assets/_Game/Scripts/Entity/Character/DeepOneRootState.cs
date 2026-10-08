@@ -125,7 +125,7 @@ namespace OceanGame
             }
 
             // Move and try to jump
-            _ctx.Velocity.x = direction * _ctx.Data.BaseSpeed;
+            _ctx.Velocity.x = Mathf.Lerp(_ctx.Velocity.x, direction * _ctx.Data.BaseSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
 
             bool grounded = _ctx.CollisionResult.TouchingBottom;
             bool hitWall = (direction < 0f && _ctx.CollisionResult.TouchingLeft) || (direction > 0f && _ctx.CollisionResult.TouchingRight);

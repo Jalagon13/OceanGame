@@ -3078,13 +3078,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 809a702732703425aabf213c8efa7694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.OxygenManager
-  _baseMaxOxygen: 45
+  _baseMaxOxygen: 1
   _airRefillDuration: 3
   _underwaterDrainRate: 1
   _lowOxygenWarningPercentage: 0.3
-  _suffocationGraceDuration: 4
+  _suffocationGraceDuration: 1
   _drowningDamage: 1
-  _drowningDamageInterval: 0.25
+  _drowningDamageInterval: 1.5
   _drowningBuffIcon: {fileID: -718255509646315996, guid: 3ab19ebc5de5d4525afdc9d466ed4fa0, type: 3}
 --- !u!1001 &1263106819
 PrefabInstance:
@@ -5509,10 +5509,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.CharacterSpawnRules
   _tempMaxCharCount: 6
-  _tempPerSecSpawnChance: 0.1
+  _tempPerSecSpawnChance: 0.075
   _tempSpawnEntries:
   - _character: {fileID: 11400000, guid: 887e9bbb18cc241e8afc54a9c9925063, type: 2}
-    _weight: 1
+    _weight: 0.5
     _environment: 2
   - _character: {fileID: 11400000, guid: 2a9db1f511b6a4888a49dd1d2f56bd26, type: 2}
     _weight: 1

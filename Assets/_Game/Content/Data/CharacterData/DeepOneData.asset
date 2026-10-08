@@ -17,12 +17,16 @@ MonoBehaviour:
   <BaseDefense>k__BackingField: 0
   <BaseDamage>k__BackingField: 6
   <KnockbackForce>k__BackingField: 5
-  <BaseSpeed>k__BackingField: 4
+  <BaseSpeed>k__BackingField: 2
   <BaseIFrameDuration>k__BackingField: 0.17
-  <BaseTurnSharpness>k__BackingField: 5
+  <BaseTurnSharpness>k__BackingField: 10
   <BaseKbResist>k__BackingField: 0
   <CanBeKnockedBacked>k__BackingField: 1
   <CanDie>k__BackingField: 1
   <CanDamagePlayerOnTouch>k__BackingField: 1
   <CharacterPrefab>k__BackingField: {fileID: 3454599396775519568, guid: 0344ba0b99a3c4bcaa9f40031b351c0b, type: 3}
-  LootDrops: []
+  LootDrops:
+  - _item: {fileID: 11400000, guid: 278c74882f6fb40319f2f4c99b2f71ff, type: 2}
+    _minAmount: 1
+    _maxAmount: 2
+    _dropChance: 1

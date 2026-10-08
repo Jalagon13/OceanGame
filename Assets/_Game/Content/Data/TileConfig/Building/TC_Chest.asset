@@ -12,15 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1261ca3245d048a78b7558ac6839603, type: 3}
   m_Name: TC_Chest
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ChestTileConfigSO
+  <RequiredHarvestType>k__BackingField: 2
   <MaxHP>k__BackingField: 50
   <LightLevel>k__BackingField: 0
   <Indestructible>k__BackingField: 0
   <IsSolid>k__BackingField: 0
   <Size>k__BackingField: {x: 1, y: 1}
   <DrawTile>k__BackingField: {fileID: 11400000, guid: c40fe86a3db0d486f96e97d809dd3899, type: 2}
-  <DroppedItem>k__BackingField: {fileID: 11400000, guid: 8546a0373cc304100bf54c76c1fc19b5, type: 2}
   <InteractBehavior>k__BackingField:
     rid: 2895664574932451429
+  LootDrops:
+  - _item: {fileID: 11400000, guid: 8546a0373cc304100bf54c76c1fc19b5, type: 2}
+    _minAmount: 1
+    _maxAmount: 1
+    _dropChance: 1
   references:
     version: 2
     RefIds:
