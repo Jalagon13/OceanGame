@@ -111,7 +111,12 @@ namespace OceanGame
             OnVisibleTileBoundsChanged?.Invoke(CurrentVisibleTileBounds, CurrentVisibleTileBounds);
         }
         
-        public bool PositionExistsInBounds(int x, int y)
+        public bool IsPositionInBounds(Vector3 worldPosition)
+        {
+            return IsPositionInBounds(Mathf.RoundToInt(worldPosition.x), Mathf.RoundToInt(worldPosition.y));
+        }
+        
+        public bool IsPositionInBounds(int x, int y)
         {
             Vector2Int positionToCheck = new Vector2Int(x, y);
             return CurrentVisibleTileBounds.Contains(positionToCheck);

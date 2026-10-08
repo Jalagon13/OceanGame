@@ -44,5 +44,8 @@ TagManager:
   - name: Lightmap
     uniqueID: 4052628259
     locked: 0
+  - name: PopupText
+    uniqueID: 726659643
+    locked: 0
   m_RenderingLayers:
   - Default

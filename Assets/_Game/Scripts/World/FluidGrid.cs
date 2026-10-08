@@ -33,7 +33,7 @@ namespace OceanGame
             
             _tiles[y * _width + x] = fluidType;
 
-            if (refreshCurrentBounds && PlayerCamera.Instance.PositionExistsInBounds(x, y))
+            if (refreshCurrentBounds && PlayerCamera.Instance.IsPositionInBounds(x, y))
             {
                 PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
             }

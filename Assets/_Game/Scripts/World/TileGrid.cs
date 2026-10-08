@@ -64,7 +64,7 @@ namespace OceanGame
             {
                 DamagedTiles[damagePos] = currentDamage;
 
-                if (refreshCurrentBounds && PlayerCamera.Instance.PositionExistsInBounds(x, y))
+                if (refreshCurrentBounds && PlayerCamera.Instance.IsPositionInBounds(x, y))
                 {
                     PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
                 }
@@ -95,7 +95,7 @@ namespace OceanGame
             // Grid-level event notification (for audio, chunk updates, etc.)
             OnTileDestroyed?.Invoke(new Vector2Int(x, y));
 
-            if (refreshCurrentBounds && PlayerCamera.Instance.PositionExistsInBounds(x, y))
+            if (refreshCurrentBounds && PlayerCamera.Instance.IsPositionInBounds(x, y))
             {
                 PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
             }
@@ -112,7 +112,7 @@ namespace OceanGame
                 OnTilePlaced?.Invoke(new(x, y));
             }
 
-            if (refreshCurrentBounds && PlayerCamera.Instance.PositionExistsInBounds(x, y))
+            if (refreshCurrentBounds && PlayerCamera.Instance.IsPositionInBounds(x, y))
             {
                 PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
             }
@@ -154,7 +154,7 @@ namespace OceanGame
                 }
             }
 
-            if (refreshCurrentBounds && PlayerCamera.Instance.PositionExistsInBounds(x, y))
+            if (refreshCurrentBounds && PlayerCamera.Instance.IsPositionInBounds(x, y))
             {
                 PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
             }
@@ -193,7 +193,7 @@ namespace OceanGame
                 OnTilePlaced?.Invoke(new(x, y));
             }
 
-            if (refreshCurrentBounds && PlayerCamera.Instance.PositionExistsInBounds(x, y))
+            if (refreshCurrentBounds && PlayerCamera.Instance.IsPositionInBounds(x, y))
             {
                 PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
             }

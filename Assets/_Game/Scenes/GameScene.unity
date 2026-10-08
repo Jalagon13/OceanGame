@@ -5368,6 +5368,7 @@ GameObject:
   - component: {fileID: 2043979319}
   - component: {fileID: 2043979320}
   - component: {fileID: 2043979321}
+  - component: {fileID: 2043979322}
   m_Layer: 0
   m_Name: WORLD
   m_TagString: Untagged
@@ -5530,6 +5531,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ChestManager
   <DefaultChestSize>k__BackingField: 20
+--- !u!114 &2043979322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043979312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b939b9f57ca941a58efe2534e9a2200, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldTextPopupManager
+  _damageNumberPrefab: {fileID: 2269376299504380118, guid: b70f3005dee9549a8a9791ad127aa781, type: 3}
+  _damageNumberColor: {r: 1, g: 0.27581587, b: 0, a: 1}
+  _damageNumberFontSize: 8
+  _itemCollectPopupPrefab: {fileID: 2893883857882228170, guid: 97583e12174a6488193592c120954140, type: 3}
+  _itemCollectTextColor: {r: 1, g: 1, b: 1, a: 1}
+  _itemCollectFontSize: 65
 --- !u!1 &2053910504
 GameObject:
   m_ObjectHideFlags: 0

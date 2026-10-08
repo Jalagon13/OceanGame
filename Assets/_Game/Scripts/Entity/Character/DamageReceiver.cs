@@ -35,6 +35,9 @@ namespace OceanGame
 
             _character.Health.TakeDamage(netDamage);
             
+            // TEMP: Spawn damage number popup. I will put this code in a client side game feel system later.
+            WorldTextPopupManager.Instance.SpawnDamageNumbers(_character.transform.position, netDamage);
+            
             if (!_character.Data.CanBeKnockedBacked || _character.Health.CurrentLifeState.Value == LifeState.Dead) return;
 
             float resistance = Mathf.Clamp01(_character.Data.BaseKbResist);
@@ -44,7 +47,6 @@ namespace OceanGame
             Vector2 direction = ((Vector2)_character.transform.position - hit.SourcePosition).normalized;
 
             _character.ApplyKnockback(direction * finalForce);
-            
         }
     }
     
