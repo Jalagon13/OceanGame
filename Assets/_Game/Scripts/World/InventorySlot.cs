@@ -7,9 +7,9 @@ namespace OceanGame
     public class InventorySlot
     {
         public ushort ItemId { get; private set; } 
-        public int CurrentAmount { get; private set; } = 0;
+        public int Amount { get; private set; } = 0;
 
-        public bool IsEmpty => CurrentAmount <= 0;
+        public bool IsEmpty => Amount <= 0;
 
         public InventorySlot(ItemSO itemSO, int amount)
         {
@@ -37,18 +37,18 @@ namespace OceanGame
         public void AssignItem(ushort itemId, int amount)
         {
             ItemId = itemId;
-            CurrentAmount = amount;
+            Amount = amount;
         }
 
         public void AddToCurrentAmount(int amount)
         {
-            CurrentAmount += amount;
+            Amount += amount;
         }
 
         public void RemoveFromCurrentAmount(int amount)
         {
-            CurrentAmount -= amount;
-            if (CurrentAmount <= 0)
+            Amount -= amount;
+            if (Amount <= 0)
             {
                 Clear();
             }
@@ -57,12 +57,12 @@ namespace OceanGame
         public void Clear()
         {
             ItemId = 0;
-            CurrentAmount = 0;
+            Amount = 0;
         }
         
         public InventorySlot Clone()
         {
-            return IsEmpty ? new InventorySlot() : new InventorySlot(ItemId, CurrentAmount);
+            return IsEmpty ? new InventorySlot() : new InventorySlot(ItemId, Amount);
         }
     }
 }

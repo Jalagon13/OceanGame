@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Tool_Axe
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ToolItemSO
   <ItemName>k__BackingField: Axe
-  <Description>k__BackingField: 
+  <Description>k__BackingField: Yes
   <DisplayIcon>k__BackingField: {fileID: 332521514213222740, guid: 2f87ce7e588154a76acbf2c4eda5fff0, type: 3}
   <IsStackable>k__BackingField: 0
   <HarvestType>k__BackingField: 2

@@ -13,6 +13,7 @@ namespace OceanGame
         [SerializeField] private TextMeshProUGUI _stackText;
         
         private RecipeSO _recipe;
+        private TooltipHover _hover;
 
         private void OnDestroy()
         {
@@ -30,6 +31,13 @@ namespace OceanGame
             _itemIcon.sprite = recipe.OutputItem.DisplayIcon;
             _stackText.text = recipe.OutputAmonut > 1 ? recipe.OutputAmonut.ToString() : string.Empty;
 
+            _hover = GetComponent<TooltipHover>();
+            _hover.OnHoverEnter = () =>
+            {
+                Tooltip.ShowNew();
+                Tooltip.CraftingRecipeDisplay(_recipe, fontSize: 12f, iconScale: 0.6f);
+            };
+
             RefreshUI();
         }
 
@@ -39,7 +47,8 @@ namespace OceanGame
         
             if(inventory.CanCraftRecipe(_recipe))
             {
-                if(!inventory.IsInventoryFull() && inventory.CanAcceptItem(_recipe.OutputItem.GetId(), _recipe.OutputAmonut)) // NTFS: Later on I need to make it so canacceptitem is true even if i do not have the space but if i craft the item and i consume the ingredients THEN I will have space
+                // NTFS: Later on I need to make it so canacceptitem is true even if i do not have the space but if i craft the item and i consume the ingredients THEN I will have space
+                if (!inventory.IsInventoryFull() && inventory.CanAcceptItem(_recipe.OutputItem.GetId(), _recipe.OutputAmonut)) 
                 {
                     var outputId = GameDataRegistry.Instance.GetItemIdFromItemSO(_recipe.OutputItem);
 

@@ -73,7 +73,7 @@ namespace OceanGame
                     if (!slot.IsEmpty)
                     {
                         var itemSO = GameDataRegistry.Instance.GetItemSOFromItemId(slot.ItemId);
-                        GameManager.Instance.SpawnItem(itemSO, slot.CurrentAmount, dropPos);
+                        GameManager.Instance.SpawnItem(itemSO, slot.Amount, dropPos);
                         slot.Clear();
                     }
                 }

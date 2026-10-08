@@ -91,7 +91,7 @@ namespace OceanGame
             if (character.gameObject.layer != 3) return;
             if (character.Health != null && character.Health.CurrentLifeState.Value != LifeState.Alive) return;
 
-            bool canThisPlayerAcceptThisItem = InventoryManager.Instance.CanAcceptItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.CurrentAmount);
+            bool canThisPlayerAcceptThisItem = InventoryManager.Instance.CanAcceptItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.Amount);
             if (canThisPlayerAcceptThisItem)
             {
                 OnItemCollected();
@@ -125,7 +125,7 @@ namespace OceanGame
                         if (character.Health != null && character.Health.CurrentLifeState.Value != LifeState.Alive) continue;
 
                         // Only detect players who can accept this item. In the future, query each player for can accept item somehow
-                        bool canThisPlayerAcceptThisItem = InventoryManager.Instance.CanAcceptItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.CurrentAmount);
+                        bool canThisPlayerAcceptThisItem = InventoryManager.Instance.CanAcceptItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.Amount);
 
                         if (canThisPlayerAcceptThisItem)
                         {
@@ -148,7 +148,7 @@ namespace OceanGame
         {
             if (Ctx.HasBeenCollected || Ctx.ItemSlot == null) return;
 
-            int remainder = InventoryManager.Instance.AddItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.CurrentAmount);
+            int remainder = InventoryManager.Instance.AddItem(Ctx.ItemSlot.ItemId, Ctx.ItemSlot.Amount);
 
             if (remainder <= 0)
             {

@@ -222,6 +222,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5774251868741017237}
   - component: {fileID: 3174087706022003324}
+  - component: {fileID: 4830824365028434391}
   m_Layer: 5
   m_Name: InventorySlotUI
   m_TagString: Untagged
@@ -265,6 +266,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.InventorySlotUI
   _itemIcon: {fileID: 3274273813896076968}
   _stackText: {fileID: 1114283585399596433}
+--- !u!114 &4830824365028434391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6208680448429095837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e870c776f3d274f9aa49ca62ed801daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.TooltipHover
 --- !u!1 &6420993907519511408
 GameObject:
   m_ObjectHideFlags: 0

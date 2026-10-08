@@ -14,6 +14,7 @@ namespace OceanGame
         private InventorySlot _slot;
         private Action _onSlotModified;
         private bool _isPlayerSlot;
+        private TooltipHover _hover;
 
         private void OnDestroy()
         {
@@ -29,6 +30,28 @@ namespace OceanGame
             _slot = InventoryManager.Instance.PlayerInventory[index];
             _isPlayerSlot = true;
             _onSlotModified = null;
+            _hover = GetComponent<TooltipHover>();
+            
+            _hover.OnHoverEnter = () =>
+            {
+                if(!_slot.IsEmpty && InventoryCursorManager.Instance.CursorSlot.IsEmpty)
+                {
+                    Tooltip.ShowNew();
+
+                    switch (_slot.GetItemSO())
+                    {
+                        // Add future cases here
+
+                        default:
+                            int quantity = _slot.Amount;
+                            string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
+                            string itemText = $"{_slot.GetItemSO().ItemName} {quantityString}<br>{_slot.GetItemSO().Description}";
+
+                            Tooltip.JustText(itemText, Color.white, fontSize: 12f);
+                            break;
+                    }
+                }
+            };
 
             InventoryManager.Instance.OnPlayerInventoryChanged += RefreshUI;
             RefreshUI();
@@ -55,7 +78,7 @@ namespace OceanGame
             {
                 _itemIcon.enabled = true;
                 _itemIcon.sprite = GameDataRegistry.Instance.GetItemSOFromItemId(_slot.ItemId).DisplayIcon;
-                _stackText.text = _slot.CurrentAmount > 1 ? _slot.CurrentAmount.ToString() : string.Empty;
+                _stackText.text = _slot.Amount > 1 ? _slot.Amount.ToString() : string.Empty;
             }
         }
 

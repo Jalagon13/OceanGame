@@ -73,7 +73,7 @@ namespace OceanGame
                 if (!PlayerInventory[i].IsEmpty && PlayerInventory[i].ItemId == itemId)
                 {
                     // Check if there is room remaining in this stack
-                    int roomLeft = MaxStackSize - PlayerInventory[i].CurrentAmount;
+                    int roomLeft = MaxStackSize - PlayerInventory[i].Amount;
                     if (roomLeft > 0)
                     {
                         int amountToAdd = Mathf.Min(amount, roomLeft);
@@ -134,7 +134,7 @@ namespace OceanGame
             {
                 if (!PlayerInventory[i].IsEmpty && PlayerInventory[i].ItemId == itemId)
                 {
-                    if (PlayerInventory[i].CurrentAmount >= amount)
+                    if (PlayerInventory[i].Amount >= amount)
                     {
                         PlayerInventory[i].RemoveFromCurrentAmount(amount);
                         OnPlayerInventoryChanged?.Invoke();
@@ -142,7 +142,7 @@ namespace OceanGame
                     }
                     else
                     {
-                        amount -= PlayerInventory[i].CurrentAmount;
+                        amount -= PlayerInventory[i].Amount;
                         PlayerInventory[i].Clear();
                     }
                 }
@@ -164,7 +164,7 @@ namespace OceanGame
             {
                 if (!PlayerInventory[i].IsEmpty && PlayerInventory[i].ItemId == itemId)
                 {
-                    total += PlayerInventory[i].CurrentAmount;
+                    total += PlayerInventory[i].Amount;
                 }
             }
             return total;
@@ -184,7 +184,7 @@ namespace OceanGame
                 // If it matches, it can hold whatever room is left in this specific stack
                 else if (PlayerInventory[i].ItemId == itemId)
                 {
-                    int roomLeft = MaxStackSize - PlayerInventory[i].CurrentAmount;
+                    int roomLeft = MaxStackSize - PlayerInventory[i].Amount;
                     if (roomLeft > 0)
                     {
                         remainingAmount -= roomLeft;
@@ -231,7 +231,7 @@ namespace OceanGame
                 {
                     return false;
                 }
-                else if(!slot.GetItemSO().IsStackable && slot.CurrentAmount < MaxStackSize)
+                else if(!slot.GetItemSO().IsStackable && slot.Amount < MaxStackSize)
                 {
                     return false;
                 }

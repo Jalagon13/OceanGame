@@ -48,7 +48,7 @@ namespace OceanGame
             aimDirection.Normalize();
             aimDirection *= _throwItemForce;
             
-            GameManager.Instance.SpawnItem(GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId), CursorSlot.CurrentAmount, Player.Instance.transform.position, aimDirection);
+            GameManager.Instance.SpawnItem(GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId), CursorSlot.Amount, Player.Instance.transform.position, aimDirection);
             CursorSlot.Clear();
 
             InventoryManager.Instance.RefreshInventory();
@@ -96,7 +96,7 @@ namespace OceanGame
                 ItemSO cursorItemSO = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
                 if (cursorItemSO is not OxygenTankItemSO) return;
 
-                if (CursorSlot.CurrentAmount == 1)
+                if (CursorSlot.Amount == 1)
                 {
                     ushort oldEquippedItemId = equipSlot.ItemId;
                     ushort newEquippedItemId = CursorSlot.ItemId;
@@ -157,7 +157,7 @@ namespace OceanGame
             }
             else if (slot.IsEmpty)
             {
-                slot.AssignItem(CursorSlot.ItemId, CursorSlot.CurrentAmount);
+                slot.AssignItem(CursorSlot.ItemId, CursorSlot.Amount);
                 CursorSlot.Clear();
             }
             else if (CanStacksMerge(slot, CursorSlot))
@@ -169,8 +169,8 @@ namespace OceanGame
             {
                 // Swap slot contents safely
                 ushort tempId = slot.ItemId;
-                int tempAmount = slot.CurrentAmount;
-                slot.AssignItem(CursorSlot.ItemId, CursorSlot.CurrentAmount);
+                int tempAmount = slot.Amount;
+                slot.AssignItem(CursorSlot.ItemId, CursorSlot.Amount);
                 CursorSlot.AssignItem(tempId, tempAmount);
             }
             
@@ -185,7 +185,7 @@ namespace OceanGame
             
             if (CursorSlot.IsEmpty)
             {
-                int cursorAmount = Mathf.CeilToInt(slot.CurrentAmount * 0.5f);
+                int cursorAmount = Mathf.CeilToInt(slot.Amount * 0.5f);
                 CursorSlot.AssignItem(slot.ItemId, cursorAmount);
                 slot.RemoveFromCurrentAmount(cursorAmount);
             }
@@ -232,7 +232,7 @@ namespace OceanGame
                 ItemSO cursorItem = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
                 if (canEquipValidator != null && !canEquipValidator(cursorItem)) return;
 
-                if (CursorSlot.CurrentAmount == 1)
+                if (CursorSlot.Amount == 1)
                 {
                     ushort oldEquippedId = equipSlot.ItemId;
                     ushort newEquippedId = CursorSlot.ItemId;
@@ -250,8 +250,8 @@ namespace OceanGame
                 return 0;
             }
 
-            int amountToMove = Mathf.Min(requestedAmount, source.CurrentAmount);
-            amountToMove = Mathf.Min(amountToMove, maxTargetAmount - target.CurrentAmount);
+            int amountToMove = Mathf.Min(requestedAmount, source.Amount);
+            amountToMove = Mathf.Min(amountToMove, maxTargetAmount - target.Amount);
             
             if (amountToMove <= 0)
             {
@@ -270,7 +270,7 @@ namespace OceanGame
                 !target.IsEmpty &&
                 !source.IsEmpty &&
                 target.ItemId == source.ItemId &&
-                target.CurrentAmount < GetMaxStackSize(GameDataRegistry.Instance.GetItemSOFromItemId(target.ItemId));
+                target.Amount < GetMaxStackSize(GameDataRegistry.Instance.GetItemSOFromItemId(target.ItemId));
         }
 
         private int GetMaxStackSize(ItemSO item)
