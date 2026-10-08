@@ -127,6 +127,8 @@ namespace OceanGame
             {
                 CloseExternalCraftingMenuUI();
                 CloseInventoryUI();
+                
+                Tooltip.HideUI();
             }
         }
 
