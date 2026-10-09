@@ -85,36 +85,98 @@ namespace OceanGame
             var tileConfig = tileItem.PlaceTileDataSO;
 
             // Only 1x1 non-multitile tiles can be placed on the background layer
-            if (activeLayer == WorldManager.LayerType.Background && tileConfig.IsMultiTile)
+            if (activeLayer == WorldManager.LayerType.Background && tileConfig.IsMultiTile) return false;
+
+            // Check if the targeted layer already has a tile at this cell
+            var targetTileData = targetGrid.GetTileData(mouseTilePos.x, mouseTilePos.y);
+            if(targetTileData.HasTile) return false;
+
+            Vector2Int placementSize = tileConfig.Size;
+
+            if (HasEntityOverlappingTileArea(mouseTilePos, placementSize))
             {
                 return false;
             }
 
-            // Check if the targeted layer already has a tile at this cell
-            var targetTileData = targetGrid.GetTileData(mouseTilePos.x, mouseTilePos.y);
+            bool isBackgroundPlacement = activeLayer == WorldManager.LayerType.Background;
+            var supportGrid = isBackgroundPlacement ? world.BgGrid : world.FgGrid;
 
-            if (!targetTileData.HasTile)
+            // Just the complicated rules for when you can place a tile as it is now
+            bool hasSolidNeighbor =
+                IsSolidTile(supportGrid, mouseTilePos.x, mouseTilePos.y + 1) ||
+                IsSolidTile(supportGrid, mouseTilePos.x, mouseTilePos.y - 1) ||
+                IsSolidTile(supportGrid, mouseTilePos.x - 1, mouseTilePos.y) ||
+                IsSolidTile(supportGrid, mouseTilePos.x + 1, mouseTilePos.y);
+
+            bool hasBackgroundNeighbor =
+                world.BgGrid.GetTileData(mouseTilePos.x, mouseTilePos.y + 1).HasTile ||
+                world.BgGrid.GetTileData(mouseTilePos.x, mouseTilePos.y - 1).HasTile ||
+                world.BgGrid.GetTileData(mouseTilePos.x - 1, mouseTilePos.y).HasTile ||
+                world.BgGrid.GetTileData(mouseTilePos.x + 1, mouseTilePos.y).HasTile;
+
+            bool hasForegroundNeighbor =
+                world.FgGrid.GetTileData(mouseTilePos.x, mouseTilePos.y + 1).HasTile ||
+                world.FgGrid.GetTileData(mouseTilePos.x, mouseTilePos.y - 1).HasTile ||
+                world.FgGrid.GetTileData(mouseTilePos.x - 1, mouseTilePos.y).HasTile ||
+                world.FgGrid.GetTileData(mouseTilePos.x + 1, mouseTilePos.y).HasTile;
+
+            bool canPlaceBesideForeground = isBackgroundPlacement && !hasBackgroundNeighbor && hasForegroundNeighbor;
+            bool isBehindForegroundTile = world.FgGrid.GetTileData(mouseTilePos.x, mouseTilePos.y).HasTile;
+            bool hasPlacementSupport = hasSolidNeighbor || (isBackgroundPlacement && isBehindForegroundTile) || canPlaceBesideForeground;
+
+            // If no support, do not do that
+            if (!hasPlacementSupport) return false;
+
+            // If everything is good then we can proceed to place the tile
+            var tileToPlaceTd = new TileData(tileConfig.GetId());
+
+            if (activeLayer == WorldManager.LayerType.Foreground && tileConfig.IsMultiTile)
             {
-                var tileToPlaceTd = new TileData(tileConfig.GetId());
+                world.FgGrid.PlaceMultiTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true, manualyPlaced: true);
+            }
+            else
+            {
+                targetGrid.SetTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true, manualyPlaced: true);
+            }
 
-                if (activeLayer == WorldManager.LayerType.Foreground && tileConfig.IsMultiTile)
+            InventoryInputManager.Instance.GetActiveInvSlot().RemoveFromCurrentAmount(1);
+            InventoryManager.Instance.RefreshInventory();
+
+            float interval = _placementsPerSecond > 0f ? 1f / _placementsPerSecond : 0.25f;
+            _nextPlaceTime = Time.time + interval;
+            
+            return true;
+        }
+
+        private static bool HasEntityOverlappingTileArea(Vector2Int tilePosition, Vector2Int tileSize)
+        {
+            var entityManager = EntityManager.Instance;
+
+            // Don't allow placement when entity occupancy can't be checked.
+            if (entityManager == null) return true;
+
+            Vector2 tileAreaCenter = new(tilePosition.x + tileSize.x * 0.5f, tilePosition.y + tileSize.y * 0.5f);
+            Vector2 tileAreaSize = new(tileSize.x, tileSize.y);
+            var entities = entityManager.Entities;
+
+            for (int i = 0; i < entities.Count; i++)
+            {
+                Entity entity = entities[i];
+                if (entity == null) continue;
+
+                if (GridPhysics.IsOverlapping(tileAreaCenter, tileAreaSize, entity.transform.position, entity.ColliderSize))
                 {
-                    world.FgGrid.PlaceMultiTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true, manualyPlaced: true);
+                    return true;
                 }
-                else
-                {
-                    targetGrid.SetTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true, manualyPlaced: true);
-                }
-
-                InventoryInputManager.Instance.GetActiveInvSlot().RemoveFromCurrentAmount(1);
-                InventoryManager.Instance.RefreshInventory();
-
-                float interval = _placementsPerSecond > 0f ? 1f / _placementsPerSecond : 0.25f;
-                _nextPlaceTime = Time.time + interval;
-                return true;
             }
 
             return false;
+        }
+
+        private static bool IsSolidTile(TileGrid grid, int x, int y)
+        {
+            var tile = grid.GetTileData(x, y);
+            return tile.HasTile && tile.IsSolid;
         }
     }
 }
