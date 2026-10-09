@@ -20,6 +20,7 @@ namespace OceanGame
         [SerializeField] private Transform _externalCraftingSlotsHolder;
         
         [Header("Default Crafting Menu")]
+        [SerializeField] private Transform _defaultCraftMenuUI;
         [SerializeField] private Transform _defaultCraftSlotsHolder;
         [SerializeField] private List<RecipeSO> _defaultCraftingRecipes;
         
@@ -30,6 +31,8 @@ namespace OceanGame
             InventoryInputManager.Instance.OnInventoryOpenChanged += ToggleInventoryUI;
             InventoryInputManager.Instance.OnActiveHotbarIndexChanged += UpdateHotbarUI;
             InventoryInputManager.Instance.OnCraftTableInteract += ShowCraftingMenu;
+            ChestManager.Instance.OnChestOpened += OnChestOpened;
+            ChestManager.Instance.OnChestClosed += OnChestClosed;
 
             CloseInventoryUI();
             InitializeSlots();
@@ -44,8 +47,10 @@ namespace OceanGame
             InventoryInputManager.Instance.OnInventoryOpenChanged -= ToggleInventoryUI;
             InventoryInputManager.Instance.OnActiveHotbarIndexChanged -= UpdateHotbarUI;
             InventoryInputManager.Instance.OnCraftTableInteract -= ShowCraftingMenu;
+            ChestManager.Instance.OnChestOpened -= OnChestOpened;
+            ChestManager.Instance.OnChestClosed -= OnChestClosed;
         }
-        
+
         private void Update() 
         {
             if(_externalCraftMenuUI.gameObject.activeInHierarchy)
@@ -54,29 +59,10 @@ namespace OceanGame
                 
                 if(distance > Player.Instance.InteractRange)
                 {
+                    ShowDefaultCraftingMenuUI();
                     CloseExternalCraftingMenuUI();
                 }
             }
-        }
-
-        private void ShowCraftingMenu(List<RecipeSO> recipes, int x, int y)
-        {
-            _interactedCtPos = new Vector2(x + 0.5f, y + 0.5f);
-        
-            // Destroy any children left
-            for (int i = _externalCraftingSlotsHolder.childCount - 1; i >= 0; i--)
-            {
-                Destroy(_externalCraftingSlotsHolder.GetChild(i).gameObject);
-            }
-
-            // Populate craftMenu
-            foreach (var recipe in recipes)
-            {
-                var cSlot = Instantiate(_craftingSlotPrefab, _externalCraftingSlotsHolder);
-                cSlot.Initialize(recipe);
-            }
-
-            ShowExternalCraftingMenuUI();
         }
 
         private void InitializeSlots()
@@ -107,8 +93,45 @@ namespace OceanGame
                 var cSlot = Instantiate(_craftingSlotPrefab, _defaultCraftSlotsHolder);
                 cSlot.Initialize(recipe);
             }
+
+        }
+
+        private void OnChestOpened(ChestData data)
+        {
+            CloseDefaultCraftingMenuUI();
             
-            
+            if(_externalCraftMenuUI.gameObject.activeInHierarchy)
+            {
+                CloseExternalCraftingMenuUI();
+            }
+        }
+
+        private void OnChestClosed()
+        {
+            ShowDefaultCraftingMenuUI();
+        }
+
+        private void ShowCraftingMenu(List<RecipeSO> recipes, int x, int y)
+        {
+            ChestManager.Instance.CloseChest();
+            CloseDefaultCraftingMenuUI();
+        
+            _interactedCtPos = new Vector2(x + 0.5f, y + 0.5f);
+        
+            // Destroy any children left
+            for (int i = _externalCraftingSlotsHolder.childCount - 1; i >= 0; i--)
+            {
+                Destroy(_externalCraftingSlotsHolder.GetChild(i).gameObject);
+            }
+
+            // Populate craftMenu
+            foreach (var recipe in recipes)
+            {
+                var cSlot = Instantiate(_craftingSlotPrefab, _externalCraftingSlotsHolder);
+                cSlot.Initialize(recipe);
+            }
+
+            ShowExternalCraftingMenuUI();
         }
 
         private void UpdateHotbarUI(int activeHotbarIndex)
@@ -121,6 +144,7 @@ namespace OceanGame
         {
             if(isInventoryOpen)
             {
+                ShowDefaultCraftingMenuUI();
                 ShowInventoryUI();
             }
             else
@@ -150,6 +174,16 @@ namespace OceanGame
         private void CloseExternalCraftingMenuUI()
         {
             _externalCraftMenuUI.gameObject.SetActive(false);
+        }
+        
+        private void ShowDefaultCraftingMenuUI()
+        {
+            _defaultCraftMenuUI.gameObject.SetActive(true);
+        }
+
+        private void CloseDefaultCraftingMenuUI()
+        {
+            _defaultCraftMenuUI.gameObject.SetActive(false);
         }
     }
 }

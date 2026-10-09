@@ -29,6 +29,7 @@ namespace OceanGame
                 chest = new ChestData(rootPos, DefaultChestSize);
                 _chests[rootPos] = chest;
             }
+            
             return chest;
         }
 
@@ -41,13 +42,14 @@ namespace OceanGame
         public void OpenChest(Vector2Int rootPos)
         {
             CurrentOpenChest = GetOrCreateChest(rootPos);
-            OnChestOpened?.Invoke(CurrentOpenChest);
 
             // Automatically open player inventory UI so items can be transferred
             if (!InventoryInputManager.Instance.IsInventoryOpen)
             {
                 InventoryInputManager.Instance.OnToggleInventory();
             }
+            
+            OnChestOpened?.Invoke(CurrentOpenChest);
         }
 
         public void CloseChest()

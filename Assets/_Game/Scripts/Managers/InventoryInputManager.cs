@@ -31,7 +31,6 @@ namespace OceanGame
             GameInput.Instance.OnToggleInventory += OnToggleInventory;
             GameInput.Instance.OnPrimaryActionPressed += OnPrimaryActionPressed;
             GameInput.Instance.OnSecondaryActionPressed += OnSecondaryActionPressed;
-
         }
 
         private void OnDestroy()
@@ -136,6 +135,16 @@ namespace OceanGame
         }
 
         public void OnToggleInventory()
+        {
+            if (Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
+
+            IsInventoryOpen = !IsInventoryOpen;
+
+            OnInventoryOpenChanged?.Invoke(IsInventoryOpen);
+        }
+        
+        // Used for chest manager
+        public void OnToggleInventory(bool showDefaultCraftingMenu = true)
         {
             if (Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
 

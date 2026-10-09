@@ -53,11 +53,14 @@ namespace OceanGame
 
         private void ShowChestUI(ChestData chest)
         {
+
+        
             // Clean up old slot objects
             for (int i = _chestSlotsHolder.childCount - 1; i >= 0; i--)
             {
                 Destroy(_chestSlotsHolder.GetChild(i).gameObject);
             }
+            
             _instantiatedSlots.Clear();
 
             // Populate slots for this chest
