@@ -1608,6 +1608,75 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1442964531627222901, guid: d282bbe71d29441cbbbd3a0e146ffd3c, type: 3}
   m_PrefabInstance: {fileID: 642800041}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &653184663
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 653184664}
+  - component: {fileID: 653184665}
+  - component: {fileID: 653184666}
+  m_Layer: 0
+  m_Name: CHARACTER
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &653184664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653184663}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 970924654}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &653184665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653184663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d58df6de50ce94e08a6db50f9a63e04c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.CharacterManager
+  _enableSpawning: 1
+  _globalMaxCharacterCap: 200
+  _durationTillCharacterDespawns: 15
+--- !u!114 &653184666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653184663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f8f52762262d413e849637a1b15c3fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.CharacterSpawnRules
+  _tempMaxCharCount: 6
+  _tempPerSecSpawnChance: 0.075
+  _tempSpawnEntries:
+  - _character: {fileID: 11400000, guid: 887e9bbb18cc241e8afc54a9c9925063, type: 2}
+    _weight: 1
+    _environment: 2
+  - _character: {fileID: 11400000, guid: 2a9db1f511b6a4888a49dd1d2f56bd26, type: 2}
+    _weight: 0.5
+    _environment: 0
 --- !u!1 &675801627
 GameObject:
   m_ObjectHideFlags: 0
@@ -2446,6 +2515,7 @@ Transform:
   - {fileID: 1178486982}
   - {fileID: 1246345772}
   - {fileID: 2043979313}
+  - {fileID: 653184664}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &970924655
@@ -2884,7 +2954,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 24.999878, y: 56.92}
+  m_AnchoredPosition: {x: 24.999878, y: 56.920044}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1143112405
@@ -5643,12 +5713,10 @@ GameObject:
   - component: {fileID: 2043979314}
   - component: {fileID: 2043979315}
   - component: {fileID: 2043979316}
+  - component: {fileID: 2043979322}
   - component: {fileID: 2043979317}
   - component: {fileID: 2043979318}
-  - component: {fileID: 2043979319}
-  - component: {fileID: 2043979320}
   - component: {fileID: 2043979321}
-  - component: {fileID: 2043979322}
   m_Layer: 0
   m_Name: WORLD
   m_TagString: Untagged
@@ -5762,42 +5830,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad3c40d5996ba48a9b0408f6de2e7233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.DrainManager
---- !u!114 &2043979319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2043979312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d58df6de50ce94e08a6db50f9a63e04c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.CharacterManager
-  _enableSpawning: 0
-  _globalMaxCharacterCap: 200
-  _durationTillCharacterDespawns: 15
---- !u!114 &2043979320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2043979312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f8f52762262d413e849637a1b15c3fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.CharacterSpawnRules
-  _tempMaxCharCount: 6
-  _tempPerSecSpawnChance: 0.075
-  _tempSpawnEntries:
-  - _character: {fileID: 11400000, guid: 887e9bbb18cc241e8afc54a9c9925063, type: 2}
-    _weight: 0.5
-    _environment: 2
-  - _character: {fileID: 11400000, guid: 2a9db1f511b6a4888a49dd1d2f56bd26, type: 2}
-    _weight: 1
-    _environment: 0
 --- !u!114 &2043979321
 MonoBehaviour:
   m_ObjectHideFlags: 0

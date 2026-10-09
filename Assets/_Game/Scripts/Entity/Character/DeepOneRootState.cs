@@ -19,17 +19,29 @@ namespace OceanGame
         public float GravityForce = 20f;
         public float TerminalVelocity = -18f;
 
-        public DeepOnePursuingState Pursuing { get; private set; }
+        public DeepOneLandPursuingState LandPursuing { get; private set; }
+        public DeepOneWaterPursuingState WaterPursuing { get; private set; }
 
         public DeepOneRootState() : base() { }
 
         public override void Initialize(ServerCharacter ctx)
         {
             base.Initialize(ctx);
-            Pursuing = new DeepOnePursuingState(null, this, ctx);
+
+            LandPursuing = new DeepOneLandPursuingState(null, this, ctx);
+            WaterPursuing = new DeepOneWaterPursuingState(null, this, ctx);
         }
 
-        protected override State GetInitialState() => Pursuing;
+        protected override State GetInitialState()
+        {
+            return IsFullySubmerged() ? WaterPursuing : LandPursuing;
+        }
+
+        protected override State GetTransition()
+        {
+            State desiredState = IsFullySubmerged() ? WaterPursuing : LandPursuing;
+            return ActiveChild == desiredState ? null : desiredState;
+        }
 
         private bool IsWaterAt(int tileX, int tileY)
         {
@@ -60,130 +72,23 @@ namespace OceanGame
 
     #endregion
 
-    #region Pursuing State
+    #region Abstract Pursuing State
 
-    public class DeepOnePursuingState : State
+    public abstract class DeepOnePursuingState : State
     {
-        private readonly ServerCharacter _ctx;
-        private readonly DeepOneRootState _root;
+        protected readonly ServerCharacter Ctx;
+        protected readonly DeepOneRootState Root;
 
         private ServerCharacter _target;
-        private Vector2 _desiredVisualRotation = Vector2.up;
         private const float TurnDegreeThreshold = 90f;
 
-        public DeepOnePursuingState(StateMachine machine, State parent, ServerCharacter ctx) : base(machine, parent)
+        protected DeepOnePursuingState(State parent, ServerCharacter ctx) : base(null, parent)
         {
-            _ctx = ctx;
-            _root = (DeepOneRootState)parent;
+            Ctx = ctx;
+            Root = (DeepOneRootState)parent;
         }
 
-        protected override void OnFixedUpdate(float fixedDeltaTime)
-        {
-            // Let knockback control movement, but still apply gravity to it.
-            if (_ctx.IsKnockedBack)
-            {
-                _ctx.KnockbackVelocity.y -= _root.GravityForce * fixedDeltaTime;
-                _ctx.KnockbackVelocity.y = Mathf.Max(_ctx.KnockbackVelocity.y, _root.TerminalVelocity);
-                return;
-            }
-
-            // Find closest player and establish direction
-            float direction = 0f;
-            ServerCharacter target = FindClosestPlayer();
-            _target = target;
-
-            if (target != null)
-            {
-                float horizontalDifference = target.transform.position.x - _ctx.transform.position.x;
-
-                if (Mathf.Abs(horizontalDifference) > 0.05f)
-                {
-                    direction = Mathf.Sign(horizontalDifference);
-                }
-            }
-
-            // If fully submerged use the swimming movement
-            if (_root.IsFullySubmerged())
-            {
-                Vector2 swimDirection = Vector2.zero;
-
-                if (target != null)
-                {
-                    Vector2 targetOffset = (Vector2)target.transform.position - (Vector2)_ctx.transform.position;
-
-                    if (targetOffset.sqrMagnitude > 0.0025f)
-                    {
-                        swimDirection = targetOffset.normalized;
-                    }
-                }
-
-                float swimSpeed = _ctx.Stats.MoveSpeed.GetValue();
-
-                _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, swimDirection * swimSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
-
-                return;
-            }
-
-            // Move and try to jump
-            _ctx.Velocity.x = Mathf.Lerp(_ctx.Velocity.x, direction * _ctx.Data.BaseSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
-
-            bool grounded = _ctx.CollisionResult.TouchingBottom;
-            bool hitWall = (direction < 0f && _ctx.CollisionResult.TouchingLeft) || (direction > 0f && _ctx.CollisionResult.TouchingRight);
-            bool hitCeiling = _ctx.CollisionResult.TouchingTop && _ctx.Velocity.y > 0f;
-
-            bool shouldJumpForWall = target != null && grounded && hitWall;
-            bool playerIsAbove = target != null && target.transform.position.y > _ctx.transform.position.y;
-            bool shouldJumpFromSurface = target != null && _root.IsInWater() && !_root.IsFullySubmerged() && playerIsAbove && _ctx.Velocity.y <= 0f;
-
-            if (hitCeiling)
-            {
-                _ctx.Velocity.y = -0.1f;
-            }
-            else if (shouldJumpForWall || shouldJumpFromSurface)
-            {
-                _ctx.Velocity.y = _root.JumpSpeed;
-            }
-            else if (grounded && _ctx.Velocity.y <= 0f)
-            {
-                _ctx.Velocity.y = -0.1f;
-            }
-            else
-            {
-                _ctx.Velocity.y -= _root.GravityForce * fixedDeltaTime;
-                _ctx.Velocity.y = Mathf.Max(_ctx.Velocity.y, _root.TerminalVelocity);
-            }
-        }
-
-        protected override void OnUpdate(float deltaTime)
-        {
-            if (_ctx.VisualsGO == null)
-            {
-                return;
-            }
-
-            // Roate sprite visuals
-            _desiredVisualRotation = Vector2.up;
-
-            if (_root.IsInWater() && _target != null)
-            {
-                Vector2 directionToTarget = (Vector2)_target.transform.position - (Vector2)_ctx.transform.position;
-
-                if (directionToTarget.sqrMagnitude > 0.0025f)
-                {
-                    _desiredVisualRotation = directionToTarget.normalized;
-                }
-            }
-
-            float angleDifference = Vector2.SignedAngle(_ctx.VisualsGO.transform.up, _desiredVisualRotation);
-            float lerpSpeed = Mathf.Abs(angleDifference) < TurnDegreeThreshold ? 10f : 40f;
-            float currentAngle = _ctx.VisualsGO.transform.eulerAngles.z;
-            float targetAngle = currentAngle + angleDifference;
-            float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, lerpSpeed * deltaTime);
-
-            _ctx.VisualsGO.transform.rotation = Quaternion.Euler(0f, 0f, newAngle);
-        }
-
-        private ServerCharacter FindClosestPlayer()
+        protected ServerCharacter FindClosestPlayer()
         {
             if (EntityManager.Instance == null)
             {
@@ -191,18 +96,15 @@ namespace OceanGame
             }
 
             ServerCharacter closestPlayer = null;
-            float rangeSquared = _root.DetectionRangeTiles * _root.DetectionRangeTiles;
+            float rangeSquared = Root.DetectionRangeTiles * Root.DetectionRangeTiles;
             float closestDistanceSquared = rangeSquared;
-
-            // Find the closest player by looping through the entities
             var entities = EntityManager.Instance.Entities;
 
-            // NTFS: This might not scale well
             for (int i = 0; i < entities.Count; i++)
             {
                 Entity entity = entities[i];
 
-                if (entity == null || entity == _ctx)
+                if (entity == null || entity == Ctx)
                 {
                     continue;
                 }
@@ -217,7 +119,8 @@ namespace OceanGame
                     continue;
                 }
 
-                float distanceSquared = ((Vector2)character.transform.position - (Vector2)_ctx.transform.position).sqrMagnitude;
+                float distanceSquared =
+                    ((Vector2)character.transform.position - (Vector2)Ctx.transform.position).sqrMagnitude;
 
                 if (distanceSquared <= closestDistanceSquared)
                 {
@@ -228,8 +131,143 @@ namespace OceanGame
 
             return closestPlayer;
         }
+
+        protected void SetTarget(ServerCharacter target)
+        {
+            _target = target;
+        }
+
+        protected override void OnUpdate(float deltaTime)
+        {
+            if (Ctx.VisualsGO == null)
+            {
+                return;
+            }
+
+            Vector2 desiredVisualRotation = Vector2.up;
+
+            if (Root.IsInWater() && _target != null)
+            {
+                Vector2 directionToTarget = (Vector2)_target.transform.position - (Vector2)Ctx.transform.position;
+
+                if (directionToTarget.sqrMagnitude > 0.0025f)
+                {
+                    desiredVisualRotation = directionToTarget.normalized;
+                }
+            }
+
+            float angleDifference = Vector2.SignedAngle(Ctx.VisualsGO.transform.up, desiredVisualRotation);
+            float lerpSpeed = Mathf.Abs(angleDifference) < TurnDegreeThreshold ? 10f : 40f;
+            float currentAngle = Ctx.VisualsGO.transform.eulerAngles.z;
+            float targetAngle = currentAngle + angleDifference;
+            float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, lerpSpeed * deltaTime);
+
+            Ctx.VisualsGO.transform.rotation = Quaternion.Euler(0f, 0f, newAngle);
+        }
     }
 
     #endregion
 
+    #region Land Pursuing State
+
+    public class DeepOneLandPursuingState : DeepOnePursuingState
+    {
+        public DeepOneLandPursuingState(StateMachine machine, State parent, ServerCharacter ctx) : base(parent, ctx) { }
+
+        protected override void OnFixedUpdate(float fixedDeltaTime)
+        {
+            if (Ctx.IsKnockedBack)
+            {
+                // Like the player's grounded state, don't keep adding gravity after landing.
+                if (!Root.IsInWater() && !Ctx.CollisionResult.TouchingBottom)
+                {
+                    Ctx.KnockbackVelocity.y -= Root.GravityForce * fixedDeltaTime;
+                    Ctx.KnockbackVelocity.y = Mathf.Max(Ctx.KnockbackVelocity.y, Root.TerminalVelocity);
+                }
+
+                return;
+            }
+
+            ServerCharacter target = FindClosestPlayer();
+            SetTarget(target);
+
+            float direction = 0f;
+
+            if (target != null)
+            {
+                float horizontalDifference = target.transform.position.x - Ctx.transform.position.x;
+
+                if (Mathf.Abs(horizontalDifference) > 0.05f)
+                {
+                    direction = Mathf.Sign(horizontalDifference);
+                }
+            }
+
+            Ctx.Velocity.x = Mathf.Lerp(Ctx.Velocity.x, direction * Ctx.Data.BaseSpeed, fixedDeltaTime * Ctx.Data.BaseTurnSharpness);
+
+            bool grounded = Ctx.CollisionResult.TouchingBottom;
+            bool hitWall = (direction < 0f && Ctx.CollisionResult.TouchingLeft) || (direction > 0f && Ctx.CollisionResult.TouchingRight);
+            bool hitCeiling = Ctx.CollisionResult.TouchingTop && Ctx.Velocity.y > 0f;
+            bool shouldJumpForWall = target != null && grounded && hitWall;
+            bool playerIsAbove = target != null && target.transform.position.y > Ctx.transform.position.y;
+            bool shouldJumpFromSurface = target != null && Root.IsInWater() && !Root.IsFullySubmerged() && playerIsAbove && Ctx.Velocity.y <= 0f;
+
+            if (hitCeiling)
+            {
+                Ctx.Velocity.y = -0.1f;
+            }
+            else if (shouldJumpForWall || shouldJumpFromSurface)
+            {
+                Ctx.Velocity.y = Root.JumpSpeed;
+            }
+            else if (grounded && Ctx.Velocity.y <= 0f)
+            {
+                Ctx.Velocity.y = -0.1f;
+            }
+            else
+            {
+                Ctx.Velocity.y -= Root.GravityForce * fixedDeltaTime;
+                Ctx.Velocity.y = Mathf.Max(Ctx.Velocity.y, Root.TerminalVelocity);
+            }
+        }
+    }
+
+    #endregion
+
+    #region Land Pursuing State
+
+    public class DeepOneWaterPursuingState : DeepOnePursuingState
+    {
+        public DeepOneWaterPursuingState(StateMachine machine, State parent, ServerCharacter ctx) : base(parent, ctx) { }
+
+        protected override void OnFixedUpdate(float fixedDeltaTime)
+        {
+            if (Ctx.IsKnockedBack)
+            {
+                // The shared character tick decays knockback; water movement adds no gravity.
+                return;
+            }
+
+            ServerCharacter target = FindClosestPlayer();
+            SetTarget(target);
+
+            Vector2 swimDirection = Vector2.zero;
+
+            if (target != null)
+            {
+                Vector2 targetOffset = (Vector2)target.transform.position - (Vector2)Ctx.transform.position;
+
+                if (targetOffset.sqrMagnitude > 0.0025f)
+                {
+                    swimDirection = targetOffset.normalized;
+                }
+            }
+
+            float swimSpeed = Ctx.Stats.MoveSpeed.GetValue();
+
+            Ctx.Velocity = Vector2.Lerp(Ctx.Velocity, swimDirection * swimSpeed, fixedDeltaTime * Ctx.Data.BaseTurnSharpness);
+        }
+    }
+
+    #endregion
 }

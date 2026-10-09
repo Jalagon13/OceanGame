@@ -36,7 +36,6 @@ namespace OceanGame
     {
         public readonly PlayerIdleState Idle;
         public readonly PlayerMoveState Move;
-        public readonly PlayerKnockbackState Knockback;
     
         private readonly ServerCharacter _ctx;
         private Player _player;
@@ -47,7 +46,6 @@ namespace OceanGame
 
             Idle = new PlayerIdleState(m, this, _ctx);
             Move = new PlayerMoveState(m, this, _ctx);
-            Knockback = new PlayerKnockbackState(m, this, _ctx);
         }
 
         protected override State GetInitialState() => Idle;
@@ -426,25 +424,6 @@ namespace OceanGame
 
             var currentSpeed = _ctx.Stats.MoveSpeed.GetValue();
             _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
-        }
-    }
-
-    #endregion
-
-    #region Knockback State
-
-    public class PlayerKnockbackState : State
-    {
-        private readonly ServerCharacter _ctx;
-
-        public PlayerKnockbackState(StateMachine m, State parent, ServerCharacter ctx) : base(m, parent)
-        {
-            _ctx = ctx;
-        }
-
-        protected override State GetTransition()
-        {
-            return null; // WIP
         }
     }
 
