@@ -49,6 +49,7 @@ namespace OceanGame
             if(ActiveSlot.IsEmpty) return;
             
             if(Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
+            if (WorldManager.Instance.MouseOverUI) return;
             
             var player = Player.Instance;
 

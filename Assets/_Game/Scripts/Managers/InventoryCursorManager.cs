@@ -48,7 +48,7 @@ namespace OceanGame
             aimDirection.Normalize();
             aimDirection *= _throwItemForce;
             
-            GameManager.Instance.SpawnItem(GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId), CursorSlot.Amount, Player.Instance.transform.position, aimDirection);
+            GameManager.Instance.SpawnItem(GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId), CursorSlot.Amount, Player.Instance.Character.transform.position, aimDirection);
             CursorSlot.Clear();
 
             InventoryManager.Instance.RefreshInventory();
