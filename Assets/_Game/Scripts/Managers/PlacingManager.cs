@@ -122,7 +122,9 @@ namespace OceanGame
 
             bool canPlaceBesideForeground = isBackgroundPlacement && !hasBackgroundNeighbor && hasForegroundNeighbor;
             bool isBehindForegroundTile = world.FgGrid.GetTileData(mouseTilePos.x, mouseTilePos.y).HasTile;
-            bool hasPlacementSupport = hasSolidNeighbor || (isBackgroundPlacement && isBehindForegroundTile) || canPlaceBesideForeground;
+            bool isInFrontOfBackgroundTile = !isBackgroundPlacement && world.BgGrid.GetTileData(mouseTilePos.x, mouseTilePos.y).HasTile;
+            bool canPlaceBesideBackground = !isBackgroundPlacement && hasBackgroundNeighbor;
+            bool hasPlacementSupport = hasSolidNeighbor || (isBackgroundPlacement && isBehindForegroundTile) || canPlaceBesideForeground || isInFrontOfBackgroundTile || canPlaceBesideBackground;
 
             // If no support, do not do that
             if (!hasPlacementSupport) return false;
