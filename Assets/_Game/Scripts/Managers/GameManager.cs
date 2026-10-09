@@ -1,10 +1,13 @@
+using System;
 using UnityEngine;
 
 namespace OceanGame
 {
     public class GameManager : MonoBehaviour
     {
-       public static GameManager Instance { get; private set; }
+      public Action OnPrototypeEnd;
+
+      public static GameManager Instance { get; private set; }
        
        [SerializeField] private Item _itemPrefab;
        
@@ -19,5 +22,10 @@ namespace OceanGame
             Item itemToSpawn = Instantiate(_itemPrefab, position, Quaternion.identity);
             itemToSpawn.InitializeItem(new(itemSO, amount), startingVector);
        }
-    }
+
+      public void EndPrototype()
+      {
+         OnPrototypeEnd?.Invoke();
+      }
+   }
 }
