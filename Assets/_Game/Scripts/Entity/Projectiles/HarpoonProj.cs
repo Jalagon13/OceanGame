@@ -2,16 +2,27 @@ using UnityEngine;
 
 namespace OceanGame
 {
-    public class Harpoon : Projectile
+    public class HarpoonProj : Projectile
     {
+        [Header("Gravity")]
+        public float GravityForce = 20f;
+        public float TerminalVelocity = -18f;
+
         protected override void OnInit()
         {
             base.OnInit();
         }
 
-        protected override void OnUpdateBehavior(float fixedDeltaTime)
+        protected override void OnFixedUpdateBehavior(float fixedDeltaTime)
         {
-            base.OnUpdateBehavior(fixedDeltaTime);
+            Velocity.y -= GravityForce * fixedDeltaTime;
+
+            if (Velocity.y < TerminalVelocity)
+            {
+                Velocity.y = TerminalVelocity;
+            }
+
+            base.OnFixedUpdateBehavior(fixedDeltaTime);
         }
 
         protected override void OnTileCollide(GridPhysics.CollisionResult collision)

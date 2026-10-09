@@ -111,6 +111,8 @@ MonoBehaviour:
   ColliderSize: {x: 0, y: 0}
   _data: {fileID: 11400000, guid: b5e08a065994447879f5911de6519ca2, type: 2}
   _visuals: {fileID: 1074952428397248586}
+  GravityForce: 8
+  TerminalVelocity: -8
 --- !u!1 &8046294159509687918
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,8 +194,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 5
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: -7435222215631992490, guid: 2f87ce7e588154a76acbf2c4eda5fff0, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

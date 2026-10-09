@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Proj_Harpoon
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ProjectileSO
   <ColliderSize>k__BackingField: {x: 0.4, y: 0.4}
-  <BaseLifetime>k__BackingField: 3
-  <BaseSpeed>k__BackingField: 10
+  <BaseLifetime>k__BackingField: 4
+  <BaseSpeed>k__BackingField: 14
   <IgnoreTileCollision>k__BackingField: 0
   <DefaultFaction>k__BackingField: 0
   <BaseDamage>k__BackingField: 8
