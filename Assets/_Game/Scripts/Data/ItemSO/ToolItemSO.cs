@@ -11,7 +11,7 @@ namespace OceanGame
         [field: SerializeField] public int MiningDamage { get; private set; } = 15;
         [field: SerializeField] public float MineTicksPerSecond { get; private set; } = 4;
 
-        [Header("Melee & Hitbox Settings")]
+        [field: Header("Melee & Hitbox Settings")]
         [field: SerializeField] public int MeleeDamage { get; private set; } = 10;
         [field: SerializeField] public int KnockbackForce { get; private set; } = 15;
         [field: SerializeField] public float HitboxOffset { get; private set; } = 1.0f; // Distance from pivot to blade center

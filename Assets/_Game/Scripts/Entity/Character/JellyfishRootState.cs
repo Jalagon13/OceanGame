@@ -195,36 +195,44 @@ namespace OceanGame
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
-            // Handle knockback gravity override if active
             if (_ctx.IsKnockedBack)
             {
-                _ctx.KnockbackVelocity.y -= _root.GravityForce * fixedDeltaTime;
-                if (_ctx.KnockbackVelocity.y < _root.TerminalVelocity)
+                // In water, let ServerCharacter decay knockback without applying gravity.
+                if (!_root.IsInWater())
                 {
-                    _ctx.KnockbackVelocity.y = _root.TerminalVelocity;
+                    if (_ctx.CollisionResult.TouchingBottom && _ctx.KnockbackVelocity.y < 0f)
+                    {
+                        _ctx.KnockbackVelocity.y = 0f;
+                    }
+                    else if (_ctx.CollisionResult.TouchingTop && _ctx.KnockbackVelocity.y > 0f)
+                    {
+                        _ctx.KnockbackVelocity.y = 0f;
+                    }
+                    else if (!_ctx.CollisionResult.TouchingBottom)
+                    {
+                        _ctx.KnockbackVelocity.y -= _root.GravityForce * fixedDeltaTime;
+                        _ctx.KnockbackVelocity.y = Mathf.Max(_ctx.KnockbackVelocity.y, _root.TerminalVelocity);
+                    }
                 }
-                
+
                 return;
             }
 
-            // Apply gravity downwards
+            // Normal out-of-water behavior: fall, stop at the floor or ceiling,
+            // and slow any remaining horizontal drift.
             _ctx.Velocity.y -= _root.GravityForce * fixedDeltaTime;
-            if (_ctx.Velocity.y < _root.TerminalVelocity)
-            {
-                _ctx.Velocity.y = _root.TerminalVelocity;
-            }
+            _ctx.Velocity.y = Mathf.Max(_ctx.Velocity.y, _root.TerminalVelocity);
 
-            // Ground and ceiling stop checks
             if (_ctx.CollisionResult.TouchingBottom && _ctx.Velocity.y < 0f)
             {
                 _ctx.Velocity.y = 0f;
             }
+
             if (_ctx.CollisionResult.TouchingTop && _ctx.Velocity.y > 0f)
             {
                 _ctx.Velocity.y = 0f;
             }
 
-            // Slow down any remaining horizontal drift while airborne
             _ctx.Velocity.x = Mathf.MoveTowards(_ctx.Velocity.x, 0f, _root.DashDeceleration * fixedDeltaTime);
         }
     }
