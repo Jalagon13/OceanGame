@@ -43,7 +43,9 @@ namespace OceanGame
         public PlayerRangedHandler RangedHandler { get; private set; }
         public ServerCharacter Character { get; private set; }
         public PlayerEquipment Equipment { get; private set; }
-        
+
+        private bool _wasInWater;
+
         private void Awake() 
         {
             Instance = this;    
@@ -54,7 +56,6 @@ namespace OceanGame
             GameInput.Instance.OnMoveInputPressed += OnMoveInputPressed;
             GameInput.Instance.OnJumpPressed += OnJumpPressed;
             GameInput.Instance.OnSecondaryActionPressed += InteractWithObject;
-            
             WorldManager.Instance.OnWorldReady += SetSpawnPoint;
         }
         
@@ -63,26 +64,46 @@ namespace OceanGame
             GameInput.Instance.OnMoveInputPressed -= OnMoveInputPressed;
             GameInput.Instance.OnJumpPressed -= OnJumpPressed;
             GameInput.Instance.OnSecondaryActionPressed -= InteractWithObject;
-
             WorldManager.Instance.OnWorldReady -= SetSpawnPoint;
 
-            if(Character != null)
-                Character.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
+            if(Character != null) Character.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
+
+            if (_wasInWater && AudioManager.Instance != null)
+            {
+                AudioManager.Instance.StopOceanAmbience();
+            }
         }
 
         private void Update()
         {
-            if (!WorldManager.Instance.IsWorldReady) return;
+            if (!WorldManager.Instance.IsWorldReady || Character == null) return;
+
+            // Code for checking water ambience
+            bool isInWater = IsInWater();
+
+            if (isInWater != _wasInWater)
+            {
+                if (isInWater)
+                {
+                    AudioManager.Instance.StartOceanAmbience(FMODEvents.Instance.OceanAmbience);
+                }
+                else
+                {
+                    AudioManager.Instance.StopOceanAmbience();
+                }
+
+                _wasInWater = isInWater;
+            }
 
             if (SwimDashCooldownTimer > 0f)
             {
                 SwimDashCooldownTimer -= Time.deltaTime;
             }
-            
+
             // If player is not dead and is holding down move input keep updating desired direction with it
-            if(Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
-            
-            if(GameInput.Instance.MoveInput != Vector2.zero)
+            if (Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
+
+            if (GameInput.Instance.MoveInput != Vector2.zero)
             {
                 Character.DesiredDirection = GameInput.Instance.MoveInput;
             }

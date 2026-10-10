@@ -379,6 +379,16 @@ namespace OceanGame
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""TogglePauseMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""79396596-cc4d-43af-813b-b13c13caded8"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -513,6 +523,17 @@ namespace OceanGame
                     ""action"": ""ToggleInventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""75d04c4c-b28f-4028-927f-b9fc335e7dfb"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""TogglePauseMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -592,6 +613,7 @@ namespace OceanGame
             m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
             m_UI_SelectSlot = m_UI.FindAction("SelectSlot", throwIfNotFound: true);
             m_UI_ToggleInventory = m_UI.FindAction("ToggleInventory", throwIfNotFound: true);
+            m_UI_TogglePauseMenu = m_UI.FindAction("TogglePauseMenu", throwIfNotFound: true);
         }
 
         ~@PlayerInput()
@@ -816,6 +838,7 @@ namespace OceanGame
         private readonly InputAction m_UI_ScrollWheel;
         private readonly InputAction m_UI_SelectSlot;
         private readonly InputAction m_UI_ToggleInventory;
+        private readonly InputAction m_UI_TogglePauseMenu;
         /// <summary>
         /// Provides access to input actions defined in input action map "UI".
         /// </summary>
@@ -839,6 +862,10 @@ namespace OceanGame
             /// Provides access to the underlying input action "UI/ToggleInventory".
             /// </summary>
             public InputAction @ToggleInventory => m_Wrapper.m_UI_ToggleInventory;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/TogglePauseMenu".
+            /// </summary>
+            public InputAction @TogglePauseMenu => m_Wrapper.m_UI_TogglePauseMenu;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -874,6 +901,9 @@ namespace OceanGame
                 @ToggleInventory.started += instance.OnToggleInventory;
                 @ToggleInventory.performed += instance.OnToggleInventory;
                 @ToggleInventory.canceled += instance.OnToggleInventory;
+                @TogglePauseMenu.started += instance.OnTogglePauseMenu;
+                @TogglePauseMenu.performed += instance.OnTogglePauseMenu;
+                @TogglePauseMenu.canceled += instance.OnTogglePauseMenu;
             }
 
             /// <summary>
@@ -894,6 +924,9 @@ namespace OceanGame
                 @ToggleInventory.started -= instance.OnToggleInventory;
                 @ToggleInventory.performed -= instance.OnToggleInventory;
                 @ToggleInventory.canceled -= instance.OnToggleInventory;
+                @TogglePauseMenu.started -= instance.OnTogglePauseMenu;
+                @TogglePauseMenu.performed -= instance.OnTogglePauseMenu;
+                @TogglePauseMenu.canceled -= instance.OnTogglePauseMenu;
             }
 
             /// <summary>
@@ -1063,6 +1096,13 @@ namespace OceanGame
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnToggleInventory(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "TogglePauseMenu" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnTogglePauseMenu(InputAction.CallbackContext context);
         }
     }
 }

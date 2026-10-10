@@ -1,5 +1,72 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8438277831928084222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/UnderwaterAMB
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Ambience/UnderwaterAMB
+  Guid:
+    Data1: -62627153
+    Data2: 1211437410
+    Data3: -433738342
+    Data4: 2006587476
+  Banks:
+  - {fileID: -4991310555032039705}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 120048
+--- !u!114 &-6219207956112848524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/UI.bank
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorBankRef
+  Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/UI.bank
+  Name: UI
+  StudioPath: bank:/UI
+  lastModified: 639272390565179069
+  FileSizes:
+  - Name: Desktop
+    Value: 494
+  Exists: 1
+--- !u!114 &-4991310555032039705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/World.bank
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorBankRef
+  Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/World.bank
+  Name: World
+  StudioPath: bank:/World
+  lastModified: 639272390565149056
+  FileSizes:
+  - Name: Desktop
+    Value: 1431072
+  Exists: 1
 --- !u!114 &-3964093006761047596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15,10 +82,30 @@ MonoBehaviour:
   Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639226716450650813
+  lastModified: 639272390546799711
   FileSizes:
   - Name: Desktop
-    Value: 712
+    Value: 890
+  Exists: 1
+--- !u!114 &-2652535069046497829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Entity.bank
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorBankRef
+  Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/Entity.bank
+  Name: Entity
+  StudioPath: bank:/Entity
+  lastModified: 639272390565172680
+  FileSizes:
+  - Name: Desktop
+    Value: 494
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -35,13 +122,17 @@ MonoBehaviour:
   EditorBanks:
   - {fileID: -3964093006761047596}
   - {fileID: 6758614311371961274}
-  EditorEvents: []
+  - {fileID: -2652535069046497829}
+  - {fileID: -6219207956112848524}
+  - {fileID: -4991310555032039705}
+  EditorEvents:
+  - {fileID: -8438277831928084222}
   EditorParameters: []
   MasterBanks:
   - {fileID: 6758614311371961274}
   StringsBanks:
   - {fileID: -3964093006761047596}
-  cacheTime: 639226716450650813
+  cacheTime: 639272390565179069
   cacheVersion: 131637
 --- !u!114 &6758614311371961274
 MonoBehaviour:
@@ -58,7 +149,7 @@ MonoBehaviour:
   Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639226716450643030
+  lastModified: 639272390546792488
   FileSizes:
   - Name: Desktop
     Value: 1036

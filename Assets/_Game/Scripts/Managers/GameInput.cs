@@ -14,6 +14,7 @@ namespace OceanGame
         public event Action<InputAction.CallbackContext> OnSecondaryActionPressed;
         public event Action<InputAction.CallbackContext> OnScrollWheel;
         public event Action<InputAction.CallbackContext> OnSelectSlot;
+        public event Action<InputAction.CallbackContext> OnTogglePauseMenu;
         public event Action OnToggleInventory;
         public event Action OnToggleBuildLayer;
 
@@ -34,21 +35,18 @@ namespace OceanGame
             _playerInput.Player.Move.started += GameInput_OnMove;
             _playerInput.Player.Move.performed += GameInput_OnMove;
             _playerInput.Player.Move.canceled += GameInput_OnMove;
-            
             _playerInput.Player.Jump.started += GameInput_OnJump;
             _playerInput.Player.Jump.canceled += GameInput_OnJump;
-            
             _playerInput.Player.PrimaryAction.started += GameInput_OnPrimaryAction;
             _playerInput.Player.PrimaryAction.canceled += GameInput_OnPrimaryAction;
             _playerInput.Player.SecondaryAction.started += GameInput_OnSecondaryAction;
             _playerInput.Player.SecondaryAction.canceled += GameInput_OnSecondaryAction;
-            
             _playerInput.Player.ToggleBuildLayer.started += GameInput_OnToggleBuildLayer;
-
+            
             _playerInput.UI.ScrollWheel.performed += PlayerInput_OnScrollWheel;
             _playerInput.UI.SelectSlot.started += PlayerInput_OnSelectSlot;
-            
             _playerInput.UI.ToggleInventory.started += PlayerInput_OnToggleInventory;
+            _playerInput.UI.TogglePauseMenu.started += PlayerInput_OnTogglePauseMenu;
         }
 
         private void OnDestroy()
@@ -61,23 +59,25 @@ namespace OceanGame
             _playerInput.Player.Move.started -= GameInput_OnMove;
             _playerInput.Player.Move.performed -= GameInput_OnMove;
             _playerInput.Player.Move.canceled -= GameInput_OnMove;
-            
             _playerInput.Player.Jump.started -= GameInput_OnJump;
             _playerInput.Player.Jump.canceled -= GameInput_OnJump;
-
             _playerInput.Player.PrimaryAction.started -= GameInput_OnPrimaryAction;
             _playerInput.Player.PrimaryAction.canceled -= GameInput_OnPrimaryAction;
             _playerInput.Player.SecondaryAction.started -= GameInput_OnSecondaryAction;
             _playerInput.Player.SecondaryAction.canceled -= GameInput_OnSecondaryAction;
-
             _playerInput.Player.ToggleBuildLayer.started -= GameInput_OnToggleBuildLayer;
 
             _playerInput.UI.ScrollWheel.performed -= PlayerInput_OnScrollWheel;
             _playerInput.UI.SelectSlot.started -= PlayerInput_OnSelectSlot;
-
             _playerInput.UI.ToggleInventory.started -= PlayerInput_OnToggleInventory;
+            _playerInput.UI.TogglePauseMenu.started -= PlayerInput_OnTogglePauseMenu;
 
             _playerInput.Disable();
+        }
+
+        private void PlayerInput_OnTogglePauseMenu(InputAction.CallbackContext context)
+        {
+            OnTogglePauseMenu?.Invoke(context);
         }
 
         private void GameInput_OnToggleBuildLayer(InputAction.CallbackContext context)
