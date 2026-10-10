@@ -38,24 +38,34 @@ namespace OceanGame
             // If Online, use unity services
             try
             {
-                await UnityServices.InitializeAsync();
-
-                AuthenticationService.Instance.SignedIn += () =>
+                if (UnityServices.State != ServicesInitializationState.Initialized)
                 {
-                    Debug.Log("Signed in " + AuthenticationService.Instance.PlayerId);
-                };
+                    await UnityServices.InitializeAsync();
+                }
 
-                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+                if (!AuthenticationService.Instance.IsSignedIn)
+                {
+                    await AuthenticationService.Instance.SignInAnonymouslyAsync();
+                }
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"Unity Services failed to initialize: {e.Message}");
+                Debug.LogError($"Unity Services startup failed: {e}");
             }
         }
 
         public async void CreateRelay()
         {
-            if (_createdRelay || _isOffline) return;
+            if (_createdRelay) return;
+
+            _createdRelay = true;
+
+            if (_isOffline)
+            {
+                Loader.IsHost = true;
+                Loader.Load(Loader.Scene.GameScene);
+                return;
+            }
 
             try
             {
@@ -75,6 +85,7 @@ namespace OceanGame
             }
             catch (RelayServiceException e)
             {
+                _createdRelay = false;
                 Debug.LogError(e);
             }
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -48,7 +49,12 @@ namespace OceanGame
         public void QuitToMainMenuButtonPressed()
         {
             Time.timeScale = 1f;
-            // Scene loading stuff here
+
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+            {
+                NetworkManager.Singleton.Shutdown();
+            }
+
             Loader.Load(Loader.Scene.MainMenuScene);
         }
 
