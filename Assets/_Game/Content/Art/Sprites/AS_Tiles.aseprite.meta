@@ -863,6 +863,27 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
+  - name: item_iron_ingot
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 128
+      y: 64
+      width: 16
+      height: 16
+    spriteID: 1c46d0e793a0646739775e37bd3844d6
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
   tileSetImportData: []
   asepriteLayers:
   - layerIndex: 0
@@ -883,7 +904,7 @@ ScriptedImporter:
       cellRect:
         x: 0
         y: 0
-        width: 127
+        width: 143
         height: 80
       spriteId: 29e30dac0e8574e0bb07847e539baa65
     linkedCells: []
@@ -931,5 +952,5 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 128, y: 80}
-  previousTextureSize: {x: 128, y: 128}
+  canvasSize: {x: 144, y: 80}
+  previousTextureSize: {x: 256, y: 128}
