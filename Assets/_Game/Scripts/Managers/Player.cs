@@ -43,6 +43,7 @@ namespace OceanGame
         public PlayerRangedHandler RangedHandler { get; private set; }
         public ServerCharacter Character { get; private set; }
         public PlayerEquipment Equipment { get; private set; }
+        public PlayerDepthTracker DepthTracker { get; private set; }
 
         private bool _wasInWater;
 
@@ -119,6 +120,7 @@ namespace OceanGame
             Equipment = Character.GetComponent<PlayerEquipment>();
             ArmHandler = Character.GetComponent<PlayerArmHandler>();
             RangedHandler = Character.GetComponent<PlayerRangedHandler>();
+            DepthTracker = Character.GetComponent<PlayerDepthTracker>();
 
             PlayerReady?.Invoke(Character);
         }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ad5d6c9d626f4a86b10848c127dc8e7, type: 3}
   m_Name: Rsc_Kelp
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ItemSO
-  <ItemName>k__BackingField: Kelp
+  <ItemName>k__BackingField: Kelp Fiber
   <Description>k__BackingField: 
   <DisplayIcon>k__BackingField: {fileID: 7354925426893663108, guid: 2f87ce7e588154a76acbf2c4eda5fff0, type: 3}
   <IsStackable>k__BackingField: 1
