@@ -127,33 +127,48 @@ namespace OceanGame
         // Attempts to grow a tree at (groundX, groundY). groundY is the soil/ground block the tree stands on.
         public bool TryGrowTree(WorldGenContext ctx, int groundX, int groundY)
         {
-            ushort treeId = GetId();
-            int height = ctx.Random.Next(MinHeight, MaxHeight + 1);
+            // Keep existing callers, including surface trees, using the world's top as their limit.
+            return TryGrowTree(ctx, groundX, groundY, ctx.Height - 1);
+        }
 
-            // Clearance Check
+        public bool TryGrowTree(WorldGenContext ctx, int groundX, int groundY, int maxGrowthY)
+        {
+            ushort treeId = GetId();
+
+            // Clamp the inclusive tile-coordinate limit to the world bounds.
+            maxGrowthY = Mathf.Min(maxGrowthY, ctx.Height - 1);
+
+            // Choose a height within the config range that also fits below the ceiling.
+            int maxHeightThatFits = Mathf.Min(MaxHeight, maxGrowthY - groundY);
+            if (maxHeightThatFits < MinHeight) return false;
+
+            int height = ctx.Random.Next(MinHeight, maxHeightThatFits + 1);
+
+            // Check vertical clearance before placing any part of the tree.
             for (int y = 1; y <= height; y++)
             {
                 int checkY = groundY + y;
-                if (checkY >= ctx.Height || ctx.FgGrid[groundX, checkY].HasTile) return false;
+                if (checkY > maxGrowthY || checkY >= ctx.Height || ctx.FgGrid[groundX, checkY].HasTile)
+                {
+                    return false;
+                }
             }
 
-            // Gen Base
+            // Generate the base.
             ctx.FgGrid[groundX, groundY + 1] = new TileData(treeId, state: (byte)TreeSegmentType.Base);
 
-            // Gen Trunk and Branches
+            // Generate the trunk and any branches.
             for (int y = 2; y < height; y++)
             {
                 TreeSegmentType segment = TreeSegmentType.Trunk;
 
                 if (ctx.Random.NextDouble() < _branchChance)
                 {
-                    TreeSegmentType branchType = ctx.Random.NextDouble() < 0.5
-                        ? TreeSegmentType.BranchLeft
-                        : TreeSegmentType.BranchRight;
+                    TreeSegmentType branchType = ctx.Random.NextDouble() < 0.5 ? TreeSegmentType.BranchLeft : TreeSegmentType.BranchRight;
+
                     int offset = branchType == TreeSegmentType.BranchLeft ? -1 : 1;
                     int branchX = groundX + offset;
 
-                    // Make sure branch space is clear and within bounds
                     if (branchX >= 0 && branchX < ctx.Width && !ctx.FgGrid[branchX, groundY + y].HasTile)
                     {
                         ctx.FgGrid[branchX, groundY + y] = new TileData(treeId, state: (byte)branchType);
@@ -163,7 +178,7 @@ namespace OceanGame
                 ctx.FgGrid[groundX, groundY + y] = new TileData(treeId, state: (byte)segment);
             }
 
-            // Top
+            // Generate the top.
             ctx.FgGrid[groundX, groundY + height] = new TileData(treeId, state: (byte)TreeSegmentType.Top);
 
             return true;

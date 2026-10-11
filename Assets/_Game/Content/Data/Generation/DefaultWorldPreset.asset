@@ -30,6 +30,7 @@ MonoBehaviour:
   - rid: 2688502357985853566
   - rid: 2895663963195310357
   - rid: 2895664510129406076
+  - rid: 2783294085391712386
   references:
     version: 2
     RefIds:
@@ -87,6 +88,13 @@ MonoBehaviour:
         _belowSurfaceHeightOffset: 4
         _minVeinSize: 3
         _maxVeinSize: 8
+    - rid: 2783294085391712386
+      type: {class: OceanFloraGenStep, ns: OceanGame, asm: Assembly-CSharp}
+      data:
+        RunStep: 1
+        _kelp: {fileID: 11400000, guid: eb775bac2fe1947c1b732966b2e22c8e, type: 2}
+        _minKelpSpace: 1
+        _maxKelpSpace: 4
     - rid: 2895663963195310357
       type: {class: SetFluidStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
