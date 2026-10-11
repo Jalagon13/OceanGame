@@ -8,20 +8,22 @@ namespace OceanGame
     [Serializable]
     public class OreGenStep : WorldGenStep
     {
-        [SerializeField] private TileConfigSO _ironOreTile;
-        [SerializeField] private int _chunkSize = 20;
+        [SerializeField] private List<OreConfig> _oreConfigs = new();
+        
+        [Serializable]
+        private class OreConfig
+        {
+            public TileConfigSO OreTile;
+            public int StartingDepth = 20;
+            public int ChunkSize = 30;
+            public int VeinsPerChunk = 6;
+            public int VeinMinDistance = 6;
+            public int MaxAttemptsPerVein = 15;
+            public int MinVeinSize = 2;
+            public int MaxVeinSize = 8;
+        }
 
-        // Exposed configuration for easier balancing
-        [SerializeField] private int _veinsPerChunk = 6;
-        [SerializeField] private int _veinMinDistance = 5;
-        [SerializeField] private int _maxAttemptsPerVein = 10;
-        [SerializeField] private int _belowSurfaceHeightOffset = 4;
-
-        [Header("Vein Size Configurations")]
-        [SerializeField] private int _minVeinSize = 8;
-        [SerializeField] private int _maxVeinSize = 16;
-
-        private readonly Vector2Int[] _cardinalDirections = new Vector2Int[]
+        private readonly Vector2Int[] _cardinalDirections =
         {
             Vector2Int.up,
             Vector2Int.down,
@@ -31,137 +33,140 @@ namespace OceanGame
 
         public override IEnumerator Execute(WorldGenContext ctx)
         {
-            // Safeguard bounds checking to prevent index out of bounds at world edges
-            for (int chunkX = 0; chunkX < ctx.Width; chunkX += _chunkSize)
+            foreach (OreConfig oreConfig in _oreConfigs)
             {
-                for (int chunkY = 0; chunkY < ctx.SeaLevel; chunkY += _chunkSize)
+                int chunkSize = Mathf.Max(1, oreConfig.ChunkSize);
+                int highestAllowedY = Mathf.Min(ctx.SeaLevel - oreConfig.StartingDepth, ctx.Height - 1);
+
+                if (highestAllowedY < 0)
                 {
-                    HashSet<Vector2Int> foundVeinPositions = new();
+                    continue;
+                }
 
-                    // Outer loop tracks exactly how many veins we want to place
-                    for (int i = 0; i < _veinsPerChunk; i++)
+                for (int chunkX = 0; chunkX < ctx.Width; chunkX += chunkSize)
+                {
+                    for (int chunkY = 0; chunkY <= highestAllowedY; chunkY += chunkSize)
                     {
-                        int currentAttempt = 0;
-                        bool veinPlaced = false;
+                        HashSet<Vector2Int> foundVeinPositions = new();
 
-                        // Inner loop tracks attempts for the CURRENT vein
-                        while (currentAttempt < _maxAttemptsPerVein && !veinPlaced)
+                        for (int i = 0; i < oreConfig.VeinsPerChunk; i++)
                         {
-                            // Calculate local chunk bounds, clamped to world size
-                            int maxX = Mathf.Min(chunkX + _chunkSize, ctx.Width);
-                            int maxY = Mathf.Min(chunkY + _chunkSize, ctx.SeaLevel);
+                            int currentAttempt = 0;
+                            bool veinPlaced = false;
 
-                            int randPosX = ctx.Random.Next(chunkX, maxX);
-                            int randPosY = ctx.Random.Next(chunkY, maxY);
-                            Vector2Int randPos = new(randPosX, randPosY);
+                            while (currentAttempt < oreConfig.MaxAttemptsPerVein && !veinPlaced)
+                            {
+                                int maxX = Mathf.Min(chunkX + chunkSize, ctx.Width);
+                                int maxYExclusive = Mathf.Min(chunkY + chunkSize, highestAllowedY + 1);
 
-                            if (IsValidVeinPosition(ctx, randPos, foundVeinPositions))
-                            {
-                                foundVeinPositions.Add(randPos);
-                                veinPlaced = true;
+                                Vector2Int randPos = new(ctx.Random.Next(chunkX, maxX), ctx.Random.Next(chunkY, maxYExclusive));
+
+                                if (IsValidVeinPosition(ctx, randPos, foundVeinPositions, oreConfig))
+                                {
+                                    foundVeinPositions.Add(randPos);
+                                    veinPlaced = true;
+                                }
+                                else
+                                {
+                                    currentAttempt++;
+                                }
                             }
-                            else
-                            {
-                                currentAttempt++;
-                            }
+                        }
+
+                        foreach (Vector2Int seedPos in foundVeinPositions)
+                        {
+                            GrowOreVein(ctx, seedPos, oreConfig);
                         }
                     }
 
-                    // Grow the veins out from the found seed positions
-                    foreach (Vector2Int seedPos in foundVeinPositions)
-                    {
-                        GrowOreVein(ctx, seedPos);
-                    }
+                    yield return null;
                 }
-                // Yielding per column of chunks prevents frame stutter during generation
-                yield return null;
             }
         }
 
-        private bool IsValidVeinPosition(WorldGenContext ctx, Vector2Int pos, HashSet<Vector2Int> existingPositions)
+        private bool IsValidVeinPosition(WorldGenContext ctx, Vector2Int pos, HashSet<Vector2Int> existingPositions, OreConfig oreConfig)
         {
-            if(pos.y >= ctx.OceanFloorHeightValues[pos.x] - _belowSurfaceHeightOffset) return false; // Makes it spawn at least some distance away from the surface
-            if(ctx.FgGrid[pos.x, pos.y].IsAir) return false;
-        
-            foreach (var existingPos in existingPositions)
+            if (!CanPlaceOreAt(ctx, pos, oreConfig))
             {
-                // Using SqrMagnitude is significantly faster than Vector2Int.Distance 
-                // because it avoids calculating a square root.
+                return false;
+            }
+
+            foreach (Vector2Int existingPos in existingPositions)
+            {
                 float sqrDistance = (existingPos - pos).sqrMagnitude;
-                if (sqrDistance < _veinMinDistance * _veinMinDistance)
+                if (sqrDistance < oreConfig.VeinMinDistance * oreConfig.VeinMinDistance)
                 {
                     return false;
                 }
             }
+
             return true;
         }
 
-        // (Assuming you integrate this into the main class from the previous step)
-        private void GrowOreVein(WorldGenContext ctx, Vector2Int seedPos)
+        private bool CanPlaceOreAt(WorldGenContext ctx, Vector2Int pos, OreConfig oreConfig)
         {
-            // 1. Determine a randomized target size for this specific vein
-            int targetVeinSize = ctx.Random.Next(_minVeinSize, _maxVeinSize + 1);
+            if (!IsWithinWorldBounds(ctx, pos))
+            {
+                return false;
+            }
 
-            // Track tiles we have already converted to ore
+            int depth = ctx.SeaLevel - pos.y;
+            if (depth < oreConfig.StartingDepth)
+            {
+                return false;
+            }
+
+            return !ctx.FgGrid[pos.x, pos.y].IsAir;
+        }
+
+        private void GrowOreVein(WorldGenContext ctx, Vector2Int seedPos, OreConfig oreConfig)
+        {
+            int targetVeinSize = ctx.Random.Next(oreConfig.MinVeinSize, oreConfig.MaxVeinSize + 1);
+
             HashSet<Vector2Int> placedOrePositions = new();
-            // Track outer tiles we have already evaluated so we don't evaluate them twice
             HashSet<Vector2Int> visitedPositions = new();
-            // Queue for processing neighboring tiles layer-by-layer (BFS)
             Queue<Vector2Int> frontier = new();
 
-            // 2. Initialize with the seed position
-            ctx.FgGrid[seedPos.x, seedPos.y] = new TileData(_ironOreTile.GetId());
+            ctx.FgGrid[seedPos.x, seedPos.y] = new TileData(oreConfig.OreTile.GetId());
             placedOrePositions.Add(seedPos);
             visitedPositions.Add(seedPos);
 
-            // Add the initial neighbors to start the growth
-            foreach (var dir in _cardinalDirections)
+            foreach (Vector2Int dir in _cardinalDirections)
             {
                 Vector2Int neighbor = seedPos + dir;
-                bool isAir = ctx.FgGrid[seedPos.x, seedPos.y].IsAir;
-                
-                if (IsWithinWorldBounds(ctx, neighbor) && !isAir)
+
+                if (IsWithinWorldBounds(ctx, neighbor) && visitedPositions.Add(neighbor) && CanPlaceOreAt(ctx, neighbor, oreConfig))
                 {
                     frontier.Enqueue(neighbor);
-                    visitedPositions.Add(neighbor);
                 }
             }
 
-            // 3. Loop through the neighbors while we have options and haven't hit our target size
             while (frontier.Count > 0 && placedOrePositions.Count < targetVeinSize)
             {
                 Vector2Int currentTile = frontier.Dequeue();
 
-                // Calculate distance from the starting seed
                 float distance = Vector2Int.Distance(seedPos, currentTile);
-                
                 float maxVeinRadius = 6f;
                 float minProb = 0.25f;
                 float maxProb = 0.8f;
 
                 float t = 1f - Mathf.Clamp01(distance / maxVeinRadius);
                 float smoothedT = Mathf.SmoothStep(0f, 1f, t);
-
                 float spawnChance = Mathf.Lerp(minProb, maxProb, smoothedT);
-
-                float roll = (float)ctx.Random.NextDouble(); // Generates a value between 0.0 and 1.0
+                float roll = (float)ctx.Random.NextDouble();
 
                 if (roll <= spawnChance)
                 {
-                    // Success! Convert this tile to ore
-                    ctx.FgGrid[currentTile.x, currentTile.y] = new TileData(_ironOreTile.GetId());
+                    ctx.FgGrid[currentTile.x, currentTile.y] = new TileData(oreConfig.OreTile.GetId());
                     placedOrePositions.Add(currentTile);
 
-                    // Since this tile is now part of the cluster, add ITS neighbors to the frontier
-                    foreach (var dir in _cardinalDirections)
+                    foreach (Vector2Int dir in _cardinalDirections)
                     {
                         Vector2Int neighbor = currentTile + dir;
 
-                        // Only add if it's in the world bounds and we haven't checked it yet
-                        if (IsWithinWorldBounds(ctx, neighbor) && !visitedPositions.Contains(neighbor))
+                        if (IsWithinWorldBounds(ctx, neighbor) && visitedPositions.Add(neighbor) && CanPlaceOreAt(ctx, neighbor, oreConfig))
                         {
                             frontier.Enqueue(neighbor);
-                            visitedPositions.Add(neighbor);
                         }
                     }
                 }

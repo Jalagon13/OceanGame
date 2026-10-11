@@ -19,10 +19,6 @@ namespace OceanGame
         [field: SerializeField] public Vector2 WalkingBoxColliderSize { get; private set; }
         [field: SerializeField] public Vector2 SwimmingBoxColliderSize { get; private set; }
 
-        [field: Header("Swim Settings")]
-        [field: SerializeField] public float SwimDashSpeed { get; private set; }
-        [field: SerializeField] public float SwimDashCooldown { get; private set; }
-
         [field: Header("Jump Settings")]
         [field: SerializeField] public float FromWaterJumpSpeed { get; private set; }
         [field: SerializeField] public float MinJumpSpeed { get; private set; }
@@ -37,7 +33,6 @@ namespace OceanGame
 
         public bool JumpPressed { get; set; }
         public bool WaterJumpBuffered { get; set; }
-        public float SwimDashCooldownTimer { get; set; }
         public Vector2 RespawnPoint { get; private set; }
         public PlayerArmHandler ArmHandler { get; private set; }
         public PlayerRangedHandler RangedHandler { get; private set; }
@@ -94,11 +89,6 @@ namespace OceanGame
                 }
 
                 _wasInWater = isInWater;
-            }
-
-            if (SwimDashCooldownTimer > 0f)
-            {
-                SwimDashCooldownTimer -= Time.deltaTime;
             }
 
             // If player is not dead and is holding down move input keep updating desired direction with it

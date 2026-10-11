@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe0e4c828bd83465e82ab75a6c973b41, type: 3}
   m_Name: DefaultWorldPreset
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
-  UseRandomSeed: 0
+  UseRandomSeed: 1
   Seed: 0
   GenColumnsPerFrame: 50
   Width: 1600
@@ -80,14 +80,23 @@ MonoBehaviour:
       type: {class: OreGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
         RunStep: 1
-        _ironOreTile: {fileID: 11400000, guid: 75d3adf13369b426cbdbcc99aabd6f3d, type: 2}
-        _chunkSize: 30
-        _veinsPerChunk: 6
-        _veinMinDistance: 6
-        _maxAttemptsPerVein: 15
-        _belowSurfaceHeightOffset: 4
-        _minVeinSize: 3
-        _maxVeinSize: 8
+        _oreConfigs:
+        - OreTile: {fileID: 11400000, guid: 75d3adf13369b426cbdbcc99aabd6f3d, type: 2}
+          StartingDepth: 10
+          ChunkSize: 30
+          VeinsPerChunk: 5
+          VeinMinDistance: 7
+          MaxAttemptsPerVein: 15
+          MinVeinSize: 3
+          MaxVeinSize: 8
+        - OreTile: {fileID: 11400000, guid: e7b35e8f4d4be47e784aa3e4bb7295a2, type: 2}
+          StartingDepth: 50
+          ChunkSize: 30
+          VeinsPerChunk: 4
+          VeinMinDistance: 8
+          MaxAttemptsPerVein: 15
+          MinVeinSize: 2
+          MaxVeinSize: 6
     - rid: 2783294085391712386
       type: {class: OceanFloraGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:

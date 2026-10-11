@@ -225,7 +225,7 @@ namespace OceanGame
             }
         
             // Allow horizontal movement while airborne
-            var currentSpeed = _ctx.Stats.MoveSpeed.GetValue() * _player.AirborneMoveSpeedMultiplier;
+            var currentSpeed = _ctx.Data.BaseSpeed * _player.AirborneMoveSpeedMultiplier;
             _ctx.Velocity.x = Mathf.Lerp(_ctx.Velocity.x, _ctx.DesiredDirection.x * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
 
@@ -289,15 +289,11 @@ namespace OceanGame
         {
             _player = Player.Instance;
             _ctx.ColliderSize = _player.SwimmingBoxColliderSize;
-
-            GameInput.Instance.OnJumpPressed += ExecuteDash;
         }
 
         protected override void OnExit()
         {
             _ctx.VisualsGO.transform.up = Vector2.up;
-
-            GameInput.Instance.OnJumpPressed -= ExecuteDash;
         }
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
@@ -334,16 +330,6 @@ namespace OceanGame
             _ctx.VisualsGO.transform.rotation = Quaternion.Euler(0, 0, newAngle);
         }
 
-        private void ExecuteDash()
-        {
-            if (_ctx.IsKnockedBack || _player.SwimDashCooldownTimer > 0f || _player.IsHeadInAir()) // If head is above water, do not execute dash only dash when i am underwater
-            {
-                return;
-            }
-
-            _ctx.Velocity = _ctx.DesiredDirection * _player.SwimDashSpeed;
-            _player.SwimDashCooldownTimer = _player.SwimDashCooldown;
-        }
     }
 
     #endregion
@@ -384,7 +370,7 @@ namespace OceanGame
             if (_ctx.IsKnockedBack)
                 return;
 
-            var currentSpeed = _ctx.Stats.MoveSpeed.GetValue();
+            var currentSpeed = _ctx.Data.BaseSpeed; // For player, only allow speed buffs to change swim speed
             _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
     }
@@ -422,7 +408,7 @@ namespace OceanGame
             if (_ctx.IsKnockedBack)
                 return;
 
-            var currentSpeed = _ctx.Stats.MoveSpeed.GetValue();
+            var currentSpeed = _ctx.Data.BaseSpeed; // For player, only allow speed buffs to change swim speed
             _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
         }
     }

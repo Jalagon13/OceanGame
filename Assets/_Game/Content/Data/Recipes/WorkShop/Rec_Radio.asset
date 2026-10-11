@@ -16,6 +16,8 @@ MonoBehaviour:
   <OutputAmonut>k__BackingField: 1
   <Recipe>k__BackingField:
   - _ingredient: {fileID: 11400000, guid: 8d66a3e045bd243edaf2a0a22cec58f5, type: 2}
-    _amount: 12
+    _amount: 10
   - _ingredient: {fileID: 11400000, guid: d6e5e2bab9b7347208c312146e82e2e3, type: 2}
-    _amount: 8
+    _amount: 6
+  - _ingredient: {fileID: 11400000, guid: f685d39f31fd6476b8213124cd5013fa, type: 2}
+    _amount: 4

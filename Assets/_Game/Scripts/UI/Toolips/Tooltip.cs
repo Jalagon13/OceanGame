@@ -77,7 +77,7 @@ namespace OceanGame
 
         public static void CraftingRecipeDisplay(RecipeSO recipeSO, Transform customLayout = null, float fontSize = 10, float iconScale = 1)
         {
-            JustText($"{recipeSO.OutputItem.ItemName} <br>Recipe ({recipeSO.OutputAmonut}):<br>", Color.white, fontSize: fontSize);
+            JustText($"{recipeSO.OutputItem.ItemName} <br>{recipeSO.OutputItem.Description}<br>Recipe ({recipeSO.OutputAmonut}):<br>", Color.white, fontSize: fontSize);
 
             //for each ingredient in the recipe resource list
             foreach (Ingredient ingredient in recipeSO.Recipe)
