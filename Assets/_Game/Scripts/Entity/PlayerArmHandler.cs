@@ -8,6 +8,7 @@ namespace OceanGame
     {
         [SerializeField] private Transform _armPivot;
         [SerializeField] private Transform _hitboxPoint;
+        [SerializeField] private Transform _arm;
         [SerializeField] private SpriteRenderer _swingToolSr;
 
         public bool IsSwinging { get; private set; }
@@ -20,7 +21,7 @@ namespace OceanGame
 
         private void Awake() 
         {
-            _swingToolSr.gameObject.SetActive(false);
+            _armPivot.gameObject.SetActive(false);
         }
 
         private void OnDisable()
@@ -79,8 +80,12 @@ namespace OceanGame
             // Setup
             _swingToolSr.sprite = tool.DisplayIcon;
             _hitboxPoint.localPosition = new Vector2(tool.HitboxOffset, 0);
+            Vector3 armScale = _arm.localScale;
+            armScale.x = isAimingRight ? -1f : 1f;
+            _arm.localScale = armScale;
+            _arm.localRotation = Quaternion.Euler(0f, 0f, isAimingRight ? 180f : 0f);
             _armPivot.rotation = Quaternion.Euler(0f, 0f, startAngle);
-            _swingToolSr.gameObject.SetActive(true);
+            _armPivot.gameObject.SetActive(true);
             _currentTool = tool;
 
             // Entity Detection
@@ -90,7 +95,7 @@ namespace OceanGame
             // Start sequence
             _swingSequence?.Kill();
             _swingSequence = DOTween.Sequence();
-            _swingSequence.Append(_armPivot.DORotate(new Vector3(0f, 0f, endAngle), tool.SwingDuration).SetEase(Ease.Linear));
+            _swingSequence.Append(_armPivot.DORotate(new Vector3(0f, 0f, endAngle), tool.SwingDuration).SetEase(Ease.InOutCubic));
             _swingSequence.AppendCallback(() => _isHitboxActive = false); // Stop damage during recovery
             _swingSequence.Append(_armPivot.DORotate(new Vector3(0f, 0f, swingEndAngle), tool.SwingEndDuration).SetRelative().SetEase(Ease.Linear));
 
@@ -110,7 +115,7 @@ namespace OceanGame
             _isHitboxActive = false;
             _currentTool = null;
             _hitEntitiesThisSwing.Clear();
-            _swingToolSr.gameObject.SetActive(false);
+            _armPivot.gameObject.SetActive(false);
             
             IsSwinging = false;
             // Debug.Log($"Swing completed");
