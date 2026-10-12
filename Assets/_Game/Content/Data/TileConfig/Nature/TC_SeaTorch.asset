@@ -19,13 +19,27 @@ MonoBehaviour:
   <IsSolid>k__BackingField: 0
   <Size>k__BackingField: {x: 1, y: 1}
   <DrawTile>k__BackingField: {fileID: 11400000, guid: c085640d10a1d4797818080cb3fc6f40, type: 2}
+  <TileHitSFX>k__BackingField:
+    Guid:
+      Data1: 663265361
+      Data2: 1341010617
+      Data3: 18740408
+      Data4: 275038047
+    Path: event:/World/WoodHitSFX
+  <TileDestroyedSFX>k__BackingField:
+    Guid:
+      Data1: -1391175195
+      Data2: 1120500594
+      Data3: 1478287533
+      Data4: 380314682
+    Path: event:/World/WoodDestroyedSFX
   <InteractBehavior>k__BackingField:
     rid: -2
   LootDrops:
   - _item: {fileID: 11400000, guid: 1c2c9103005254e2096a71428bc94070, type: 2}
-    _dropChance: 1
     _minAmount: 1
     _maxAmount: 1
+    _dropChance: 1
   references:
     version: 2
     RefIds:

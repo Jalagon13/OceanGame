@@ -1,5 +1,59 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9117670225872358134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/PlayerHurtSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Player/PlayerHurtSFX
+  Guid:
+    Data1: 1871022001
+    Data2: 1266764014
+    Data3: -700748148
+    Data4: 1759758874
+  Banks:
+  - {fileID: -2652535069046497829}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-9082670671657809726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/SandDestroyedSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/World/SandDestroyedSFX
+  Guid:
+    Data1: -1423510184
+    Data2: 1266889974
+    Data3: 1737393593
+    Data4: -848103714
+  Banks:
+  - {fileID: -4991310555032039705}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-7725265703934676413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47,6 +101,60 @@ MonoBehaviour:
     Data4: 2053343828
   Banks:
   - {fileID: -2652535069046497829}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-7244856045112001981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/WoodDestroyedSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/World/WoodDestroyedSFX
+  Guid:
+    Data1: -1391175195
+    Data2: 1120500594
+    Data3: 1478287533
+    Data4: 380314682
+  Banks:
+  - {fileID: -4991310555032039705}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-7153193879969977625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/DoorOpenSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/World/DoorOpenSFX
+  Guid:
+    Data1: -119070837
+    Data2: 1073744737
+    Data3: -2008671564
+    Data4: -1395580817
+  Banks:
+  - {fileID: -4991310555032039705}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -170,11 +278,38 @@ MonoBehaviour:
   Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/World.bank
   Name: World
   StudioPath: bank:/World
-  lastModified: 639273991416395110
+  lastModified: 639274104303047373
   FileSizes:
   - Name: Desktop
-    Value: 1431072
+    Value: 1892032
   Exists: 1
+--- !u!114 &-4462881947711337222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/UnderwaterAMB
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Ambience/UnderwaterAMB
+  Guid:
+    Data1: -62627153
+    Data2: 1211437410
+    Data3: -433738342
+    Data4: 2006587476
+  Banks:
+  - {fileID: -4991310555032039705}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 120048
 --- !u!114 &-3964093006761047596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,10 +325,10 @@ MonoBehaviour:
   Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639273991398636994
+  lastModified: 639274104298777736
   FileSizes:
   - Name: Desktop
-    Value: 1532
+    Value: 2396
   Exists: 1
 --- !u!114 &-3019884686379359991
 MonoBehaviour:
@@ -237,10 +372,10 @@ MonoBehaviour:
   Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/Entity.bank
   Name: Entity
   StudioPath: bank:/Entity
-  lastModified: 639273991416909136
+  lastModified: 639274101789800738
   FileSizes:
   - Name: Desktop
-    Value: 107904
+    Value: 159296
   Exists: 1
 --- !u!114 &-566181306087128266
 MonoBehaviour:
@@ -296,6 +431,60 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-41482348850798246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Character/DeepOneDeathSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Character/DeepOneDeathSFX
+  Guid:
+    Data1: -1325172787
+    Data2: 1191774288
+    Data3: -2133570171
+    Data4: -1438792589
+  Banks:
+  - {fileID: -2652535069046497829}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-10300795804262074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/SandHitSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/World/SandHitSFX
+  Guid:
+    Data1: 2070957096
+    Data2: 1079413369
+    Data3: -2118459249
+    Data4: -142417729
+  Banks:
+  - {fileID: -4991310555032039705}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,14 +516,58 @@ MonoBehaviour:
   - {fileID: -5165982065052179726}
   - {fileID: -3019884686379359991}
   - {fileID: -7319096536405057105}
-  - {fileID: 3168944286812388216}
+  - {fileID: 5063794651847670332}
+  - {fileID: -7153193879969977625}
+  - {fileID: -4462881947711337222}
+  - {fileID: 3412126794930083884}
+  - {fileID: -7244856045112001981}
+  - {fileID: 7154433745198557922}
+  - {fileID: 8006722257869562558}
+  - {fileID: 4432863096188550666}
+  - {fileID: 4992623391973922254}
+  - {fileID: 5889885681609198114}
+  - {fileID: -41482348850798246}
+  - {fileID: 6933756915368667214}
+  - {fileID: -10300795804262074}
+  - {fileID: 8784048187313166457}
+  - {fileID: -9082670671657809726}
+  - {fileID: 1946753427569621067}
+  - {fileID: -9117670225872358134}
+  - {fileID: 8751255753524379710}
   EditorParameters: []
   MasterBanks:
   - {fileID: 6758614311371961274}
   StringsBanks:
   - {fileID: -3964093006761047596}
-  cacheTime: 639273991416909136
+  cacheTime: 639274104303047373
   cacheVersion: 131637
+--- !u!114 &1946753427569621067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/KelpDestroyedSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/World/KelpDestroyedSFX
+  Guid:
+    Data1: -2114601077
+    Data2: 1192694919
+    Data3: -1420537167
+    Data4: -1139276887
+  Banks:
+  - {fileID: -4991310555032039705}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &2035931393286374842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,7 +622,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &3168944286812388216
+--- !u!114 &3412126794930083884
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -399,23 +632,104 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/World/Ambience/UnderwaterAMB
+  m_Name: event:/World/WoodHitSFX
   m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
-  Path: event:/World/Ambience/UnderwaterAMB
+  Path: event:/World/WoodHitSFX
   Guid:
-    Data1: -62627153
-    Data2: 1211437410
-    Data3: -433738342
-    Data4: 2006587476
+    Data1: 663265361
+    Data2: 1341010617
+    Data3: 18740408
+    Data4: 275038047
   Banks:
   - {fileID: -4991310555032039705}
-  IsStream: 1
+  IsStream: 0
   Is3D: 0
-  IsOneShot: 0
+  IsOneShot: 1
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 120048
+  Length: 0
+--- !u!114 &4432863096188550666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/OreHitSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/World/OreHitSFX
+  Guid:
+    Data1: -1551361867
+    Data2: 1282066334
+    Data3: -307415668
+    Data4: 2119187964
+  Banks:
+  - {fileID: -4991310555032039705}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &4992623391973922254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/StoneHitSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/World/StoneHitSFX
+  Guid:
+    Data1: 385692146
+    Data2: 1168839885
+    Data3: -1768191065
+    Data4: -302468917
+  Banks:
+  - {fileID: -4991310555032039705}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &5063794651847670332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/DoorClosedSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/World/DoorClosedSFX
+  Guid:
+    Data1: 1187741970
+    Data2: 1115079145
+    Data3: 191581827
+    Data4: 174573057
+  Banks:
+  - {fileID: -4991310555032039705}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &5873045379572479922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -443,6 +757,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &5889885681609198114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Character/DeepOneDamagedSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Character/DeepOneDamagedSFX
+  Guid:
+    Data1: -1489350017
+    Data2: 1203981027
+    Data3: 1870255023
+    Data4: -422337342
+  Banks:
+  - {fileID: -2652535069046497829}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &6758614311371961274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -458,11 +799,65 @@ MonoBehaviour:
   Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639273991398628758
+  lastModified: 639274104298769545
   FileSizes:
   - Name: Desktop
     Value: 1036
   Exists: 1
+--- !u!114 &6933756915368667214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Character/JellyfishDamagedSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Character/JellyfishDamagedSFX
+  Guid:
+    Data1: -625518566
+    Data2: 1300118833
+    Data3: 865802677
+    Data4: 1708618978
+  Banks:
+  - {fileID: -2652535069046497829}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &7154433745198557922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/StoneDestroySFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/World/StoneDestroySFX
+  Guid:
+    Data1: 367165706
+    Data2: 1225033850
+    Data3: 743236771
+    Data4: 1138547050
+  Banks:
+  - {fileID: -4991310555032039705}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &7853439017396542578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -483,6 +878,87 @@ MonoBehaviour:
     Data4: 138174823
   Banks:
   - {fileID: -6219207956112848524}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &8006722257869562558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/OreDestroySFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/World/OreDestroySFX
+  Guid:
+    Data1: 1290448922
+    Data2: 1153340809
+    Data3: -829409151
+    Data4: -349986138
+  Banks:
+  - {fileID: -4991310555032039705}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &8751255753524379710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/BeachAMB
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Ambience/BeachAMB
+  Guid:
+    Data1: 995689372
+    Data2: 1176779951
+    Data3: 1183494566
+    Data4: 229374135
+  Banks:
+  - {fileID: -4991310555032039705}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 26841
+--- !u!114 &8784048187313166457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/KelpHitSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/World/KelpHitSFX
+  Guid:
+    Data1: 1763498630
+    Data2: 1324331639
+    Data3: 1787901594
+    Data4: 1854606365
+  Banks:
+  - {fileID: -4991310555032039705}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1

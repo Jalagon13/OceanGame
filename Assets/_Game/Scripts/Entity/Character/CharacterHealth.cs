@@ -63,6 +63,7 @@ namespace OceanGame
             if (CurrentHealth.Value <= 0 && CurrentLifeState.Value != LifeState.Dead)
             {
                 CurrentLifeState.Value = LifeState.Dead;
+                AudioManager.Instance.PlayOneShot(_character.Data.CharacterDeathSFX, transform.position);
 
                 // Server-authoritative loot drop on death
                 if (IsServer && _character != null && _character.Data != null)
@@ -78,7 +79,11 @@ namespace OceanGame
             if (triggerIFrame && CurrentLifeState.Value == LifeState.IFrame) return;
 
             CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - netDamage);
-            Debug.Log($"{name} Took {netDamage} Damage. {CurrentHealth.Value}/{_character.Stats.MaxHealth.GetValue()}");
+            
+            if(CurrentHealth.Value > 0)
+            {
+                AudioManager.Instance.PlayOneShot(_character.Data.CharacterDamagedSFX, transform.position);
+            }
 
             if (triggerIFrame && CurrentLifeState.Value == LifeState.Alive)
             {
@@ -96,7 +101,7 @@ namespace OceanGame
             if (IsServer)
             {
                 CurrentHealth.Value = Mathf.Min(maxHp, CurrentHealth.Value + amount);
-                Debug.Log($"{name} Restored {amount} HP. {CurrentHealth.Value}/{maxHp}");
+                // Debug.Log($"{name} Restored {amount} HP. {CurrentHealth.Value}/{maxHp}");
             }
             else
             {
@@ -111,7 +116,7 @@ namespace OceanGame
 
             int maxHp = _character.Stats.MaxHealth.GetValue();
             CurrentHealth.Value = Mathf.Min(maxHp, CurrentHealth.Value + amount);
-            Debug.Log($"{name} Restored {amount} HP on Server. {CurrentHealth.Value}/{maxHp}");
+            // Debug.Log($"{name} Restored {amount} HP on Server. {CurrentHealth.Value}/{maxHp}");
         }
 
         private IEnumerator IFrameRoutine()

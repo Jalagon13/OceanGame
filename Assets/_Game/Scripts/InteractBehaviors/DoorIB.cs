@@ -12,15 +12,17 @@ namespace OceanGame
 
             if (doorTd.State == 0)
             {
-                Debug.Log($"Opening door");
                 doorTd.State = 1;
                 doorTd.IsSolid = false;
+                
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.DoorOpen, default);
             }
             else if (doorTd.State == 1)
             {
-                Debug.Log($"Closing door");
                 doorTd.State = 0;
                 doorTd.IsSolid = true;
+
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.DoorClosed, default);
             }
 
             WorldManager.Instance.FgGrid.ChangeMultiTileData(posX, posY, doorTd, true);

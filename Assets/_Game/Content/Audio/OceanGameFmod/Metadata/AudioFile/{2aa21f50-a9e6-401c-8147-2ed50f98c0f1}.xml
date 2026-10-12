@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{2aa21f50-a9e6-401c-8147-2ed50f98c0f1}">
 		<property name="assetPath">
-			<value>World/WaterExitSFX.wav</value>
+			<value>Player/WaterExitSFX.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>

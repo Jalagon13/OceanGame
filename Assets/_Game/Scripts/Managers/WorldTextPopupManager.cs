@@ -27,12 +27,6 @@ namespace OceanGame
 
         public void SpawnDamageNumbers(Vector3 worldPosition, int damage)
         {
-            if (_damageNumberPrefab == null)
-            {
-                Debug.LogError("Damage Number Prefab is not assigned.", this);
-                return;
-            }
-
             if (!CanSpawnAt(worldPosition))
             {
                 return;
@@ -42,7 +36,6 @@ namespace OceanGame
 
             popup.Initialize(damage, _damageNumberColor, _damageNumberFontSize);
             popup.Play();
-            Debug.Log($"Spawned damage number popup: {damage}");
         }
 
         public void SpawnItemCollectPopup(ItemSO item, int amount)

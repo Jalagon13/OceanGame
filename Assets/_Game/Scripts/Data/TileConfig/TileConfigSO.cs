@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -16,9 +17,13 @@ namespace OceanGame
         [field: SerializeField] public Vector2Int Size { get; private set; } = new(1, 1);
         [field: SerializeField] public TileBase DrawTile { get; private set; }
 
+        [field: Header("Game Feel")]
+        [field: SerializeField] public EventReference TileHitSFX { get; private set; }
+        [field: SerializeField] public EventReference TileDestroyedSFX { get; private set; }
+
+        [field: Header("Tile Behavior")]
         [field: SerializeReference]
         [field: SerializeField] public InteractBehavior InteractBehavior { get; private set; }
-
         [field: SerializeField] public List<LootDropEntry> LootDrops = new();
 
         public bool IsMultiTile => Size != new Vector2Int(1, 1);
@@ -66,7 +71,7 @@ namespace OceanGame
 
                 dropPos = new Vector2(x + 0.5f, y + 0.5f);
             }
-
+            
             // Roll and drop each entry in the loot table
             DropLoot(dropPos);
         }

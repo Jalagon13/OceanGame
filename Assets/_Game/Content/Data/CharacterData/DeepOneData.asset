@@ -17,14 +17,28 @@ MonoBehaviour:
   <BaseDefense>k__BackingField: 0
   <BaseDamage>k__BackingField: 6
   <KnockbackForce>k__BackingField: 5
+  <BaseKbResist>k__BackingField: 0.25
   <BaseSpeed>k__BackingField: 2
   <BaseIFrameDuration>k__BackingField: 0.17
   <BaseTurnSharpness>k__BackingField: 2
-  <BaseKbResist>k__BackingField: 0.25
   <CanBeKnockedBacked>k__BackingField: 1
   <CanDie>k__BackingField: 1
   <CanDamagePlayerOnTouch>k__BackingField: 1
   <CharacterPrefab>k__BackingField: {fileID: 3454599396775519568, guid: 0344ba0b99a3c4bcaa9f40031b351c0b, type: 3}
+  <CharacterDamagedSFX>k__BackingField:
+    Guid:
+      Data1: -1489350017
+      Data2: 1203981027
+      Data3: 1870255023
+      Data4: -422337342
+    Path: event:/Character/DeepOneDamagedSFX
+  <CharacterDeathSFX>k__BackingField:
+    Guid:
+      Data1: -1325172787
+      Data2: 1191774288
+      Data3: -2133570171
+      Data4: -1438792589
+    Path: event:/Character/DeepOneDeathSFX
   LootDrops:
   - _item: {fileID: 11400000, guid: 278c74882f6fb40319f2f4c99b2f71ff, type: 2}
     _minAmount: 1

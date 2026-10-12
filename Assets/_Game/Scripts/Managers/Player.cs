@@ -204,7 +204,5 @@ namespace OceanGame
             Vector2Int playerTilePos = new Vector2Int(Mathf.FloorToInt(Character.transform.position.x), Mathf.FloorToInt(Character.transform.position.y - 0.5f));
             return WorldManager.Instance.FluidGrid.GetFluidType(playerTilePos.x, playerTilePos.y) == FluidType.Water;
         }
-
-        
     }
 }

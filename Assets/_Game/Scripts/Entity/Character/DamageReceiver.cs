@@ -35,7 +35,7 @@ namespace OceanGame
 
             _character.Health.TakeDamage(netDamage);
             
-            // TEMP: Spawn damage number popup. I will put this code in a client side game feel system later.
+            // TEMP: Spawn damage number popup. I will put this code in a client side game feel system later. Same with the SFX
             WorldTextPopupManager.Instance.SpawnDamageNumbers(_character.transform.position, netDamage);
             
             if (!_character.Data.CanBeKnockedBacked || _character.Health.CurrentLifeState.Value == LifeState.Dead) return;

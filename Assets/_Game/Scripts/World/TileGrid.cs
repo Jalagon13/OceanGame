@@ -66,6 +66,8 @@ namespace OceanGame
             else
             {
                 DamagedTiles[damagePos] = currentDamage;
+                
+                AudioManager.Instance.PlayOneShot(tc.TileHitSFX, new(damagePos.x, damagePos.y));
 
                 if (refreshCurrentBounds && PlayerCamera.Instance.IsPositionInBounds(x, y))
                 {
@@ -87,6 +89,9 @@ namespace OceanGame
             {
                 // Let the TileConfig handle clearing the cells and dropping items!
                 tc.OnTileDestroyed(this, x, y, targetTile, refreshCurrentBounds);
+
+                // NTFS: Probably move this to a client side game feel area later
+                AudioManager.Instance.PlayOneShot(tc.TileDestroyedSFX, new(x, y)); 
             }
             else
             {

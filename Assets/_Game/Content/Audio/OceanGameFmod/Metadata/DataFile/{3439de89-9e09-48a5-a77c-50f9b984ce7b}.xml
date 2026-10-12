@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="DataFile" id="{3439de89-9e09-48a5-a77c-50f9b984ce7b}">
+		<property name="assetPath">
+			<value>World/Ambience/UnderwaterAMB.wav.meta</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f5f6d90b-b97f-40e1-9eb6-1296e342ad23}</destination>
+		</relationship>
+	</object>
+</objects>

@@ -19,6 +19,20 @@ MonoBehaviour:
   <IsSolid>k__BackingField: 0
   <Size>k__BackingField: {x: 1, y: 1}
   <DrawTile>k__BackingField: {fileID: 11400000, guid: 16cdd19d4e78d4c5f8381a2c4ad7c662, type: 2}
+  <TileHitSFX>k__BackingField:
+    Guid:
+      Data1: 1763498630
+      Data2: 1324331639
+      Data3: 1787901594
+      Data4: 1854606365
+    Path: event:/World/KelpHitSFX
+  <TileDestroyedSFX>k__BackingField:
+    Guid:
+      Data1: -2114601077
+      Data2: 1192694919
+      Data3: -1420537167
+      Data4: -1139276887
+    Path: event:/World/KelpDestroyedSFX
   <InteractBehavior>k__BackingField:
     rid: -2
   LootDrops:

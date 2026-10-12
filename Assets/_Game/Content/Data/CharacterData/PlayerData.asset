@@ -25,4 +25,18 @@ MonoBehaviour:
   <CanDie>k__BackingField: 1
   <CanDamagePlayerOnTouch>k__BackingField: 0
   <CharacterPrefab>k__BackingField: {fileID: 0}
+  <CharacterDamagedSFX>k__BackingField:
+    Guid:
+      Data1: 1871022001
+      Data2: 1266764014
+      Data3: -700748148
+      Data4: 1759758874
+    Path: event:/Player/PlayerHurtSFX
+  <CharacterDeathSFX>k__BackingField:
+    Guid:
+      Data1: 1871022001
+      Data2: 1266764014
+      Data3: -700748148
+      Data4: 1759758874
+    Path: event:/Player/PlayerHurtSFX
   LootDrops: []

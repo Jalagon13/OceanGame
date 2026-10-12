@@ -19,6 +19,20 @@ MonoBehaviour:
   <IsSolid>k__BackingField: 1
   <Size>k__BackingField: {x: 1, y: 1}
   <DrawTile>k__BackingField: {fileID: 11400000, guid: 9e02c752ffed040c8bf132bf7c47a889, type: 2}
+  <TileHitSFX>k__BackingField:
+    Guid:
+      Data1: -1551361867
+      Data2: 1282066334
+      Data3: -307415668
+      Data4: 2119187964
+    Path: event:/World/OreHitSFX
+  <TileDestroyedSFX>k__BackingField:
+    Guid:
+      Data1: 1290448922
+      Data2: 1153340809
+      Data3: -829409151
+      Data4: -349986138
+    Path: event:/World/OreDestroySFX
   <InteractBehavior>k__BackingField:
     rid: -2
   LootDrops:

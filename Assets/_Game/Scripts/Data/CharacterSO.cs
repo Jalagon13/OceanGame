@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
 
 namespace OceanGame
@@ -20,6 +21,13 @@ namespace OceanGame
         [field: SerializeField] public bool CanDie { get; private set; } = true;
         [field: SerializeField] public bool CanDamagePlayerOnTouch { get; private set; }
         [field: SerializeField] public ServerCharacter CharacterPrefab { get; private set; }
+
+        [field: Header("Game Feel")]
+        [field: SerializeField] public EventReference CharacterDamagedSFX { get; private set; }
+        [field: SerializeField] public EventReference CharacterDeathSFX { get; private set; }
+
+        [field: Header("Drops")]
+
         [field: SerializeField] public List<LootDropEntry> LootDrops = new();
 
         public void DropLoot(Vector2 position)

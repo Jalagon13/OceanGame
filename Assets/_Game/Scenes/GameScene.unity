@@ -529,14 +529,14 @@ MonoBehaviour:
       Data2: 1211437410
       Data3: -433738342
       Data4: 2006587476
-    Path: event:/World/Ambience/UnderwaterAMB
+    Path: event:/Ambience/UnderwaterAMB
   <SurfaceAmbience>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 995689372
+      Data2: 1176779951
+      Data3: 1183494566
+      Data4: 229374135
+    Path: event:/Ambience/BeachAMB
   <InventoryOpenSFX>k__BackingField:
     Guid:
       Data1: -729829203
@@ -623,18 +623,18 @@ MonoBehaviour:
     Path: event:/Player/WaterExitSFX
   <DoorOpen>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -119070837
+      Data2: 1073744737
+      Data3: -2008671564
+      Data4: -1395580817
+    Path: event:/World/DoorOpenSFX
   <DoorClosed>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1187741970
+      Data2: 1115079145
+      Data3: 191581827
+      Data4: 174573057
+    Path: event:/World/DoorClosedSFX
 --- !u!1 &176723418
 GameObject:
   m_ObjectHideFlags: 0
