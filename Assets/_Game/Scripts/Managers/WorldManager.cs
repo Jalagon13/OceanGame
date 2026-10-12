@@ -18,6 +18,9 @@ namespace OceanGame
         [SerializeField] private Tilemap _foregroundTilemap;
         [SerializeField] private Tilemap _backgroundTilemap;
 
+        [Header("Tile Repair")]
+        [SerializeField, Min(0f)] private float _tileRepairDelay = 5f;
+
         [Header("Debug Testing")]
         [SerializeField] private TreeTileConfigSO _debugTreeConfig;
         [SerializeField] private ProjectileSO _testProjectile;
@@ -53,8 +56,12 @@ namespace OceanGame
 
         private void Update()
         {
-            MouseOverUI = EventSystem.current.IsPointerOverGameObject();
+            if(!IsWorldReady) return;
+        
+            FgGrid.RestoreExpiredDamage(Time.time, _tileRepairDelay);
+            BgGrid.RestoreExpiredDamage(Time.time, _tileRepairDelay);
 
+            MouseOverUI = EventSystem.current.IsPointerOverGameObject();
             MouseWorldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             MouseWorldTilePosition = new(Mathf.FloorToInt(MouseWorldPosition.x), Mathf.FloorToInt(MouseWorldPosition.y));
 
@@ -62,7 +69,6 @@ namespace OceanGame
             {
                 ProjectileManager.SpawnProjectile(_testProjectile, Player.Instance.Character.transform.position, Vector2.right, sourceEntity: Player.Instance.Character);
             }
-            
         }
 
         private void ToggleBuildLayer()
@@ -167,4 +173,3 @@ namespace OceanGame
     
     
 }
-

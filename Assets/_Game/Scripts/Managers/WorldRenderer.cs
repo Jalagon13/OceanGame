@@ -116,14 +116,14 @@ namespace OceanGame
                     int currentDamage = 0;
                     int maxHp = 0;
 
-                    if (world.FgGrid.DamagedTiles.TryGetValue(tilePos, out int fgDmg) && fgTd.HasTile)
+                    if (world.FgGrid.DamagedTiles.TryGetValue(tilePos, out TileDamageState fgDamage) && fgTd.HasTile)
                     {
-                        currentDamage = fgDmg;
+                        currentDamage = fgDamage.Damage;
                         maxHp = fgTd.TileConfig.MaxHP;
                     }
-                    else if (world.BgGrid.DamagedTiles.TryGetValue(tilePos, out int bgDmg) && bgTd.HasTile)
+                    else if (world.BgGrid.DamagedTiles.TryGetValue(tilePos, out TileDamageState bgDamage) && bgTd.HasTile)
                     {
-                        currentDamage = bgDmg;
+                        currentDamage = bgDamage.Damage;
                         maxHp = bgTd.TileConfig.MaxHP;
                     }
 

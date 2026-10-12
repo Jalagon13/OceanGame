@@ -41,6 +41,7 @@ namespace OceanGame
         public PlayerDepthTracker DepthTracker { get; private set; }
 
         private bool _wasInWater;
+        private bool _hasInitializedAmbience;
         private bool _hasInitialSpawn;
 
         private void Awake() 
@@ -66,9 +67,10 @@ namespace OceanGame
 
             if (Character != null) Character.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
 
-            if (_wasInWater && AudioManager.Instance != null)
+            if (AudioManager.Instance != null)
             {
                 AudioManager.Instance.StopOceanAmbience();
+                AudioManager.Instance.StopSurfaceAmbience();
             }
         }
 
@@ -79,18 +81,21 @@ namespace OceanGame
             // Code for checking water ambience
             bool isInWater = IsInWater();
 
-            if (isInWater != _wasInWater)
+            if (!_hasInitializedAmbience || isInWater != _wasInWater)
             {
                 if (isInWater)
                 {
                     AudioManager.Instance.StartOceanAmbience(FMODEvents.Instance.OceanAmbience);
+                    AudioManager.Instance.StopSurfaceAmbience();
                 }
                 else
                 {
                     AudioManager.Instance.StopOceanAmbience();
+                    AudioManager.Instance.StartSurfaceAmbience(FMODEvents.Instance.SurfaceAmbience);
                 }
 
                 _wasInWater = isInWater;
+                _hasInitializedAmbience = true;
             }
 
             // If player is not dead and is holding down move input keep updating desired direction with it

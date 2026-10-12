@@ -13,11 +13,12 @@ namespace OceanGame
         private readonly TileData[] _tiles;
         private readonly int _width;
         private readonly int _height;
+        private readonly List<Vector2Int> _expiredDamagePositions = new();
 
         public int Width => _width;
         public int Height => _height;
 
-        public Dictionary<Vector2Int, int> DamagedTiles { get; private set; } = new(); // Stores accumulated damage only for tiles that have taken damage
+        public Dictionary<Vector2Int, TileDamageState> DamagedTiles { get; } = new();
         public Tilemap Tilemap { get; }
 
         public TileGrid(int width, int height, Tilemap tilemap)
@@ -52,7 +53,8 @@ namespace OceanGame
             int damageY = tc.IsMultiTile ? y - targetTile.OffsetY : y;
             Vector2Int damagePos = new(damageX, damageY);
 
-            DamagedTiles.TryGetValue(damagePos, out int currentDamage);
+            DamagedTiles.TryGetValue(damagePos, out TileDamageState damageState);
+            int currentDamage = damageState.Damage;
             currentDamage += damageAmount;
 
             if (currentDamage >= tc.MaxHP)
@@ -65,7 +67,7 @@ namespace OceanGame
             }
             else
             {
-                DamagedTiles[damagePos] = currentDamage;
+                DamagedTiles[damagePos] = new TileDamageState(currentDamage, Time.time);
                 
                 AudioManager.Instance.PlayOneShot(tc.TileHitSFX, new(damagePos.x, damagePos.y));
 
@@ -74,6 +76,35 @@ namespace OceanGame
                     PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
                 }
             }
+        }
+
+        public void RestoreExpiredDamage(float currentTime, float repairDelay)
+        {
+            _expiredDamagePositions.Clear();
+
+            foreach (var entry in DamagedTiles)
+            {
+                if (currentTime - entry.Value.LastDamagedTime >= repairDelay)
+                    _expiredDamagePositions.Add(entry.Key);
+            }
+
+            if (_expiredDamagePositions.Count == 0)
+                return;
+
+            bool refreshedVisibleDamage = false;
+            for (int i = 0; i < _expiredDamagePositions.Count; i++)
+            {
+                Vector2Int position = _expiredDamagePositions[i];
+                DamagedTiles.Remove(position);
+
+                if (!refreshedVisibleDamage && PlayerCamera.Instance != null && PlayerCamera.Instance.IsPositionInBounds(position.x, position.y))
+                {
+                    refreshedVisibleDamage = true;
+                }
+            }
+
+            if (refreshedVisibleDamage)
+                PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
         }
 
         public void DestroyTile(int x, int y, bool refreshCurrentBounds = false)
@@ -241,6 +272,18 @@ namespace OceanGame
         public void ClearDamage(int x, int y)
         {
             DamagedTiles.Remove(new Vector2Int(x, y));
+        }
+    }
+
+    public readonly struct TileDamageState
+    {
+        public int Damage { get; }
+        public float LastDamagedTime { get; }
+
+        public TileDamageState(int damage, float lastDamagedTime)
+        {
+            Damage = damage;
+            LastDamagedTime = lastDamagedTime;
         }
     }
 
