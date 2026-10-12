@@ -41,6 +41,7 @@ namespace OceanGame
         public PlayerDepthTracker DepthTracker { get; private set; }
 
         private bool _wasInWater;
+        private bool _hasInitialSpawn;
 
         private void Awake() 
         {
@@ -52,7 +53,8 @@ namespace OceanGame
             GameInput.Instance.OnMoveInputPressed += OnMoveInputPressed;
             GameInput.Instance.OnJumpPressed += OnJumpPressed;
             GameInput.Instance.OnSecondaryActionPressed += InteractWithObject;
-            WorldManager.Instance.OnWorldReady += SetSpawnPoint;
+            WorldManager.Instance.OnWorldReady += InitializeSpawn;
+            InitializeSpawn();
         }
         
         private void OnDestroy() 
@@ -60,9 +62,9 @@ namespace OceanGame
             GameInput.Instance.OnMoveInputPressed -= OnMoveInputPressed;
             GameInput.Instance.OnJumpPressed -= OnJumpPressed;
             GameInput.Instance.OnSecondaryActionPressed -= InteractWithObject;
-            WorldManager.Instance.OnWorldReady -= SetSpawnPoint;
+            WorldManager.Instance.OnWorldReady -= InitializeSpawn;
 
-            if(Character != null) Character.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
+            if (Character != null) Character.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
 
             if (_wasInWater && AudioManager.Instance != null)
             {
@@ -100,6 +102,26 @@ namespace OceanGame
             }
         }
 
+        private void InitializeSpawn()
+        {
+            if (_hasInitialSpawn || Character == null || !WorldManager.Instance.IsWorldReady)
+                return;
+
+            if (!WorldManager.Instance.TryGetPlayerSpawnPosition(WalkingBoxColliderSize, out Vector2 spawnPosition))
+            {
+                Debug.LogError("Could not find a clear player spawn position in the center of the world.");
+                return;
+            }
+
+            Character.transform.position = spawnPosition;
+            Character.Velocity = Vector2.zero;
+            Character.DesiredDirection = Vector2.zero;
+            Character.KnockbackVelocity = Vector2.zero;
+
+            RespawnPoint = spawnPosition;
+            _hasInitialSpawn = true;
+        }
+
         public void BindCharacter(ServerCharacter character)
         {
             if (Character == character) return;
@@ -112,12 +134,8 @@ namespace OceanGame
             RangedHandler = Character.GetComponent<PlayerRangedHandler>();
             DepthTracker = Character.GetComponent<PlayerDepthTracker>();
 
+            InitializeSpawn();
             PlayerReady?.Invoke(Character);
-        }
-
-        private void SetSpawnPoint()
-        {
-            RespawnPoint = Character.transform.position;
         }
 
         private void OnLifeStateChanged(LifeState previousValue, LifeState newValue)

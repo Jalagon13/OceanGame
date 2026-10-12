@@ -1,11 +1,13 @@
+using System;
 using UnityEngine;
 
 namespace OceanGame
 {
     public class WorldGenerator : MonoBehaviour
     {
-        [field: SerializeField] 
-        public WorldGenPipelineSO CurrentWorldGenPreset { get; private set; }
+        public event Action<float, string> OnWorldGenProgressed;
+
+        [field: SerializeField] public WorldGenPipelineSO CurrentWorldGenPreset { get; private set; }
 
         public void GenerateWorld()
         {
@@ -22,7 +24,9 @@ namespace OceanGame
         private void OnWorldGenProgress(float progress, string stepName)
         {
             // Update UI loading bars or log progress
-            Debug.Log($"[WorldGen Progress] {(progress * 100):F0}% - Current Step: {stepName}");
+            Debug.Log($"[WorldGen Progress] {progress * 100:F0}% - Current Step: {stepName}");
+
+            OnWorldGenProgressed?.Invoke(progress, stepName);
         }
 
         private void OnWorldGenComplete(WorldGenContext context)

@@ -100,6 +100,64 @@ namespace OceanGame
             PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
         }
 
+        public bool TryGetPlayerSpawnPosition(Vector2 colliderSize, out Vector2 spawnPosition)
+        {
+            spawnPosition = default;
+
+            if (!IsWorldReady || FgGrid == null)
+                return false;
+
+            // SmallIslandsGenStep generates an island at this center column.
+            int centerX = FgGrid.Width / 2;
+            Vector2 halfSize = colliderSize * 0.5f;
+
+            // Start at the top of the world and search down the center column.
+            for (int y = FgGrid.Height - 1; y >= 0; y--)
+            {
+                TileData ground = FgGrid.GetTileData(centerX, y);
+
+                if (!ground.HasTile || !ground.IsSolid)
+                    continue;
+
+                // Put the character's feet right on top of the solid tile.
+                Vector2 candidate = new(centerX + 0.5f, y + 1f + halfSize.y);
+
+                if (!IsSpawnAreaClear(candidate, colliderSize))
+                    continue;
+
+                spawnPosition = candidate;
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool IsSpawnAreaClear(Vector2 position, Vector2 colliderSize)
+        {
+            Vector2 halfSize = colliderSize * 0.5f;
+
+            int minX = Mathf.FloorToInt(position.x - halfSize.x);
+            int maxX = Mathf.CeilToInt(position.x + halfSize.x) - 1;
+            int minY = Mathf.FloorToInt(position.y - halfSize.y);
+            int maxY = Mathf.CeilToInt(position.y + halfSize.y) - 1;
+
+            for (int x = minX; x <= maxX; x++)
+            {
+                for (int y = minY; y <= maxY; y++)
+                {
+                    if (!FgGrid.IsInBounds(x, y))
+                        return false;
+
+                    TileData tile = FgGrid.GetTileData(x, y);
+
+                    if (tile.HasTile && tile.IsSolid)
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
         public void DamageTile(Vector2Int position, int damageAmount, LayerType layerType, bool refreshCurrentBounds = false)
         {
             TileGrid layer = layerType == LayerType.Foreground ? FgGrid : BgGrid;

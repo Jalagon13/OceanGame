@@ -59,7 +59,13 @@ namespace OceanGame
                 
                 yield return null;
             }
-            
+
+            // Add the guaranteed island after the regular islands are generated.
+            int centerIslandWidth = Mathf.Max(1, (_minIslandWidth + _maxIslandWidth) / 2);
+            int centerIslandHeight = Mathf.Max(1, (_minIslandHeight + _maxIslandHeight) / 2);
+
+            GenerateIsland(ctx, ctx.Width / 2, ctx.SeaLevel, centerIslandWidth, centerIslandHeight);
+
         }
 
         private void GenerateIsland(WorldGenContext ctx, int islandCenterX, int islandCenterY, int islandWidth, int islandHeight)
