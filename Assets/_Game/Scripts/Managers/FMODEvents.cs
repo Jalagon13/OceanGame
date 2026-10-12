@@ -14,7 +14,7 @@ namespace OceanGame
         [field: Header("UI")]
         [field: SerializeField] public EventReference InventoryOpenSFX { get; private set; }
         [field: SerializeField] public EventReference InventoryCloseSFX { get; private set; }
-        [field: SerializeField] public EventReference SelectedSlotChangedSFX { get; private set; }
+        [field: SerializeField] public EventReference HotbarSlotChangedSFX { get; private set; }
         [field: SerializeField] public EventReference ItemPickupSFX { get; private set; }
         [field: SerializeField] public EventReference SlotClickedSFX { get; private set; }
         [field: SerializeField] public EventReference OxygenWarningSFX { get; private set; }
@@ -22,11 +22,14 @@ namespace OceanGame
         [field: Header("Player")]
         [field: SerializeField] public EventReference OxygenReplenishSFX { get; private set; }
         [field: SerializeField] public EventReference PlayerSwimSFX { get; private set; }
-        [field: SerializeField] public EventReference DrillSFX { get; private set; }
+        [field: SerializeField] public EventReference PlayerAirThrustSFX { get; private set; }
+        [field: SerializeField] public EventReference PlayerWaterThrustSFX { get; private set; }
+        [field: SerializeField] public EventReference WaterEnterSFX { get; private set; }
+        [field: SerializeField] public EventReference WaterExitSFX { get; private set; }
 
         [field: Header("World")]
-        [field: SerializeField] public EventReference HatchOpen { get; private set; }
-        [field: SerializeField] public EventReference HatchClosed { get; private set; }
+        [field: SerializeField] public EventReference DoorOpen { get; private set; }
+        [field: SerializeField] public EventReference DoorClosed { get; private set; }
 
         private void Awake()
         {

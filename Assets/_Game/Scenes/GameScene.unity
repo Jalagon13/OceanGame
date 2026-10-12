@@ -529,7 +529,7 @@ MonoBehaviour:
       Data2: 1211437410
       Data3: -433738342
       Data4: 2006587476
-    Path: event:/Ambience/UnderwaterAMB
+    Path: event:/World/Ambience/UnderwaterAMB
   <SurfaceAmbience>k__BackingField:
     Guid:
       Data1: 0
@@ -539,75 +539,96 @@ MonoBehaviour:
     Path: 
   <InventoryOpenSFX>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -729829203
+      Data2: 1103490979
+      Data3: -817699923
+      Data4: -49729109
+    Path: event:/UI/InventoryOpenSFX
   <InventoryCloseSFX>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  <SelectedSlotChangedSFX>k__BackingField:
+      Data1: 445445433
+      Data2: 1279167117
+      Data3: -986718795
+      Data4: 2104895142
+    Path: event:/UI/InventoryCloseSFX
+  <HotbarSlotChangedSFX>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -1800359118
+      Data2: 1089812223
+      Data3: -940334452
+      Data4: 138174823
+    Path: event:/UI/SelectedSlotChangedSFX
   <ItemPickupSFX>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 197837756
+      Data2: 1245606847
+      Data3: -2113783918
+      Data4: -1809229984
+    Path: event:/UI/ItemPickupSFX
   <SlotClickedSFX>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1068272004
+      Data2: 1141351391
+      Data3: -1043708767
+      Data4: 1734120185
+    Path: event:/UI/SlotClickedSFX
   <OxygenWarningSFX>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -1320922507
+      Data2: 1156802317
+      Data3: -243276108
+      Data4: 1290273029
+    Path: event:/UI/OxygenWarningSFX
   <OxygenReplenishSFX>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -1812861233
+      Data2: 1215773853
+      Data3: 1815484088
+      Data4: -1469176887
+    Path: event:/Player/OxygenReplenishSFX
   <PlayerSwimSFX>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  <DrillSFX>k__BackingField:
+      Data1: 1283418176
+      Data2: 1285530896
+      Data3: -1112521305
+      Data4: -132285314
+    Path: event:/Player/PlayerSwimSFX
+  <PlayerAirThrustSFX>k__BackingField:
+    Guid:
+      Data1: 1596647604
+      Data2: 1148653756
+      Data3: -1045980032
+      Data4: -882691186
+    Path: event:/Player/AirThrustSFX
+  <PlayerWaterThrustSFX>k__BackingField:
+    Guid:
+      Data1: -178650094
+      Data2: 1315804617
+      Data3: 1270689671
+      Data4: -1526551179
+    Path: event:/Player/WaterThrustSFX
+  <WaterEnterSFX>k__BackingField:
+    Guid:
+      Data1: -1818233781
+      Data2: 1084670490
+      Data3: 678267300
+      Data4: -1728962492
+    Path: event:/Player/WaterEnterSFX
+  <WaterExitSFX>k__BackingField:
+    Guid:
+      Data1: 1450809081
+      Data2: 1243880691
+      Data3: 1153980051
+      Data4: 2053343828
+    Path: event:/Player/WaterExitSFX
+  <DoorOpen>k__BackingField:
     Guid:
       Data1: 0
       Data2: 0
       Data3: 0
       Data4: 0
     Path: 
-  <HatchOpen>k__BackingField:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  <HatchClosed>k__BackingField:
+  <DoorClosed>k__BackingField:
     Guid:
       Data1: 0
       Data2: 0
@@ -2182,13 +2203,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.CharacterSpawnRules
   _tempMaxCharCount: 6
-  _tempPerSecSpawnChance: 0.05
+  _tempPerSecSpawnChance: 0.025
   _tempSpawnEntries:
   - _character: {fileID: 11400000, guid: 887e9bbb18cc241e8afc54a9c9925063, type: 2}
-    _weight: 1
+    _weight: 0.25
     _environment: 2
   - _character: {fileID: 11400000, guid: 2a9db1f511b6a4888a49dd1d2f56bd26, type: 2}
-    _weight: 0.133
+    _weight: 1
     _environment: 0
 --- !u!114 &653184667
 MonoBehaviour:

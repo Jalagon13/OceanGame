@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{ac41055f-79b4-42e5-b33f-2a6837796fc7}">
+		<property name="assetPath">
+			<value>UI/OxygenWarningSFX.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>24</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>1.0233749999999999</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f5f6d90b-b97f-40e1-9eb6-1296e342ad23}</destination>
+		</relationship>
+	</object>
+</objects>

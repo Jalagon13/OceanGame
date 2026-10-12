@@ -61,6 +61,8 @@ namespace OceanGame
             _fadeTween = _warningCanvasGroup.DOFade(1f, _flashDuration)
                 .SetLoops(_flashLoops, LoopType.Yoyo)
                 .OnComplete(() => _warningCanvasGroup.alpha = 0f);
+                
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.OxygenWarningSFX, default);
         }
 
         private void HideWarning()

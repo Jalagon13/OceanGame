@@ -207,6 +207,8 @@ namespace OceanGame
                 return;
             }
 
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.HotbarSlotChangedSFX, default);
+
             ActiveHotbarIndex = newIndex;
             OnActiveHotbarIndexChanged?.Invoke(ActiveHotbarIndex);
             // Debug.Log($"Active Hotbar Index is: {newIndex}");

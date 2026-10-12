@@ -64,7 +64,9 @@ namespace OceanGame
         private void ExecuteSwing(ToolItemSO tool)
         {
             if (IsSwinging) return;
-            // Debug.Log($"Swing started");
+            
+            var swingSfx = Player.Instance.IsInWater() ? FMODEvents.Instance.PlayerWaterThrustSFX : FMODEvents.Instance.PlayerAirThrustSFX; 
+            AudioManager.Instance.PlayOneShot(swingSfx, transform.position);
             
             IsSwinging = true;
 

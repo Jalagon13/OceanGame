@@ -67,6 +67,8 @@ namespace OceanGame
             _itemText.text = $"+{DisplayAmount} {item.ItemName}";
             _itemText.color = textColor;
             _itemText.fontSize = fontSize;
+            
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ItemPickupSFX, default);
         }
 
         public void Play()

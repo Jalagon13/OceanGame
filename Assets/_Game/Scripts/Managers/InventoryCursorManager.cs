@@ -175,6 +175,7 @@ namespace OceanGame
             }
             
             onSlotModified?.Invoke();
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.SlotClickedSFX, default);
             InventoryManager.Instance.RefreshInventory();
         }
         
@@ -201,6 +202,7 @@ namespace OceanGame
             }
             
             onSlotModified?.Invoke();
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.SlotClickedSFX, default);
             InventoryManager.Instance.RefreshInventory();
         }
 
@@ -215,6 +217,8 @@ namespace OceanGame
                 ushort unequippedItemId = equipSlot.ItemId;
                 CursorSlot.AssignItem(unequippedItemId, 1);
                 onUnequip?.Invoke();
+
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.SlotClickedSFX, default);
             }
             else if (equipSlot.IsEmpty)
             {
@@ -225,6 +229,8 @@ namespace OceanGame
                 ushort itemIdToEquip = CursorSlot.ItemId;
                 CursorSlot.RemoveFromCurrentAmount(1);
                 onEquip?.Invoke(itemIdToEquip);
+
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.SlotClickedSFX, default);
             }
             else
             {
@@ -239,6 +245,8 @@ namespace OceanGame
 
                     CursorSlot.AssignItem(oldEquippedId, 1);
                     onEquip?.Invoke(newEquippedId);
+
+                    AudioManager.Instance.PlayOneShot(FMODEvents.Instance.SlotClickedSFX, default);
                 }
             }
         }
@@ -265,12 +273,7 @@ namespace OceanGame
 
         private bool CanStacksMerge(InventorySlot target, InventorySlot source)
         {
-            return target != null &&
-                source != null &&
-                !target.IsEmpty &&
-                !source.IsEmpty &&
-                target.ItemId == source.ItemId &&
-                target.Amount < GetMaxStackSize(GameDataRegistry.Instance.GetItemSOFromItemId(target.ItemId));
+            return target != null && source != null && !target.IsEmpty && !source.IsEmpty && target.ItemId == source.ItemId && target.Amount < GetMaxStackSize(GameDataRegistry.Instance.GetItemSOFromItemId(target.ItemId));
         }
 
         private int GetMaxStackSize(ItemSO item)

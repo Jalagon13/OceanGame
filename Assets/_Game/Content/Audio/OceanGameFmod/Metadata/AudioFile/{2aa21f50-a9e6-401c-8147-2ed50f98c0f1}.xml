@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{2aa21f50-a9e6-401c-8147-2ed50f98c0f1}">
+		<property name="assetPath">
+			<value>World/WaterExitSFX.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.67622916666666666</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f5f6d90b-b97f-40e1-9eb6-1296e342ad23}</destination>
+		</relationship>
+	</object>
+</objects>

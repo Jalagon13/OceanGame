@@ -146,12 +146,15 @@ namespace OceanGame
             {
                 ShowDefaultCraftingMenuUI();
                 ShowInventoryUI();
+                
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.InventoryOpenSFX, default);
             }
             else
             {
                 CloseExternalCraftingMenuUI();
                 CloseInventoryUI();
-                
+
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.InventoryCloseSFX, default);
                 Tooltip.HideUI();
             }
         }

@@ -17,6 +17,7 @@ namespace OceanGame
         [field: SerializeField] public int InventorySize { get; private set; } = 40;
         [field: SerializeField] public int HotbarSize { get; private set; } = 10;
         [field: SerializeField] public int MaxStackSize { get; private set; } = 999;
+        
         [SerializeField] private List<Ingredient> _startingItems = new();
 
         public InventorySlot[] PlayerInventory { get; private set; }

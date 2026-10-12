@@ -248,11 +248,14 @@ namespace OceanGame
 
     public class PlayerSwimmingState : State
     {
+        private const float SwimSfxInterval = 0.75f;
+
         private readonly ServerCharacter _ctx;
         private Player _player;
 
         private Vector2 _desiredVisualRotation;
         private int _turnDegreeThreshold = 90;
+        private float _swimSfxTimer;
 
         public PlayerSwimmingState(StateMachine m, State parent, ServerCharacter ctx) : base(m, parent)
         {
@@ -289,11 +292,18 @@ namespace OceanGame
         {
             _player = Player.Instance;
             _ctx.ColliderSize = _player.SwimmingBoxColliderSize;
+            _swimSfxTimer = 0f;
+            
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.WaterEnterSFX, _ctx.transform.position);
         }
 
         protected override void OnExit()
         {
             _ctx.VisualsGO.transform.up = Vector2.up;
+            _swimSfxTimer = 0f;
+
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.WaterExitSFX, _ctx.transform.position);
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.OxygenReplenishSFX, _ctx.transform.position);
         }
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
@@ -310,6 +320,20 @@ namespace OceanGame
 
         protected override void OnUpdate(float deltaTime)
         {
+            if (_ctx.DesiredDirection != Vector2.zero)
+            {
+                _swimSfxTimer += deltaTime;
+                if (_swimSfxTimer >= SwimSfxInterval)
+                {
+                    _swimSfxTimer %= SwimSfxInterval;
+                    AudioManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerSwimSFX, _ctx.transform.position);
+                }
+            }
+            else
+            {
+                _swimSfxTimer = 0f;
+            }
+
             bool isArmHandling = Player.Instance.ArmHandler.IsActionHeld || Player.Instance.ArmHandler.IsSwinging;
         
             if (isArmHandling || (_ctx.Velocity.sqrMagnitude <= 10f && _ctx.DesiredDirection == Vector2.zero))

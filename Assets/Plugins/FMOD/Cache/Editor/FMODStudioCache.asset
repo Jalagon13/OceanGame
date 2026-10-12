@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8438277831928084222
+--- !u!114 &-7725265703934676413
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,23 +10,50 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Ambience/UnderwaterAMB
+  m_Name: event:/UI/SlotClickedSFX
   m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
-  Path: event:/Ambience/UnderwaterAMB
+  Path: event:/UI/SlotClickedSFX
   Guid:
-    Data1: -62627153
-    Data2: 1211437410
-    Data3: -433738342
-    Data4: 2006587476
+    Data1: 1068272004
+    Data2: 1141351391
+    Data3: -1043708767
+    Data4: 1734120185
   Banks:
-  - {fileID: -4991310555032039705}
-  IsStream: 1
+  - {fileID: -6219207956112848524}
+  IsStream: 0
   Is3D: 0
-  IsOneShot: 0
+  IsOneShot: 1
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 120048
+  Length: 0
+--- !u!114 &-7319096536405057105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/WaterExitSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Player/WaterExitSFX
+  Guid:
+    Data1: 1450809081
+    Data2: 1243880691
+    Data3: 1153980051
+    Data4: 2053343828
+  Banks:
+  - {fileID: -2652535069046497829}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-6219207956112848524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42,11 +69,92 @@ MonoBehaviour:
   Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/UI.bank
   Name: UI
   StudioPath: bank:/UI
-  lastModified: 639272390565179069
+  lastModified: 639273978990492515
   FileSizes:
   - Name: Desktop
-    Value: 494
+    Value: 39616
   Exists: 1
+--- !u!114 &-5572229154658685041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/OxygenWarningSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/UI/OxygenWarningSFX
+  Guid:
+    Data1: -1320922507
+    Data2: 1156802317
+    Data3: -243276108
+    Data4: 1290273029
+  Banks:
+  - {fileID: -6219207956112848524}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-5528723584804517678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/InventoryCloseSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/UI/InventoryCloseSFX
+  Guid:
+    Data1: 445445433
+    Data2: 1279167117
+    Data3: -986718795
+    Data4: 2104895142
+  Banks:
+  - {fileID: -6219207956112848524}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-5165982065052179726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/OxygenReplenishSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Player/OxygenReplenishSFX
+  Guid:
+    Data1: -1812861233
+    Data2: 1215773853
+    Data3: 1815484088
+    Data4: -1469176887
+  Banks:
+  - {fileID: -2652535069046497829}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-4991310555032039705
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,7 +170,7 @@ MonoBehaviour:
   Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/World.bank
   Name: World
   StudioPath: bank:/World
-  lastModified: 639272390565149056
+  lastModified: 639273991416395110
   FileSizes:
   - Name: Desktop
     Value: 1431072
@@ -82,11 +190,38 @@ MonoBehaviour:
   Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639272390546799711
+  lastModified: 639273991398636994
   FileSizes:
   - Name: Desktop
-    Value: 890
+    Value: 1532
   Exists: 1
+--- !u!114 &-3019884686379359991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/WaterEnterSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Player/WaterEnterSFX
+  Guid:
+    Data1: -1818233781
+    Data2: 1084670490
+    Data3: 678267300
+    Data4: -1728962492
+  Banks:
+  - {fileID: -2652535069046497829}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-2652535069046497829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,11 +237,65 @@ MonoBehaviour:
   Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/Entity.bank
   Name: Entity
   StudioPath: bank:/Entity
-  lastModified: 639272390565172680
+  lastModified: 639273991416909136
   FileSizes:
   - Name: Desktop
-    Value: 494
+    Value: 107904
   Exists: 1
+--- !u!114 &-566181306087128266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/PlayerSwimSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Player/PlayerSwimSFX
+  Guid:
+    Data1: 1283418176
+    Data2: 1285530896
+    Data3: -1112521305
+    Data4: -132285314
+  Banks:
+  - {fileID: -2652535069046497829}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1429
+--- !u!114 &-190063996927762502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/AirThrustSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Player/AirThrustSFX
+  Guid:
+    Data1: 1596647604
+    Data2: 1148653756
+    Data3: -1045980032
+    Data4: -882691186
+  Banks:
+  - {fileID: -2652535069046497829}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,14 +315,134 @@ MonoBehaviour:
   - {fileID: -6219207956112848524}
   - {fileID: -4991310555032039705}
   EditorEvents:
-  - {fileID: -8438277831928084222}
+  - {fileID: -5528723584804517678}
+  - {fileID: -5572229154658685041}
+  - {fileID: -7725265703934676413}
+  - {fileID: 2035931393286374842}
+  - {fileID: 5873045379572479922}
+  - {fileID: -566181306087128266}
+  - {fileID: 7853439017396542578}
+  - {fileID: 2853801950772342492}
+  - {fileID: -190063996927762502}
+  - {fileID: -5165982065052179726}
+  - {fileID: -3019884686379359991}
+  - {fileID: -7319096536405057105}
+  - {fileID: 3168944286812388216}
   EditorParameters: []
   MasterBanks:
   - {fileID: 6758614311371961274}
   StringsBanks:
   - {fileID: -3964093006761047596}
-  cacheTime: 639272390565179069
+  cacheTime: 639273991416909136
   cacheVersion: 131637
+--- !u!114 &2035931393286374842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/InventoryOpenSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/UI/InventoryOpenSFX
+  Guid:
+    Data1: -729829203
+    Data2: 1103490979
+    Data3: -817699923
+    Data4: -49729109
+  Banks:
+  - {fileID: -6219207956112848524}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &2853801950772342492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/WaterThrustSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Player/WaterThrustSFX
+  Guid:
+    Data1: -178650094
+    Data2: 1315804617
+    Data3: 1270689671
+    Data4: -1526551179
+  Banks:
+  - {fileID: -2652535069046497829}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &3168944286812388216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Ambience/UnderwaterAMB
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/World/Ambience/UnderwaterAMB
+  Guid:
+    Data1: -62627153
+    Data2: 1211437410
+    Data3: -433738342
+    Data4: 2006587476
+  Banks:
+  - {fileID: -4991310555032039705}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 120048
+--- !u!114 &5873045379572479922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/ItemPickupSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/UI/ItemPickupSFX
+  Guid:
+    Data1: 197837756
+    Data2: 1245606847
+    Data3: -2113783918
+    Data4: -1809229984
+  Banks:
+  - {fileID: -6219207956112848524}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &6758614311371961274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,8 +458,35 @@ MonoBehaviour:
   Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639272390546792488
+  lastModified: 639273991398628758
   FileSizes:
   - Name: Desktop
     Value: 1036
   Exists: 1
+--- !u!114 &7853439017396542578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/SelectedSlotChangedSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/UI/SelectedSlotChangedSFX
+  Guid:
+    Data1: -1800359118
+    Data2: 1089812223
+    Data3: -940334452
+    Data4: 138174823
+  Banks:
+  - {fileID: -6219207956112848524}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0

@@ -58,9 +58,8 @@ namespace OceanGame
                     }
 
                     inventory.AddItem(outputId, _recipe.OutputAmonut);
+                    AudioManager.Instance.PlayOneShot(FMODEvents.Instance.SlotClickedSFX, default);
                 }
-            
-                
             }
         }
 
