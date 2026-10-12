@@ -2129,9 +2129,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 653184664}
+  - component: {fileID: 653184667}
   - component: {fileID: 653184665}
   - component: {fileID: 653184666}
-  - component: {fileID: 653184667}
   m_Layer: 0
   m_Name: ENTITY
   m_TagString: Untagged
@@ -2166,7 +2166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d58df6de50ce94e08a6db50f9a63e04c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.CharacterManager
-  _enableSpawning: 1
+  _enableSpawning: 0
   _globalMaxCharacterCap: 200
   _durationTillCharacterDespawns: 15
 --- !u!114 &653184666
@@ -2185,10 +2185,10 @@ MonoBehaviour:
   _tempPerSecSpawnChance: 0.05
   _tempSpawnEntries:
   - _character: {fileID: 11400000, guid: 887e9bbb18cc241e8afc54a9c9925063, type: 2}
-    _weight: 0.5
+    _weight: 1
     _environment: 2
   - _character: {fileID: 11400000, guid: 2a9db1f511b6a4888a49dd1d2f56bd26, type: 2}
-    _weight: 1
+    _weight: 0.133
     _environment: 0
 --- !u!114 &653184667
 MonoBehaviour:
@@ -4436,7 +4436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.Player
   _playerSO: {fileID: 11400000, guid: d2612cd7c6d00436188c7b1a8b45c63e, type: 2}
-  <InteractRange>k__BackingField: 2.5
+  <InteractRange>k__BackingField: 3
   <WalkingBoxColliderSize>k__BackingField: {x: 0.75, y: 1.75}
   <SwimmingBoxColliderSize>k__BackingField: {x: 0.75, y: 1.25}
   <FromWaterJumpSpeed>k__BackingField: 7

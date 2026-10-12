@@ -137,7 +137,7 @@ namespace OceanGame
 
                 if (isOverlapping)
                 {
-                    Debug.Log($"Hitting {entity.name} for {_currentTool.MeleeDamage} damage");
+                    // Debug.Log($"Hitting {entity.name} for {_currentTool.MeleeDamage} damage");
                     _hitEntitiesThisSwing.Add(entity);
 
                     if (entity is ServerCharacter enemy && enemy.DamageReceiver != null)

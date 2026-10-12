@@ -130,6 +130,7 @@ MonoBehaviour:
       data:
         DetectionRangeTiles: 100
         JumpSpeed: 10
+        MinSwimWallBounceSpeed: 4.5
         GravityForce: 20
         TerminalVelocity: -18
 --- !u!1 &6902626330650952792

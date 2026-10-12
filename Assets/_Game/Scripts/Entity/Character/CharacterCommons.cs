@@ -3,13 +3,6 @@ using UnityEngine;
 
 namespace OceanGame
 {
-    public enum StateMachineType
-    {
-        Player,
-        Jellyfish,
-        Crab,
-    }
-    
     public enum LifeState
     {
         Alive,

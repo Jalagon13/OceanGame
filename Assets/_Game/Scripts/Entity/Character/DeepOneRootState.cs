@@ -14,7 +14,8 @@ namespace OceanGame
 
         [Header("Movement")]
         public float JumpSpeed = 8f;
-        
+        public float MinSwimWallBounceSpeed = 3f;
+
         [Header("Gravity")]
         public float GravityForce = 20f;
         public float TerminalVelocity = -18f;
@@ -72,7 +73,7 @@ namespace OceanGame
 
     #endregion
 
-    #region Abstract Pursuing State
+    #region Pursuing State
 
     public abstract class DeepOnePursuingState : State
     {
@@ -119,8 +120,7 @@ namespace OceanGame
                     continue;
                 }
 
-                float distanceSquared =
-                    ((Vector2)character.transform.position - (Vector2)Ctx.transform.position).sqrMagnitude;
+                float distanceSquared = ((Vector2)character.transform.position - (Vector2)Ctx.transform.position).sqrMagnitude;
 
                 if (distanceSquared <= closestDistanceSquared)
                 {
@@ -234,24 +234,28 @@ namespace OceanGame
 
     #endregion
 
-    #region Land Pursuing State
+    #region Water Pursuing State
 
     public class DeepOneWaterPursuingState : DeepOnePursuingState
     {
+        private bool _wasTouchingLeft;
+        private bool _wasTouchingRight;
+        private bool _wasTouchingBottom;
+        private bool _wasTouchingTop;
+
         public DeepOneWaterPursuingState(StateMachine machine, State parent, ServerCharacter ctx) : base(parent, ctx) { }
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
             if (Ctx.IsKnockedBack)
             {
-                // The shared character tick decays knockback; water movement adds no gravity.
                 return;
             }
 
             ServerCharacter target = FindClosestPlayer();
             SetTarget(target);
 
-            Vector2 swimDirection = Vector2.zero;
+            Vector2 desiredDirection = Vector2.zero;
 
             if (target != null)
             {
@@ -259,13 +263,71 @@ namespace OceanGame
 
                 if (targetOffset.sqrMagnitude > 0.0025f)
                 {
-                    swimDirection = targetOffset.normalized;
+                    desiredDirection = targetOffset.normalized;
                 }
             }
 
+            var collision = Ctx.CollisionResult;
+
+            // Touching flags can remain true for multiple ticks. Bounce only when
+            // contact with a face begins, rather than repeatedly bouncing in place.
+            bool hitLeft = collision.TouchingLeft && !_wasTouchingLeft;
+            bool hitRight = collision.TouchingRight && !_wasTouchingRight;
+            bool hitBottom = collision.TouchingBottom && !_wasTouchingBottom;
+            bool hitTop = collision.TouchingTop && !_wasTouchingTop;
+
+            _wasTouchingLeft = collision.TouchingLeft;
+            _wasTouchingRight = collision.TouchingRight;
+            _wasTouchingBottom = collision.TouchingBottom;
+            _wasTouchingTop = collision.TouchingTop;
+
             float swimSpeed = Ctx.Stats.MoveSpeed.GetValue();
 
-            Ctx.Velocity = Vector2.Lerp(Ctx.Velocity, swimDirection * swimSpeed, fixedDeltaTime * Ctx.Data.BaseTurnSharpness);
+            if (hitLeft || hitRight || hitBottom || hitTop)
+            {
+                Vector2 wallNormal = Vector2.zero;
+
+                // Each normal points away from the tile face.
+                if (hitLeft) wallNormal += Vector2.right;
+                if (hitRight) wallNormal += Vector2.left;
+                if (hitBottom) wallNormal += Vector2.up;
+                if (hitTop) wallNormal += Vector2.down;
+
+                // Opposing contacts can cancel; choose one contacted face as a fallback.
+                if (wallNormal.sqrMagnitude < 0.001f)
+                {
+                    if (hitLeft) wallNormal = Vector2.right;
+                    else if (hitRight) wallNormal = Vector2.left;
+                    else if (hitBottom) wallNormal = Vector2.up;
+                    else wallNormal = Vector2.down;
+                }
+
+                wallNormal.Normalize();
+
+                Vector2 reflectionInput = desiredDirection;
+
+                if (reflectionInput.sqrMagnitude < 0.001f)
+                {
+                    reflectionInput = Ctx.Velocity.sqrMagnitude > 0.001f ? Ctx.Velocity.normalized : -wallNormal;
+                }
+
+                Vector2 bounceDirection = Vector2.Reflect(reflectionInput, wallNormal).normalized;
+                Vector2 bounceVelocity = bounceDirection * Mathf.Max(swimSpeed, Root.MinSwimWallBounceSpeed);
+
+                // Guarantee a minimum velocity component away from the contacted tile.
+                float outwardSpeed = Vector2.Dot(bounceVelocity, wallNormal);
+                if (outwardSpeed < Root.MinSwimWallBounceSpeed)
+                {
+                    bounceVelocity += wallNormal * (Root.MinSwimWallBounceSpeed - outwardSpeed);
+                }
+
+                Ctx.Velocity = bounceVelocity;
+            }
+            else
+            {
+                Vector2 desiredVelocity = desiredDirection * swimSpeed;
+                Ctx.Velocity = Vector2.Lerp(Ctx.Velocity, desiredVelocity, fixedDeltaTime * Ctx.Data.BaseTurnSharpness);
+            }
         }
     }
 

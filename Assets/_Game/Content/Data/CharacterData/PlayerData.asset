@@ -25,3 +25,4 @@ MonoBehaviour:
   <CanDie>k__BackingField: 1
   <CanDamagePlayerOnTouch>k__BackingField: 0
   <CharacterPrefab>k__BackingField: {fileID: 0}
+  LootDrops: []
