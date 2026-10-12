@@ -75,6 +75,14 @@ namespace OceanGame
         {
             ActiveLayer = (ActiveLayer == LayerType.Foreground) ? LayerType.Background : LayerType.Foreground;
             OnActiveLayerChanged?.Invoke(ActiveLayer);
+
+            if (Player.Instance == null || Player.Instance.Character == null)
+            {
+                Debug.LogError("Cannot show the active layer popup because the player character is not available.", this);
+                return;
+            }
+
+            WorldTextPopupManager.Instance.SpawnTextPopup(Player.Instance.Character.transform.position, $"Targeting: {ActiveLayer}");
         }
 
         public void LoadGeneratedWorld(WorldGenContext context)

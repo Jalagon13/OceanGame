@@ -5,7 +5,7 @@ using UnityEngine;
 namespace OceanGame
 {
     [RequireComponent(typeof(TextMeshPro))]
-    public class DamageNumberPopup : MonoBehaviour
+    public class PlainTextPopup : MonoBehaviour
     {
         [SerializeField, Min(0.01f)] private float _duration = 0.8f;
         [SerializeField] private float _riseDistance = 0.5f;
@@ -20,9 +20,14 @@ namespace OceanGame
 
         public void Initialize(int damage, Color color, float fontSize)
         {
+            Initialize(damage.ToString(), color, fontSize);
+        }
+
+        public void Initialize(string text, Color color, float fontSize)
+        {
             _initialColor = color;
 
-            _label.text = damage.ToString();
+            _label.text = text;
             _label.color = color;
             _label.fontSize = fontSize;
         }

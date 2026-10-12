@@ -8,10 +8,14 @@ namespace OceanGame
     {
         public static WorldTextPopupManager Instance { get; private set; }
 
-        [Header("Damage Number")]
-        [SerializeField] private DamageNumberPopup _damageNumberPrefab;
+        [Header("Popup Number")]
+        [SerializeField] private PlainTextPopup _plainTextPopupPrefab;
         [SerializeField] private Color _damageNumberColor = Color.red;
         [SerializeField, Min(1f)] private float _damageNumberFontSize = 24f;
+
+        [Header("Plain Text")]
+        [SerializeField] private Color _plainTextColor = Color.white;
+        [SerializeField, Min(1f)] private float _plainTextFontSize = 8f;
 
         [Header("Item Collect Popup")]
         [SerializeField] private ItemCollectWorldPopup _itemCollectPopupPrefab;
@@ -27,14 +31,30 @@ namespace OceanGame
 
         public void SpawnDamageNumbers(Vector3 worldPosition, int damage)
         {
+            SpawnTextPopup(worldPosition, damage.ToString(), _damageNumberColor, _damageNumberFontSize);
+        }
+
+        public void SpawnTextPopup(Vector3 worldPosition, string text)
+        {
+            SpawnTextPopup(worldPosition, text, _plainTextColor, _plainTextFontSize);
+        }
+
+        private void SpawnTextPopup(Vector3 worldPosition, string text, Color color, float fontSize)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                Debug.LogError("Cannot spawn a text popup with empty text.", this);
+                return;
+            }
+
             if (!CanSpawnAt(worldPosition))
             {
                 return;
             }
-            
-            DamageNumberPopup popup = Instantiate(_damageNumberPrefab, worldPosition, Quaternion.identity);
 
-            popup.Initialize(damage, _damageNumberColor, _damageNumberFontSize);
+            PlainTextPopup popup = Instantiate(_plainTextPopupPrefab, worldPosition, Quaternion.identity);
+
+            popup.Initialize(text, color, fontSize);
             popup.Play();
         }
 

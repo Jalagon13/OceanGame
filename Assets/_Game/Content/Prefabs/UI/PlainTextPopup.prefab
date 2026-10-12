@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8649712686267561804}
   - component: {fileID: 2269376299504380118}
   m_Layer: 0
-  m_Name: DamagePopup
+  m_Name: PlainTextPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -195,4 +195,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.DamageNumberPopup
   _duration: 2
-  _riseDistance: 1
+  _riseDistance: 3
