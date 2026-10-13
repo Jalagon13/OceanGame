@@ -17,7 +17,7 @@ MonoBehaviour:
   <LightLevel>k__BackingField: 0
   <Indestructible>k__BackingField: 0
   <IsSolid>k__BackingField: 0
-  <Size>k__BackingField: {x: 1, y: 1}
+  <Size>k__BackingField: {x: 2, y: 2}
   <DrawTile>k__BackingField: {fileID: 11400000, guid: 87e8a23082c444545a383b5e75ab89d7, type: 2}
   <TileHitSFX>k__BackingField:
     Guid:

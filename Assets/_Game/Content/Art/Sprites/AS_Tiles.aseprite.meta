@@ -760,16 +760,16 @@ ScriptedImporter:
     uvTransform: {x: 0, y: 0}
   - name: tile_furnace
     originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
+    pivot: {x: 0.25, y: 0.25}
+    alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
-      x: 96
+      x: 144
       y: 0
-      width: 16
-      height: 16
+      width: 32
+      height: 31
     spriteID: 98af64a5864bb4ac6afe43ea717f7ce4
     spriteBone: []
     spriteOutline: []
@@ -988,7 +988,7 @@ ScriptedImporter:
       cellRect:
         x: 0
         y: 0
-        width: 144
+        width: 173
         height: 80
       spriteId: 29e30dac0e8574e0bb07847e539baa65
     linkedCells: []
@@ -1036,5 +1036,5 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 144, y: 80}
+  canvasSize: {x: 176, y: 80}
   previousTextureSize: {x: 256, y: 128}
