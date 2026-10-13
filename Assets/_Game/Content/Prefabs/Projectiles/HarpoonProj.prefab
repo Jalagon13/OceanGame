@@ -112,7 +112,7 @@ MonoBehaviour:
   _data: {fileID: 11400000, guid: b5e08a065994447879f5911de6519ca2, type: 2}
   _visuals: {fileID: 1074952428397248586}
   GravityForce: 8
-  TerminalVelocity: -8
+  TerminalVelocity: -24
 --- !u!1 &8046294159509687918
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,9 +5,6 @@ using UnityEngine.UI;
 
 namespace OceanGame
 {
-    // Next add attenuation for solid vs background tiles
-    // Next add a pre attenuation buffer zone when going through solid or background tiles before attenuation
-
     public class LightManager : MonoBehaviour
     {
         public static LightManager Instance { get; private set; }
