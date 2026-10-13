@@ -8,11 +8,16 @@ namespace OceanGame
         [Header("UI References")]
         [SerializeField] private Image _itemIcon;
         [SerializeField] private Image _placeholderGhostIcon;
+        
+        private TooltipHover _hover;
         private int _slotIndex;
+
         private void Awake()
         {
             // Automatically determines its slot index from its sibling position in the hierarchy
             _slotIndex = transform.GetSiblingIndex();
+            _hover = GetComponent<TooltipHover>();
+            _hover.OnHoverEnter = ShowEquippedItemTooltip;
         }
         
         private void Start()
@@ -77,6 +82,17 @@ namespace OceanGame
                 _placeholderGhostIcon.enabled = !hasItem;
             }
         }
+
+        private void ShowEquippedItemTooltip()
+        {
+            if (Player.Instance == null || Player.Instance.Equipment == null) return;
+
+            var slot = Player.Instance.Equipment.GetAccessorySlot(_slotIndex);
+            if (slot != null && !slot.IsEmpty)
+            {
+                Tooltip.ItemDescriptionDisplay(GameDataRegistry.Instance.GetItemSOFromItemId(slot.ItemId), slot.Amount);
+            }
+        }
         
         public void OnPointerClick(PointerEventData eventData)
         {
@@ -85,10 +101,12 @@ namespace OceanGame
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 InventoryCursorManager.Instance.HandleAccessorySlotLeftClick(_slotIndex);
+                _hover.RefreshTooltip();
             }
             else if (eventData.button == PointerEventData.InputButton.Right)
             {
                 InventoryCursorManager.Instance.HandleAccessorySlotRightClick(_slotIndex);
+                _hover.RefreshTooltip();
             }
         }
     }

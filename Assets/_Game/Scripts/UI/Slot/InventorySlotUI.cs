@@ -30,28 +30,7 @@ namespace OceanGame
             _slot = InventoryManager.Instance.PlayerInventory[index];
             _isPlayerSlot = true;
             _onSlotModified = null;
-            _hover = GetComponent<TooltipHover>();
-            
-            _hover.OnHoverEnter = () =>
-            {
-                if(!_slot.IsEmpty && InventoryCursorManager.Instance.CursorSlot.IsEmpty)
-                {
-                    Tooltip.ShowNew();
-
-                    switch (_slot.GetItemSO())
-                    {
-                        // Add future cases here
-
-                        default:
-                            int quantity = _slot.Amount;
-                            string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
-                            string itemText = $"{_slot.GetItemSO().ItemName} {quantityString}<br>{_slot.GetItemSO().GetDescription()}";
-
-                            Tooltip.JustText(itemText, Color.white, fontSize: 12f);
-                            break;
-                    }
-                }
-            };
+            ConfigureTooltipHover();
 
             InventoryManager.Instance.OnPlayerInventoryChanged += RefreshUI;
             RefreshUI();
@@ -63,8 +42,26 @@ namespace OceanGame
             _slot = slot;
             _isPlayerSlot = false;
             _onSlotModified = onSlotModified;
+            ConfigureTooltipHover();
 
             RefreshUI();
+        }
+
+        private void ConfigureTooltipHover()
+        {
+            _hover = GetComponent<TooltipHover>();
+            if (_hover == null)
+            {
+                _hover = gameObject.AddComponent<TooltipHover>();
+            }
+
+            _hover.OnHoverEnter = () =>
+            {
+                if (_slot != null && !_slot.IsEmpty)
+                {
+                    Tooltip.ItemDescriptionDisplay(_slot.GetItemSO(), _slot.Amount);
+                }
+            };
         }
 
         public void RefreshUI()

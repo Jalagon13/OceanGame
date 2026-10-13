@@ -7,6 +7,14 @@ namespace OceanGame
     public class OxygenTankSlotUI : MonoBehaviour, IPointerClickHandler
     {
         [SerializeField] private Image _itemIcon;
+        
+        private TooltipHover _hover;
+
+        private void Awake()
+        {
+            _hover = GetComponent<TooltipHover>();
+            _hover.OnHoverEnter = ShowEquippedItemTooltip;
+        }
 
         private void Start()
         {
@@ -65,6 +73,17 @@ namespace OceanGame
             }
         }
 
+        private void ShowEquippedItemTooltip()
+        {
+            if (Player.Instance == null || Player.Instance.Equipment == null) return;
+
+            var slot = Player.Instance.Equipment.EquippedOxygenTank;
+            if (slot != null && !slot.IsEmpty)
+            {
+                Tooltip.ItemDescriptionDisplay(GameDataRegistry.Instance.GetItemSOFromItemId(slot.ItemId), slot.Amount);
+            }
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
             if (Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
@@ -72,10 +91,12 @@ namespace OceanGame
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 InventoryCursorManager.Instance.HandleOxygenTankSlotLeftClick();
+                _hover.RefreshTooltip();
             }
             else if (eventData.button == PointerEventData.InputButton.Right)
             {
                 InventoryCursorManager.Instance.HandleOxygenTankSlotRightClick();
+                _hover.RefreshTooltip();
             }
         }
     }

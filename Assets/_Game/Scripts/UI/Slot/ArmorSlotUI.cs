@@ -12,6 +12,14 @@ namespace OceanGame
         [SerializeField] private Image _itemIcon;
         [SerializeField] private Image _placeholderGhostIcon; // Optional faint icon indicating helmet/chest/pants
         
+        private TooltipHover _hover;
+
+        private void Awake()
+        {
+            _hover = GetComponent<TooltipHover>();
+            _hover.OnHoverEnter = ShowEquippedItemTooltip;
+        }
+        
         private void Start()
         {
             if (Player.Instance == null) return;
@@ -65,6 +73,17 @@ namespace OceanGame
                 _placeholderGhostIcon.enabled = !hasItem;
             }
         }
+
+        private void ShowEquippedItemTooltip()
+        {
+            if (Player.Instance == null || Player.Instance.Equipment == null) return;
+
+            var slot = Player.Instance.Equipment.GetArmorSlot(_armorType);
+            if (slot != null && !slot.IsEmpty)
+            {
+                Tooltip.ItemDescriptionDisplay(GameDataRegistry.Instance.GetItemSOFromItemId(slot.ItemId), slot.Amount);
+            }
+        }
         
         public void OnPointerClick(PointerEventData eventData)
         {
@@ -72,10 +91,12 @@ namespace OceanGame
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 InventoryCursorManager.Instance.HandleArmorSlotLeftClick(_armorType);
+                _hover.RefreshTooltip();
             }
             else if (eventData.button == PointerEventData.InputButton.Right)
             {
                 InventoryCursorManager.Instance.HandleArmorSlotRightClick(_armorType);
+                _hover.RefreshTooltip();
             }
         }
     }

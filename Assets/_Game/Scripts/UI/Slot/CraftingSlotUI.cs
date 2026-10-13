@@ -34,8 +34,11 @@ namespace OceanGame
             _hover = GetComponent<TooltipHover>();
             _hover.OnHoverEnter = () =>
             {
-                Tooltip.ShowNew();
-                Tooltip.CraftingRecipeDisplay(_recipe, fontSize: 12f, iconScale: 0.6f);
+                if (InventoryCursorManager.Instance.CursorSlot.IsEmpty)
+                {
+                    Tooltip.ShowNew();
+                    Tooltip.CraftingRecipeDisplay(_recipe, fontSize: 12f, iconScale: 0.6f);
+                }
             };
 
             RefreshUI();

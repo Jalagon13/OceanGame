@@ -42,6 +42,18 @@ namespace OceanGame
             ReferenceHolder.Background.color = color;
         }
 
+        public static void ItemDescriptionDisplay(ItemSO item, int amount, float fontSize = 12f)
+        {
+            if (item == null) return;
+
+            int displayAmount = Mathf.Max(1, amount);
+            string quantityString = displayAmount > 1 ? $"[{displayAmount}]" : string.Empty;
+            string itemText = $"{item.ItemName} {quantityString}<br>{item.GetDescription()}";
+
+            ShowNew();
+            JustText(itemText, Color.white, fontSize: fontSize);
+        }
+
         #region  just text
         
         //  If font == null -> will use default font
