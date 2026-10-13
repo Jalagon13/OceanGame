@@ -116,15 +116,9 @@ namespace OceanGame
                     int currentDamage = 0;
                     int maxHp = 0;
 
-                    if (world.FgGrid.DamagedTiles.TryGetValue(tilePos, out TileDamageState fgDamage) && fgTd.HasTile)
+                    if (!TryGetTileDamage(world.FgGrid, tilePos, fgTd, out currentDamage, out maxHp))
                     {
-                        currentDamage = fgDamage.Damage;
-                        maxHp = fgTd.TileConfig.MaxHP;
-                    }
-                    else if (world.BgGrid.DamagedTiles.TryGetValue(tilePos, out TileDamageState bgDamage) && bgTd.HasTile)
-                    {
-                        currentDamage = bgDamage.Damage;
-                        maxHp = bgTd.TileConfig.MaxHP;
+                        TryGetTileDamage(world.BgGrid, tilePos, bgTd, out currentDamage, out maxHp);
                     }
 
                     if (currentDamage > 0 && maxHp > 0 && _crackTiles != null && _crackTiles.Length > 0)
@@ -171,6 +165,27 @@ namespace OceanGame
                     }
                 }
             }
+        }
+
+        private static bool TryGetTileDamage(TileGrid grid, Vector2Int tilePos, TileData tileData, out int damage, out int maxHp)
+        {
+            damage = 0;
+            maxHp = 0;
+
+            if (!tileData.HasTile) return false;
+
+            TileConfigSO tileConfig = tileData.TileConfig;
+            if (tileConfig == null) return false;
+
+            Vector2Int damagePosition = tileConfig.IsMultiTile
+                ? new Vector2Int(tilePos.x - tileData.OffsetX, tilePos.y - tileData.OffsetY)
+                : tilePos;
+
+            if (!grid.DamagedTiles.TryGetValue(damagePosition, out TileDamageState damageState)) return false;
+
+            damage = damageState.Damage;
+            maxHp = tileConfig.MaxHP;
+            return true;
         }
     }
 }

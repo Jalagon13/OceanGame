@@ -19,3 +19,10 @@ MonoBehaviour:
   <RestoreHpAmount>k__BackingField: 15
   <PotionSicknessDuration>k__BackingField: 60
   <PotionSicknessIcon>k__BackingField: {fileID: 3121390128114958339, guid: 2f87ce7e588154a76acbf2c4eda5fff0, type: 3}
+  <ConsumeSFX>k__BackingField:
+    Guid:
+      Data1: -602489371
+      Data2: 1246663026
+      Data3: -1476097364
+      Data4: 796679449
+    Path: event:/Player/SlurpSFX

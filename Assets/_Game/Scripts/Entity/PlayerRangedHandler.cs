@@ -42,6 +42,8 @@ namespace OceanGame
             Vector2 spawnPos = transform.position;
             Vector2 aimDir = (WorldManager.MouseWorldPosition - spawnPos).normalized;
             Vector2 velocity = aimDir * weapon.Projectile.BaseSpeed;
+            
+            AudioManager.Instance.PlayOneShot(weapon.ShootSFX, transform.position);
 
             ProjectileManager.SpawnProjectile(
                 projectileSO: weapon.Projectile,

@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 
 namespace OceanGame
@@ -9,6 +10,9 @@ namespace OceanGame
         [field: SerializeField] public float ShotCooldown { get; private set; } = 0.5f;
         [field: SerializeField] public ProjectileSO Projectile { get; private set; }
         [field: SerializeField] public ItemSO Aummunition { get; private set; } // If null, use no ammunition
+
+        [field: Header("Feel")]
+        [field: SerializeField] public EventReference ShootSFX { get; private set; }
 
         public override void OnPrimaryActionStarted(Player player)
         {

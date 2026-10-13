@@ -28,11 +28,15 @@ namespace OceanGame
         protected override void OnTileCollide(GridPhysics.CollisionResult collision)
         {
             base.OnTileCollide(collision);
+            
+            AudioManager.Instance.PlayOneShot(Data.ImpactSFX, transform.position);
         }
 
         protected override void OnHitEntity(Entity target)
         {
             base.OnHitEntity(target);
+            
+            AudioManager.Instance.PlayOneShot(Data.ImpactSFX, transform.position);
         }
 
         protected override void OnKill()

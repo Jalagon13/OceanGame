@@ -81,6 +81,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-7362452079675181944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/SlurpSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Player/SlurpSFX
+  Guid:
+    Data1: -602489371
+    Data2: 1246663026
+    Data3: -1476097364
+    Data4: 796679449
+  Banks:
+  - {fileID: -2652535069046497829}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-7319096536405057105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,6 +310,33 @@ MonoBehaviour:
   - Name: Desktop
     Value: 1892032
   Exists: 1
+--- !u!114 &-4768077998354109219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Weapons/HarpoonProjImpactSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Weapons/HarpoonProjImpactSFX
+  Guid:
+    Data1: 609902450
+    Data2: 1174438516
+    Data3: 1428154762
+    Data4: -1848572028
+  Banks:
+  - {fileID: -2652535069046497829}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-4462881947711337222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,10 +379,10 @@ MonoBehaviour:
   Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639274104298777736
+  lastModified: 639274801403621726
   FileSizes:
   - Name: Desktop
-    Value: 2396
+    Value: 2558
   Exists: 1
 --- !u!114 &-3019884686379359991
 MonoBehaviour:
@@ -372,10 +426,10 @@ MonoBehaviour:
   Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/Entity.bank
   Name: Entity
   StudioPath: bank:/Entity
-  lastModified: 639274101789800738
+  lastModified: 639274801404530156
   FileSizes:
   - Name: Desktop
-    Value: 159296
+    Value: 201856
   Exists: 1
 --- !u!114 &-566181306087128266
 MonoBehaviour:
@@ -404,6 +458,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1429
+--- !u!114 &-529346698122091719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Weapons/HarpoonGunShootSFX
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Weapons/HarpoonGunShootSFX
+  Guid:
+    Data1: 1895298056
+    Data2: 1182929130
+    Data3: -467891071
+    Data4: -39399512
+  Banks:
+  - {fileID: -2652535069046497829}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-190063996927762502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -534,12 +615,15 @@ MonoBehaviour:
   - {fileID: 1946753427569621067}
   - {fileID: -9117670225872358134}
   - {fileID: 8751255753524379710}
+  - {fileID: -529346698122091719}
+  - {fileID: -4768077998354109219}
+  - {fileID: -7362452079675181944}
   EditorParameters: []
   MasterBanks:
   - {fileID: 6758614311371961274}
   StringsBanks:
   - {fileID: -3964093006761047596}
-  cacheTime: 639274774776515494
+  cacheTime: 639274801404530156
   cacheVersion: 131637
 --- !u!114 &1946753427569621067
 MonoBehaviour:
@@ -799,7 +883,7 @@ MonoBehaviour:
   Path: Assets/_Game/Content/Audio/OceanGameFmod/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639274104298769545
+  lastModified: 639274801403614332
   FileSizes:
   - Name: Desktop
     Value: 1036

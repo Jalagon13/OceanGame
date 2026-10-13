@@ -14,11 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ProjectileSO
   <ColliderSize>k__BackingField: {x: 0.4, y: 0.4}
   <BaseLifetime>k__BackingField: 4
-  <BaseSpeed>k__BackingField: 14
+  <BaseSpeed>k__BackingField: 12
   <IgnoreTileCollision>k__BackingField: 0
   <DefaultFaction>k__BackingField: 0
   <BaseDamage>k__BackingField: 8
   <BasePenetration>k__BackingField: 1
   <BaseKnockbackForce>k__BackingField: 8
   <HitImpactPrefab>k__BackingField: {fileID: 0}
+  <ImpactSFX>k__BackingField:
+    Guid:
+      Data1: 609902450
+      Data2: 1174438516
+      Data3: 1428154762
+      Data4: -1848572028
+    Path: event:/Weapons/HarpoonProjImpactSFX
   <ProjectilePrefab>k__BackingField: {fileID: 3346328009469737110, guid: d5b5750efe8b44523b1cd3ed77ad1a7e, type: 3}

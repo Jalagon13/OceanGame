@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 
 namespace OceanGame
@@ -17,8 +18,9 @@ namespace OceanGame
         [field: SerializeField] public int BasePenetration { get; private set; } = 1; // 1 = dies on first hit, -1 = infinite
         [field: SerializeField, Range(0, 100)] public int BaseKnockbackForce { get; private set; } = 15;
 
-        [field: Header("Visuals / FX (Optional)")]
+        [field: Header("Feel")]
         [field: SerializeField] public GameObject HitImpactPrefab { get; private set; }
+        [field: SerializeField] public EventReference ImpactSFX { get; private set; }
 
         [field: Header("Prefab Reference")]
         [field: SerializeField] public Projectile ProjectilePrefab { get; private set; }

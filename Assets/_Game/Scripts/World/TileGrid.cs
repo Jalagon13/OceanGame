@@ -97,7 +97,7 @@ namespace OceanGame
                 Vector2Int position = _expiredDamagePositions[i];
                 DamagedTiles.Remove(position);
 
-                if (!refreshedVisibleDamage && PlayerCamera.Instance != null && PlayerCamera.Instance.IsPositionInBounds(position.x, position.y))
+                if (!refreshedVisibleDamage && IsDamagePositionVisible(position))
                 {
                     refreshedVisibleDamage = true;
                 }
@@ -105,6 +105,32 @@ namespace OceanGame
 
             if (refreshedVisibleDamage)
                 PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
+        }
+
+        private bool IsDamagePositionVisible(Vector2Int position)
+        {
+            if (PlayerCamera.Instance == null) return false;
+
+            TileData tileData = GetTileData(position.x, position.y);
+            TileConfigSO tileConfig = tileData.HasTile ? tileData.TileConfig : null;
+            if (tileConfig == null || !tileConfig.IsMultiTile)
+            {
+                return PlayerCamera.Instance.IsPositionInBounds(position.x, position.y);
+            }
+
+            Vector2Int size = tileConfig.Size;
+            for (int offsetX = 0; offsetX < size.x; offsetX++)
+            {
+                for (int offsetY = 0; offsetY < size.y; offsetY++)
+                {
+                    if (PlayerCamera.Instance.IsPositionInBounds(position.x + offsetX, position.y + offsetY))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public void DestroyTile(int x, int y, bool refreshCurrentBounds = false)

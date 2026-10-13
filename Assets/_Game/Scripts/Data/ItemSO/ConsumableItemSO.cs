@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 
 namespace OceanGame
@@ -18,12 +19,13 @@ namespace OceanGame
         [field: Tooltip("Icon displayed in BuffUI during the Potion Sickness cooldown.")]
         [field: SerializeField] public Sprite PotionSicknessIcon { get; private set; }
 
+        [field: Header("Feel")]
+        [field: SerializeField] public EventReference ConsumeSFX { get; private set; }
+
         public override string GetDescription()
         {
             string restoreDescription = $"Restores {RestoreHpAmount} HP.";
-            return string.IsNullOrWhiteSpace(Description)
-                ? restoreDescription
-                : $"{Description}<br>{restoreDescription}";
+            return string.IsNullOrWhiteSpace(Description) ? restoreDescription : $"{Description}<br>{restoreDescription}";
         }
 
         public override void OnPrimaryActionStarted(Player player)
@@ -60,6 +62,7 @@ namespace OceanGame
             player.Character.Stats.StartBuff(sicknessBuff);
 
             // Deduct 1 potion from the active slot
+            AudioManager.Instance.PlayOneShot(ConsumeSFX, Player.Instance.transform.position);
             InventoryInputManager.Instance.GetActiveInvSlot().RemoveFromCurrentAmount(1);
         }
     }
