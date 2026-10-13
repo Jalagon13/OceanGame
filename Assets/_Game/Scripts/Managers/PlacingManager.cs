@@ -93,7 +93,8 @@ namespace OceanGame
 
             Vector2Int placementSize = tileConfig.Size;
 
-            if (HasEntityOverlappingTileArea(mouseTilePos, placementSize))
+            // Make sure entity overlap check only works for solid foreground tiles
+            if (activeLayer == WorldManager.LayerType.Foreground && tileConfig.IsSolid && HasEntityOverlappingTileArea(mouseTilePos, placementSize))
             {
                 return false;
             }
@@ -134,7 +135,8 @@ namespace OceanGame
 
             if (activeLayer == WorldManager.LayerType.Foreground && tileConfig.IsMultiTile)
             {
-                world.FgGrid.PlaceMultiTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true, manualyPlaced: true);
+                bool placed = world.FgGrid.PlaceMultiTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true, manualyPlaced: true);
+                if (!placed) return false;
             }
             else
             {

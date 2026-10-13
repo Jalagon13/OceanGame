@@ -97,6 +97,8 @@ namespace OceanGame
 
             int maxHp = _character.Stats.MaxHealth.GetValue();
             if (CurrentHealth.Value >= maxHp) return;
+            
+            WorldTextPopupManager.Instance.SpawnHealingTextPopup(Player.Instance.Character.transform.position, amount);
 
             if (IsServer)
             {

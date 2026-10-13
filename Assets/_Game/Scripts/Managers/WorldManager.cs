@@ -82,7 +82,7 @@ namespace OceanGame
                 return;
             }
 
-            WorldTextPopupManager.Instance.SpawnTextPopup(Player.Instance.Character.transform.position, $"Targeting: {ActiveLayer}");
+            WorldTextPopupManager.Instance.SpawnTextPopup(Player.Instance.Character.transform.position + new Vector3(0, 1.5f, 0), $"Targeting {ActiveLayer}");
         }
 
         public void LoadGeneratedWorld(WorldGenContext context)

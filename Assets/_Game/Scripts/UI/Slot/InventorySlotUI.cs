@@ -45,7 +45,7 @@ namespace OceanGame
                         default:
                             int quantity = _slot.Amount;
                             string quantityString = quantity > 1 ? $"[{quantity}]" : string.Empty;
-                            string itemText = $"{_slot.GetItemSO().ItemName} {quantityString}<br>{_slot.GetItemSO().Description}";
+                            string itemText = $"{_slot.GetItemSO().ItemName} {quantityString}<br>{_slot.GetItemSO().GetDescription()}";
 
                             Tooltip.JustText(itemText, Color.white, fontSize: 12f);
                             break;

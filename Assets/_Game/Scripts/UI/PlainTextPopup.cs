@@ -26,9 +26,8 @@ namespace OceanGame
         public void Initialize(string text, Color color, float fontSize)
         {
             _initialColor = color;
-
             _label.text = text;
-            _label.color = color;
+            _label.color = new Color(color.r, color.g, color.b, 0.5f);
             _label.fontSize = fontSize;
         }
 
@@ -49,16 +48,13 @@ namespace OceanGame
 
                 transform.position = startPosition + Vector3.up * (_riseDistance * progress);
 
-                _label.color = new Color(
-                    _initialColor.r,
-                    _initialColor.g,
-                    _initialColor.b,
-                    _initialColor.a * (1f - progress));
+                _label.color = new Color(_initialColor.r, _initialColor.g, _initialColor.b, Mathf.Lerp(0.75f, 1f, progress));
 
                 elapsed += Time.deltaTime;
                 yield return null;
             }
 
+            _label.color = new Color(_initialColor.r, _initialColor.g, _initialColor.b, 1f);
             Destroy(gameObject);
         }
     }

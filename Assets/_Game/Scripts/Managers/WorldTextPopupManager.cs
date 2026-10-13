@@ -8,10 +8,19 @@ namespace OceanGame
     {
         public static WorldTextPopupManager Instance { get; private set; }
 
-        [Header("Popup Number")]
         [SerializeField] private PlainTextPopup _plainTextPopupPrefab;
+
+        [Header("Healing Number")]
+        [SerializeField] private Color _healingNumberColor = Color.green;
+        [SerializeField, Min(1f)] private float _healingNumberFontSize = 24f;
+
+        [Header("Character Damage Number")]
         [SerializeField] private Color _damageNumberColor = Color.red;
         [SerializeField, Min(1f)] private float _damageNumberFontSize = 24f;
+
+        [Header("Player Damage Number")]
+        [SerializeField] private Color _playerNumberColor = Color.red;
+        [SerializeField, Min(1f)] private float _playerNumberFontSize = 24f;
 
         [Header("Plain Text")]
         [SerializeField] private Color _plainTextColor = Color.white;
@@ -29,7 +38,12 @@ namespace OceanGame
             Instance = this;
         }
 
-        public void SpawnDamageNumbers(Vector3 worldPosition, int damage)
+        public void SpawnPlayerDamageNumbers(Vector3 worldPosition, int damage)
+        {
+            SpawnTextPopup(worldPosition, damage.ToString(), _playerNumberColor, _playerNumberFontSize);
+        }
+
+        public void SpawnCharacterDamageNumbers(Vector3 worldPosition, int damage)
         {
             SpawnTextPopup(worldPosition, damage.ToString(), _damageNumberColor, _damageNumberFontSize);
         }
@@ -37,6 +51,12 @@ namespace OceanGame
         public void SpawnTextPopup(Vector3 worldPosition, string text)
         {
             SpawnTextPopup(worldPosition, text, _plainTextColor, _plainTextFontSize);
+        }
+        
+        public void SpawnHealingTextPopup(Vector3 worldPosition, int healingAmount)
+        {
+            string text = $"+{healingAmount} Healed";
+            SpawnTextPopup(worldPosition, text, _healingNumberColor, _healingNumberFontSize);
         }
 
         private void SpawnTextPopup(Vector3 worldPosition, string text, Color color, float fontSize)

@@ -18,6 +18,14 @@ namespace OceanGame
         [field: Tooltip("Icon displayed in BuffUI during the Potion Sickness cooldown.")]
         [field: SerializeField] public Sprite PotionSicknessIcon { get; private set; }
 
+        public override string GetDescription()
+        {
+            string restoreDescription = $"Restores {RestoreHpAmount} HP.";
+            return string.IsNullOrWhiteSpace(Description)
+                ? restoreDescription
+                : $"{Description}<br>{restoreDescription}";
+        }
+
         public override void OnPrimaryActionStarted(Player player)
         {
             if (player == null || player.Character == null) return;
@@ -48,6 +56,7 @@ namespace OceanGame
                 duration: PotionSicknessDuration,
                 icon: PotionSicknessIcon
             );
+            
             player.Character.Stats.StartBuff(sicknessBuff);
 
             // Deduct 1 potion from the active slot

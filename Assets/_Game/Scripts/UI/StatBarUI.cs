@@ -8,6 +8,7 @@ namespace OceanGame
     {
         [SerializeField] private Image _barFg;
         [SerializeField] private TextMeshProUGUI _barText;
+        [SerializeField] private string _statName;
         
         public void UpdateBar(float currentValue, float maxValue)
         {
@@ -19,7 +20,7 @@ namespace OceanGame
                 int current = Mathf.RoundToInt(currentValue);
                 int max = Mathf.RoundToInt(maxValue);
             
-                _barText.text = $"{current}/{max}";
+                _barText.text = $"{_statName} {current}/{max}";
             }
         }
     }

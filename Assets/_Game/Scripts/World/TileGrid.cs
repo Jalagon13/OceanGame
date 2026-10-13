@@ -199,14 +199,14 @@ namespace OceanGame
             }
         }
 
-        public void PlaceMultiTileData(int x, int y, TileData newTileData, bool refreshCurrentBounds = false, bool manualyPlaced = false)
+        public bool PlaceMultiTileData(int x, int y, TileData newTileData, bool refreshCurrentBounds = false, bool manualyPlaced = false)
         {
-            if (!IsInBounds(x, y)) return;
+            if (!IsInBounds(x, y)) return false;
             
             TileConfigSO newTc = newTileData.TileConfig;
             
-            if(!newTc.IsMultiTile) return;
-            if(!CanMultiTileFit(x, y, newTc)) return;
+            if(!newTc.IsMultiTile) return false;
+            if(!CanMultiTileFit(x, y, newTc)) return false;
 
             Vector2Int size = newTc.Size;
 
@@ -236,6 +236,8 @@ namespace OceanGame
             {
                 PlayerCamera.Instance.InvokeCurrentBoundsRefresh();
             }
+
+            return true;
         }
 
         private bool CanMultiTileFit(int x, int y, TileConfigSO tc)

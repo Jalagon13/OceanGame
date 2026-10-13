@@ -16,6 +16,11 @@ namespace OceanGame
             return GameDataRegistry.Instance.GetItemIdFromItemSO(this);
         }
 
+        public virtual string GetDescription()
+        {
+            return Description;
+        }
+
         public virtual void OnPrimaryActionStarted(Player player) { }
         public virtual void OnPrimaryActionHeld(Player player) { }
         public virtual void OnPrimaryActionRelease(Player player) { }

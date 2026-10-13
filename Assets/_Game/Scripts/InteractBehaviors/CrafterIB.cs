@@ -12,7 +12,6 @@ namespace OceanGame
 
         public override void Interact(int posX, int posY)
         {
-            Debug.Log($"Interacting with Crafting Table");
             InventoryInputManager.Instance.OnInteractWithCraftingTable(Recipes, posX, posY);
         }
     }

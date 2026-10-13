@@ -7,6 +7,7 @@ namespace OceanGame
     {
         [Header("Configuration")]
         [SerializeField] private ArmorType _armorType;
+        
         [Header("UI References")]
         [SerializeField] private Image _itemIcon;
         [SerializeField] private Image _placeholderGhostIcon; // Optional faint icon indicating helmet/chest/pants
