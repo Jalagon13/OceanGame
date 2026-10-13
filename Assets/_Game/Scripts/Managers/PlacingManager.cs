@@ -141,6 +141,7 @@ namespace OceanGame
                 targetGrid.SetTileData(mouseTilePos.x, mouseTilePos.y, tileToPlaceTd, refreshCurrentBounds: true, manualyPlaced: true);
             }
 
+            AudioManager.Instance.PlayOneShot(tileItem.PlaceTileDataSO.TileHitSFX, new(mouseTilePos.x, mouseTilePos.y));
             InventoryInputManager.Instance.GetActiveInvSlot().RemoveFromCurrentAmount(1);
             InventoryManager.Instance.RefreshInventory();
 
