@@ -15,8 +15,6 @@ namespace OceanGame
         public TileData[,] FgGrid { get; set; }
         public TileData[,] BgGrid { get; set; }
         public FluidType[,] FluidGrid { get; set; }
-        public bool[,] CaveGrid { get; } // True is air
-        public int[] OceanFloorHeightValues { get; }
 
         public WorldGenContext(int width, int height, int seed, int undergroundBottomLevel, int genColumnsPerFrame, int seaLevel)
         {
@@ -29,8 +27,6 @@ namespace OceanGame
             FgGrid = new TileData[width, height];
             BgGrid = new TileData[width, height];
             FluidGrid = new FluidType[width, height];
-            CaveGrid = new bool[width, height];
-            OceanFloorHeightValues = new int[width];
             Random = new(Seed);
         }
     }

@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2134763030
+  GlobalObjectIdHash: 50644434
   InScenePlacedSourceGlobalObjectIdHash: 0
   m_InScenePlacedDisabledByDefault: 0
   DeferredDespawnTick: 0
@@ -274,7 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ServerCharacter
   ShowTopMostFoldoutHeaderGroup: 1
-  _ignoreCollision: 0
+  _ignoreCollision: 1
   Velocity: {x: 0, y: 0}
   ColliderSize: {x: 0, y: 0}
   RootState:
