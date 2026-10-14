@@ -24,7 +24,7 @@ namespace OceanGame
         private void OnWorldGenProgress(float progress, string stepName)
         {
             // Update UI loading bars or log progress
-            Debug.Log($"[WorldGen Progress] {progress * 100:F0}% - Current Step: {stepName}");
+            // Debug.Log($"[WorldGen Progress] {progress * 100:F0}% - Current Step: {stepName}");
 
             OnWorldGenProgressed?.Invoke(progress, stepName);
         }
