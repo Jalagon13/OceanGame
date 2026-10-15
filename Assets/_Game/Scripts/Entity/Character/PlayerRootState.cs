@@ -334,9 +334,29 @@ namespace OceanGame
                 _swimSfxTimer = 0f;
             }
 
-            bool isArmHandling = Player.Instance.ArmHandler.IsActionHeld || Player.Instance.ArmHandler.IsSwinging;
-        
-            if (isArmHandling || (_ctx.Velocity.sqrMagnitude <= 10f && _ctx.DesiredDirection == Vector2.zero))
+            bool isArmHandling = Player.Instance.ArmHandler.IsActionHeld || Player.Instance.ArmHandler.IsSwinging || Player.Instance.RangedHandler.IsShooting;
+
+            if (isArmHandling)
+            {
+                Vector2 directionToMouse = WorldManager.MouseWorldPosition - (Vector2)_ctx.transform.position;
+                if (directionToMouse.sqrMagnitude > 0.0001f)
+                {
+                    Vector2 perpendicular = Vector2.Perpendicular(directionToMouse.normalized);
+                    perpendicular = Vector2.Dot(perpendicular, Vector2.up) >= 0f ? perpendicular : -perpendicular;
+
+                    float angleFromUpright = Vector2.SignedAngle(Vector2.up, perpendicular);
+                    float deviation01 = Mathf.InverseLerp(0f, 90f, Mathf.Abs(angleFromUpright));
+                    float rotationAmount = Mathf.Lerp(1f, 0.15f, deviation01);
+                    float adjustedAngle = angleFromUpright * rotationAmount;
+                    
+                    _desiredVisualRotation = Quaternion.Euler(0f, 0f, adjustedAngle) * Vector2.up;
+                }
+                else
+                {
+                    _desiredVisualRotation = Vector2.up;
+                }
+            }
+            else if (_ctx.Velocity.sqrMagnitude <= 10f && _ctx.DesiredDirection == Vector2.zero)
             {
                 _desiredVisualRotation = Vector2.up;
             }

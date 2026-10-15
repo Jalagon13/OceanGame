@@ -4716,11 +4716,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 809a702732703425aabf213c8efa7694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.OxygenManager
-  _baseMaxOxygen: 450
+  _baseMaxOxygen: 30
   _airRefillDuration: 3
   _underwaterDrainRate: 1
   _lowOxygenWarningPercentage: 0.3
-  _suffocationGraceDuration: 4
+  _suffocationGraceDuration: 6
   _drowningDamage: 1
   _drowningDamageInterval: 1.5
   _drowningBuffIcon: {fileID: -718255509646315996, guid: 3ab19ebc5de5d4525afdc9d466ed4fa0, type: 3}
@@ -7408,7 +7408,7 @@ MonoBehaviour:
   _multiplyMaterial: {fileID: 2100000, guid: c9c44d8d34d4a42d59d850f4cc9d34f9, type: 2}
   _lightOverlay: {fileID: 328273110}
   _showLight: 1
-  _lightmapFilterMode: 0
+  _lightmapFilterMode: 1
   _extraLightmapPadding: 4
   _fullBrightness: 10
   _decayBuffer: 1

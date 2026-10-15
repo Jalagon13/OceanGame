@@ -4,7 +4,12 @@ namespace OceanGame
 {
     public class PlayerRangedHandler : MonoBehaviour
     {
+        private const float ShootingRotationPadding = 0.15f;
+
         private float _shotCooldownTimer;
+        private float _shootingRotationTimer;
+
+        public bool IsShooting => _shootingRotationTimer > 0f;
 
         private void Update()
         {
@@ -12,6 +17,11 @@ namespace OceanGame
             if (_shotCooldownTimer > 0f)
             {
                 _shotCooldownTimer -= Time.deltaTime;
+            }
+
+            if (_shootingRotationTimer > 0f)
+            {
+                _shootingRotationTimer -= Time.deltaTime;
             }
         }
 
@@ -44,16 +54,11 @@ namespace OceanGame
             Vector2 velocity = aimDir * weapon.Projectile.BaseSpeed;
             
             AudioManager.Instance.PlayOneShot(weapon.ShootSFX, transform.position);
-
-            ProjectileManager.SpawnProjectile(
-                projectileSO: weapon.Projectile,
-                position: spawnPos,
-                initialVelocity: velocity,
-                sourceEntity: Player.Instance.Character
-            );
+            ProjectileManager.SpawnProjectile(projectileSO: weapon.Projectile, position: spawnPos, initialVelocity: velocity, sourceEntity: Player.Instance.Character);
 
             // Start the cooldown
             _shotCooldownTimer = weapon.ShotCooldown;
+            _shootingRotationTimer = weapon.ShotCooldown + ShootingRotationPadding;
             
             // Take away ammunition if needed
             if(weapon.Aummunition != null)
