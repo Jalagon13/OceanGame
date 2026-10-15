@@ -114,7 +114,14 @@ namespace OceanGame
 
             if (!WorldManager.Instance.TryGetPlayerSpawnPosition(WalkingBoxColliderSize, out Vector2 spawnPosition))
             {
-                Debug.LogError("Could not find a clear player spawn position in the center of the world.");
+                Debug.LogWarning($"Could not find a spawn position for player, defaulting to prefab position");
+                Character.transform.position = Character.transform.position;
+                Character.Velocity = Vector2.zero;
+                Character.DesiredDirection = Vector2.zero;
+                Character.KnockbackVelocity = Vector2.zero;
+
+                RespawnPoint = Character.transform.position;
+                _hasInitialSpawn = true;
                 return;
             }
 

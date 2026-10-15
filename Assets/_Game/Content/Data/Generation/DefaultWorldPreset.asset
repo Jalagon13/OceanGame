@@ -61,19 +61,24 @@ MonoBehaviour:
       data:
         RunStep: 1
         _sandSO: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
-        _caveFrequency: 0.065
-        _caveDetailFrequency: 0.1
-        _caveBaseNoiseWeight: 0.601
-        _shallowSolidThreshold: 0.55
+        _generateStartingIsland: 1
+        _spawnIslandRadiusX: 8
+        _spawnIslandRadiusY: 4
+        _generateIslands: 1
+        _maxIslandHeightFromSL: 22
+        _maxIslandDepthFromSL: 22
+        _islandBaseFrequency: 0.07
+        _islandDetailFrequency: 0.08
+        _islandDetailInfluence: 0.5
+        _islandSolidThreshold: 0.4
+        _generateUnderSeaTerrain: 1
+        _seaLevelOffset: 4
+        _fadeToGenTopYStart: 15
+        _baseFrequency: 0.08
+        _detailFrequency: 0.08
+        _detailInfluence: 0.5
+        _shallowSolidThreshold: 0.5
         _deepSolidThreshold: 0.1
-        _depthDensityExponent: 1
-        _smoothPasses: 2
-        _solidNeighboursToFill: 5
-        _islandProfileFrequency: 0.03
-        _islandDetailFrequency: 0.1
-        _islandThreshold: 0.01
-        _maxIslandHeight: 22
-        _islandSubmergedDepth: 5
     - rid: 2895663963195310357
       type: {class: SetFluidStep, ns: OceanGame, asm: Assembly-CSharp}
       data:

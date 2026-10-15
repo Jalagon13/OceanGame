@@ -5,144 +5,154 @@ namespace OceanGame
 {
     public class BaseTerrainGenStep : WorldGenStep
     {
-        [Header("Terrain Tile")]
-        [Tooltip("The solid tile used for all terrain produced by this step.")]
         [SerializeField] private TileConfigSO _sandSO;
+        
+        [Header("Starting Island Terrain Settings")]
+        [SerializeField] private bool _generateStartingIsland = true;
+        [SerializeField, Min(1)] private int _spawnIslandRadiusX = 5;
+        [SerializeField, Min(1)] private int _spawnIslandRadiusY = 3;
 
-        [Header("Underwater Cave Shape")]
-        [Tooltip("Scale of the large cave shapes. Lower values produce larger caves and land masses.")]
-        [SerializeField, Min(0.001f)] private float _caveFrequency = 0.06f;
 
-        [Tooltip("Scale of the smaller irregularities added to each cave wall.")]
-        [SerializeField, Min(0.001f)] private float _caveDetailFrequency = 0.15f;
+        [Header("Island Terrain Settings")]
+        [SerializeField] private bool _generateIslands = true;
+        [SerializeField, Min(1)] private int _maxIslandHeightFromSL = 10;
+        [SerializeField, Min(1)] private int _maxIslandDepthFromSL = 10;
+        [SerializeField] private float _islandBaseFrequency;
+        [SerializeField] private float _islandDetailFrequency;
+        [SerializeField, Range(0f, 1f)] private float _islandDetailInfluence = 0.15f;
+        [SerializeField] private float _islandSolidThreshold;
 
-        [Tooltip("How much of the cave shape comes from the large noise layer. A lower value makes walls rougher.")]
-        [SerializeField, Range(0f, 1f)] private float _caveBaseNoiseWeight = 0.72f;
-
-        [Header("Depth Density")]
-        [Tooltip("Noise value required to create terrain immediately below sea level. Higher values leave more open water near the surface.")]
-        [SerializeField, Range(0f, 1f)] private float _shallowSolidThreshold = 0.58f;
-
-        [Tooltip("Noise value required to create terrain at the bottom of the map. Lower values make the deep ocean denser.")]
-        [SerializeField, Range(0f, 1f)] private float _deepSolidThreshold = 0.30f;
-
-        [Tooltip("Controls where the density increase happens. Values above 1 keep the upper ocean open for longer; values below 1 make it densify sooner.")]
-        [SerializeField, Min(0.01f)] private float _depthDensityExponent = 1.1f;
-
-        [Header("Cave Polish")]
-        [Tooltip("Number of cellular-automata cleanup passes applied to underwater terrain. More passes create rounder, less noisy caves.")]
-        [SerializeField, Min(0)] private int _smoothPasses = 2;
-
-        [Tooltip("A tile becomes solid during a cleanup pass when it has at least this many solid neighbours. Five is a balanced starting point.")]
-        [SerializeField, Range(1, 8)] private int _solidNeighboursToFill = 5;
-
-        [Header("Sea-Level Islands")]
-        [Tooltip("Horizontal scale of the island groups along sea level. Lower values create wider, fewer island groups.")]
-        [SerializeField, Min(0.001f)] private float _islandProfileFrequency = 0.075f;
-
-        [Tooltip("Scale of the ragged edge noise used to break island groups into natural-looking shapes.")]
-        [SerializeField, Min(0.001f)] private float _islandDetailFrequency = 0.18f;
-
-        [Tooltip("How strong a horizontal island signal must be before an island group appears. Higher values produce fewer islands.")]
-        [SerializeField, Range(0f, 1f)] private float _islandThreshold = 0.45f;
-
-        [Tooltip("Maximum number of tiles an island can rise above Sea Level.")]
-        [SerializeField, Min(0)] private int _maxIslandHeight = 10;
-
-        [Tooltip("How far the sea-level island noise reaches below Sea Level to form reefs and shallow overhangs.")]
-        [SerializeField, Min(0)] private int _islandSubmergedDepth = 14;
+        [Header("UnderSea Terrain Settings")]
+        [SerializeField] private bool _generateUnderSeaTerrain = true;
+        [SerializeField, Min(1)] private int _seaLevelOffset = 8; // subtracts it before the undersea generation starts
+        [SerializeField, Min(1)] private int _fadeToGenTopYStart = 6;
+        [SerializeField] private float _baseFrequency;
+        [SerializeField] private float _detailFrequency;
+        [SerializeField, Range(0f, 1f)] private float _detailInfluence = 0.15f;
+        [Range(0f, 1f)][SerializeField] private float _shallowSolidThreshold;
+        [Range(0f, 1f)][SerializeField] private float _deepSolidThreshold;
 
         public override IEnumerator Execute(WorldGenContext ctx)
         {
-            if (_sandSO == null)
-            {
-                Debug.LogError("[BaseTerrainGenStep] A terrain TileConfigSO must be assigned before generating a world.");
-                yield break;
-            }
-
-            int seaLevel = Mathf.Clamp(ctx.SeaLevel, 0, ctx.Height - 1);
+            int width = ctx.Width;
+            int height = ctx.Height;
+            int seaLevel = ctx.SeaLevel;
             int columnsPerFrame = Mathf.Max(1, ctx.GenColumnsPerFrame);
+
             bool[,] terrain = new bool[ctx.Width, ctx.Height];
-
-            // Each noise layer receives deterministic offsets so a seed always recreates the same world.
-            Vector2 caveBaseOffset = CreateNoiseOffset(ctx);
-            Vector2 caveDetailOffset = CreateNoiseOffset(ctx);
-            Vector2 islandProfileOffset = CreateNoiseOffset(ctx);
-            Vector2 islandDetailOffset = CreateNoiseOffset(ctx);
-
-            // 1. Carve the broad underwater cave field. The solid threshold drops with depth,
-            //    leaving spacious water near Sea Level and increasingly dense terrain below it.
-            for (int x = 0; x < ctx.Width; x++)
+            
+            // Generate a randomized, column-shaped blob inside an elliptical footprint.
+            if (_generateStartingIsland)
             {
-                for (int y = 0; y <= seaLevel; y++)
+                float islandCenterX = (width - 1) * 0.5f;
+                int minCoreX = Mathf.Max(0, Mathf.CeilToInt(islandCenterX - _spawnIslandRadiusX));
+                int maxCoreX = Mathf.Min(width - 1, Mathf.FloorToInt(islandCenterX + _spawnIslandRadiusX));
+
+                for (int x = minCoreX; x <= maxCoreX; x++)
                 {
-                    float depth01 = Mathf.InverseLerp(seaLevel, 0f, y);
-                    float density01 = Mathf.Pow(depth01, _depthDensityExponent);
-                    float solidThreshold = Mathf.Lerp(_shallowSolidThreshold, _deepSolidThreshold, density01);
-                    float caveNoise = SampleBlendedNoise(x, y, _caveFrequency, _caveDetailFrequency,
-                        _caveBaseNoiseWeight, caveBaseOffset, caveDetailOffset);
+                    float normalizedX = (x - islandCenterX) / _spawnIslandRadiusX;
+                    float ellipticalHeight = _spawnIslandRadiusY * Mathf.Sqrt(1f - normalizedX * normalizedX);
+                    float heightVariation = ctx.Random.Next(75, 101) / 100f;
+                    int columnHalfHeight = Mathf.RoundToInt(ellipticalHeight * heightVariation);
+                    if (columnHalfHeight < 1)
+                        continue;
 
-                    terrain[x, y] = caveNoise >= solidThreshold;
+                    int minCoreY = Mathf.Max(0, seaLevel - columnHalfHeight);
+                    int maxCoreY = Mathf.Min(height - 1, seaLevel + columnHalfHeight);
+
+                    for (int y = minCoreY; y <= maxCoreY; y++)
+                    {
+                        terrain[x, y] = true;
+                    }
                 }
-
-                if (x % columnsPerFrame == 0)
-                    yield return null;
             }
 
-            // 2. Smooth only the submerged terrain. This joins stray pixels into readable caves
-            //    without eroding the deliberately jagged island silhouettes above the water.
-            for (int pass = 0; pass < _smoothPasses; pass++)
-            {
-                bool[,] smoothedTerrain = new bool[ctx.Width, ctx.Height];
+            int minIslandZoneY = seaLevel - _maxIslandDepthFromSL;
+            int maxIslandZoneY = seaLevel + _maxIslandHeightFromSL;
 
-                for (int x = 0; x < ctx.Width; x++)
+            // Sea Level Island Generation
+            if (_generateIslands)
+            {
+                float islandBaseSeedX = ctx.Random.Next(-100000, 100000);
+                float islandBaseSeedY = ctx.Random.Next(-100000, 100000);
+                float islandDetailSeedX = ctx.Random.Next(-100000, 100000);
+                float islandDetailSeedY = ctx.Random.Next(-100000, 100000);
+
+                for (int x = 0; x < width; x++)
                 {
-                    for (int y = 0; y <= seaLevel; y++)
+                    for (int y = minIslandZoneY; y <= maxIslandZoneY; y++)
                     {
-                        smoothedTerrain[x, y] = CountSolidNeighbours(terrain, ctx, x, y, seaLevel) >= _solidNeighboursToFill;
+                        // Calculate noise value
+                        float baseSampleX = (x * _islandBaseFrequency) + islandBaseSeedX;
+                        float baseSampleY = (y * _islandBaseFrequency) + islandBaseSeedY;
+                        float islandBaseNoise = Mathf.PerlinNoise(baseSampleX, baseSampleY);
+
+                        float detailSampleX = (x * _islandDetailFrequency) + islandDetailSeedX;
+                        float detailSampleY = (y * _islandDetailFrequency) + islandDetailSeedY;
+                        float detailNoise = Mathf.PerlinNoise(detailSampleX, detailSampleY);
+
+                        float finalNoise = Mathf.Lerp(islandBaseNoise, detailNoise, _islandDetailInfluence);
+
+                        // Fade the threshold toward open sea at both vertical edges of the island zone.
+                        float vertical01 = y <= seaLevel ? Mathf.InverseLerp(minIslandZoneY, seaLevel, y) : Mathf.InverseLerp(maxIslandZoneY, seaLevel, y);
+                        float islandEnvelope = Mathf.SmoothStep(0f, 1f, vertical01);
+                        float solidThreshold = Mathf.Lerp(1f, _islandSolidThreshold, islandEnvelope);
+
+                        terrain[x, y] |= finalNoise >= solidThreshold;
+                    }
+                }
+            }
+
+
+            // Under Sea Generation
+            if (_generateUnderSeaTerrain)
+            {
+                float seaTerrainBaseSeedX = ctx.Random.Next(-100000, 100000);
+                float seaTerrainBaseSeedY = ctx.Random.Next(-100000, 100000);
+                float seaTerrainDetailSeedX = ctx.Random.Next(-100000, 100000);
+                float seaTerrainDetailSeedY = ctx.Random.Next(-100000, 100000);
+
+                int generationTopY = seaLevel - _seaLevelOffset;
+                int fadeStartY = generationTopY - _fadeToGenTopYStart;
+
+                for (int x = 0; x < width; x++)
+                {
+                    for (int y = 0; y < generationTopY; y++)
+                    {
+                        // Calculate noise value
+                        float baseSampleX = (x * _baseFrequency) + seaTerrainBaseSeedX;
+                        float baseSampleY = (y * _baseFrequency) + seaTerrainBaseSeedY;
+                        float baseNoise = Mathf.PerlinNoise(baseSampleX, baseSampleY);
+
+                        float detailSampleX = (x * _detailFrequency) + seaTerrainDetailSeedX;
+                        float detailSampleY = (y * _detailFrequency) + seaTerrainDetailSeedY;
+                        float detailNoise = Mathf.PerlinNoise(detailSampleX, detailSampleY);
+
+                        float finalNoise = Mathf.Lerp(baseNoise, detailNoise, _detailInfluence);
+
+                        // Calculate solid threshold
+                        float depth01 = Mathf.InverseLerp(seaLevel - 1, 0, y);
+                        float shallow = Mathf.Clamp01(_shallowSolidThreshold);
+                        float deep = Mathf.Clamp01(_deepSolidThreshold);
+                        float solidThreshold = Mathf.Lerp(shallow, deep, depth01);
+
+                        // Gradually fade it so its not a sharp cut off
+                        if (y >= fadeStartY)
+                        {
+                            float fade01 = Mathf.InverseLerp(fadeStartY, generationTopY, y);
+                            solidThreshold = Mathf.Lerp(solidThreshold, 1f, fade01);
+                        }
+                        
+                        terrain[x, y] |= finalNoise >= solidThreshold;
                     }
 
                     if (x % columnsPerFrame == 0)
                         yield return null;
                 }
-
-                terrain = smoothedTerrain;
             }
+            
 
-            // 3. Overlay a separate, two-noise island band centred on Sea Level. The horizontal
-            //    profile decides where an island group exists; detail noise makes its coast and
-            //    submerged reef uneven instead of a flat, continuous shoreline.
-            for (int x = 0; x < ctx.Width; x++)
-            {
-                float profileNoise = Mathf.PerlinNoise((x * _islandProfileFrequency) + islandProfileOffset.x, islandProfileOffset.y);
-                float islandProfile = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(_islandThreshold, 1f, profileNoise));
-
-                if (islandProfile > 0f)
-                {
-                    int minY = Mathf.Max(0, seaLevel - _islandSubmergedDepth);
-                    int maxY = Mathf.Min(ctx.Height - 1, seaLevel + _maxIslandHeight);
-
-                    for (int y = minY; y <= maxY; y++)
-                    {
-                        int distanceFromSeaLevel = y - seaLevel;
-                        float verticalFade = distanceFromSeaLevel >= 0
-                            ? 1f - (distanceFromSeaLevel / (float)Mathf.Max(1, _maxIslandHeight + 1))
-                            : 1f - (-distanceFromSeaLevel / (float)Mathf.Max(1, _islandSubmergedDepth + 1));
-
-                        float islandCoverage = islandProfile * Mathf.Clamp01(verticalFade);
-                        float edgeNoise = Mathf.PerlinNoise((x * _islandDetailFrequency) + islandDetailOffset.x,
-                            (y * _islandDetailFrequency) + islandDetailOffset.y);
-
-                        if (edgeNoise <= islandCoverage)
-                            terrain[x, y] = true;
-                    }
-                }
-
-                if (x % columnsPerFrame == 0)
-                    yield return null;
-            }
-
-            // 4. Convert the finished boolean terrain mask into the foreground tiles used by the rest of the pipeline.
+            // Setting the actual map after generation
             ushort sandId = _sandSO.GetId();
             for (int x = 0; x < ctx.Width; x++)
             {
@@ -155,42 +165,7 @@ namespace OceanGame
                     yield return null;
             }
         }
-
-        private Vector2 CreateNoiseOffset(WorldGenContext ctx)
-        {
-            return new Vector2(ctx.Random.Next(-100000, 100001), ctx.Random.Next(-100000, 100001));
-        }
-
-        private float SampleBlendedNoise(int x, int y, float baseFrequency, float detailFrequency,
-            float baseWeight, Vector2 baseOffset, Vector2 detailOffset)
-        {
-            float baseNoise = Mathf.PerlinNoise((x * baseFrequency) + baseOffset.x, (y * baseFrequency) + baseOffset.y);
-            float detailNoise = Mathf.PerlinNoise((x * detailFrequency) + detailOffset.x, (y * detailFrequency) + detailOffset.y);
-            return Mathf.Lerp(detailNoise, baseNoise, baseWeight);
-        }
-
-        private int CountSolidNeighbours(bool[,] terrain, WorldGenContext ctx, int x, int y, int seaLevel)
-        {
-            int solidNeighbours = 0;
-
-            for (int neighbourX = x - 1; neighbourX <= x + 1; neighbourX++)
-            {
-                for (int neighbourY = y - 1; neighbourY <= y + 1; neighbourY++)
-                {
-                    if (neighbourX == x && neighbourY == y)
-                        continue;
-
-                    // Anything outside the world, including the water above Sea Level, stays open.
-                    // This allows caves to naturally reach the map sides instead of being sealed by a rim.
-                    bool insideTerrainBounds = neighbourX >= 0 && neighbourX < ctx.Width && neighbourY >= 0 && neighbourY <= seaLevel;
-                    if (insideTerrainBounds && terrain[neighbourX, neighbourY])
-                    {
-                        solidNeighbours++;
-                    }
-                }
-            }
-
-            return solidNeighbours;
-        }
+        
+        
     }
 }
