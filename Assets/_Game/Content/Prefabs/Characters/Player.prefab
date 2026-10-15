@@ -274,7 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.ServerCharacter
   ShowTopMostFoldoutHeaderGroup: 1
-  _ignoreCollision: 1
+  _ignoreCollision: 0
   Velocity: {x: 0, y: 0}
   ColliderSize: {x: 0, y: 0}
   RootState:

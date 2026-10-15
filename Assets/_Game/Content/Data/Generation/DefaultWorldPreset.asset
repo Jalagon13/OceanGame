@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe0e4c828bd83465e82ab75a6c973b41, type: 3}
   m_Name: DefaultWorldPreset
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
-  UseRandomSeed: 0
+  UseRandomSeed: 1
   Seed: 0
   GenColumnsPerFrame: 50
   Width: 1600
@@ -61,13 +61,14 @@ MonoBehaviour:
       data:
         RunStep: 1
         _sandSO: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
-        _smoothPasses: 5
+        _smoothPasses: 6
         _frequency: 0.05
         _detailFrequency: 0.125
-        _seaLevelFadeHeight: 30
-        _solidThreshold: 0.4
+        _fadeHeight: 30
+        _fadeStartFromSeaLevel: -5
+        _solidThreshold: 0.385
         _airThreshold: 0.075
-        _baseNoiseInfluencePercentage: 0.6
+        _baseNoiseInfluencePercentage: 1
     - rid: 2895663963195310357
       type: {class: SetFluidStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
