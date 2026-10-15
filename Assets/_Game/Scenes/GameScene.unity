@@ -1418,7 +1418,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 18
+  orthographic size: 28
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -4716,7 +4716,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 809a702732703425aabf213c8efa7694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.OxygenManager
-  _baseMaxOxygen: 30
+  _baseMaxOxygen: 40
   _airRefillDuration: 3
   _underwaterDrainRate: 1
   _lowOxygenWarningPercentage: 0.3
@@ -7407,14 +7407,14 @@ MonoBehaviour:
   _lightmapOverlay: {fileID: 328273112}
   _multiplyMaterial: {fileID: 2100000, guid: c9c44d8d34d4a42d59d850f4cc9d34f9, type: 2}
   _lightOverlay: {fileID: 328273110}
-  _showLight: 1
-  _lightmapFilterMode: 1
+  _showLight: 0
+  _lightmapFilterMode: 0
   _extraLightmapPadding: 4
   _fullBrightness: 10
   _decayBuffer: 1
   _solidFgDecay: 2
   _baseDecay: 1
-  _waterDecay: 0.25
+  _waterDecay: 0.5
   _blurPasses: 1
 --- !u!114 &2043979318
 MonoBehaviour:
