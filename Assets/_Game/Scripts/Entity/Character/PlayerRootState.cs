@@ -346,7 +346,7 @@ namespace OceanGame
 
                     float angleFromUpright = Vector2.SignedAngle(Vector2.up, perpendicular);
                     float deviation01 = Mathf.InverseLerp(0f, 90f, Mathf.Abs(angleFromUpright));
-                    float rotationAmount = Mathf.Lerp(1f, 0.15f, deviation01);
+                    float rotationAmount = Mathf.Lerp(1f, 0.05f, deviation01);
                     float adjustedAngle = angleFromUpright * rotationAmount;
                     
                     _desiredVisualRotation = Quaternion.Euler(0f, 0f, adjustedAngle) * Vector2.up;

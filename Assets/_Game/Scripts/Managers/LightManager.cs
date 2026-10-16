@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic; // Required for reusable Queue
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,17 +17,23 @@ namespace OceanGame
         [SerializeField] private bool _showLight = true;
         [SerializeField] private FilterMode _lightmapFilterMode;
         [SerializeField] private int _extraLightmapPadding;
+        [SerializeField] private int _lightCellsPerTile;
         [SerializeField, Min(1f)] private float _fullBrightness;
+        [SerializeField] private bool _enableBlurPass = true;
         
-        [Header("Decay")]
-        [SerializeField] private float _solidFgDecay = 3f;
-        [SerializeField] private float _baseDecay = 1f;
-        [SerializeField] private float _waterDecay = 0.75f;
+        [Header("Light Transmission")]
+        [Tooltip("Light diminished after entering a light cell occupied by a solid foreground tile.")]
+        [SerializeField, Min(0)] private float _solidFgTransmission = 0.56f;
+        [Tooltip("Light diminished after entering empty space, water, or a non-solid foreground tile.")]
+        [SerializeField, Min(0)] private float _permeableTransmission = 0.88f;
+        [Tooltip("Propagation stops once the light value is at or below this value.")]
+        [SerializeField, Min(0.0001f)] private float _propagationCutoff = 0.01f;
 
         private RectInt _lmBounds;
         private Texture2D _lightmapTexture;
-        private float[,] _lightGrid;
         private Color32[] _colorBuffer;
+        private float[,] _lightGrid;
+        private float[,] _blurGrid;
 
         private Queue<Vector2Int> _lightQueue;
         private static readonly Vector2Int[] _directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
@@ -40,7 +46,7 @@ namespace OceanGame
 
             _lightOverlay.SetActive(_showLight);
 
-            _lightQueue = new Queue<Vector2Int>(100 * 100); // Pre-allocate a reasonable default size 
+            _lightQueue = new Queue<Vector2Int>(100 * 100 * _lightCellsPerTile * _lightCellsPerTile);
         }
 
         private void Start()
@@ -70,27 +76,32 @@ namespace OceanGame
 
             _lmBounds = new(xMin, yMin, xMax - xMin, yMax - yMin);
 
-            int localWidth = _lmBounds.width;
-            int localHeight = _lmBounds.height;
+            int tileWidth = _lmBounds.width;
+            int tileHeight = _lmBounds.height;
+            int lightmapWidth = tileWidth * _lightCellsPerTile;
+            int lightmapHeight = tileHeight * _lightCellsPerTile;
 
             if (_lightmapTexture == null) // Initialize if new
             {
-                _lightmapTexture = new(localWidth, localHeight, TextureFormat.RGBA32, false)
+                _lightmapTexture = new(lightmapWidth, lightmapHeight, TextureFormat.RGBA32, false)
                 {
                     filterMode = _lightmapFilterMode,
                     wrapMode = TextureWrapMode.Clamp
                 };
             }
-            else if (_lightmapTexture.width != localWidth || _lightmapTexture.height != localHeight) // dynamically set it when camera changes dimensions
+            else if (_lightmapTexture.width != lightmapWidth || _lightmapTexture.height != lightmapHeight) // dynamically set it when camera changes dimensions
             {
-                _lightmapTexture.Reinitialize(localWidth, localHeight);
+                _lightmapTexture.Reinitialize(lightmapWidth, lightmapHeight);
+                _lightmapTexture.filterMode = _lightmapFilterMode;
+                _lightmapTexture.wrapMode = TextureWrapMode.Clamp;
             }
 
             // Manage light grid and color buffer sizes safely
-            if (_lightGrid == null || _lightGrid.GetLength(0) != localWidth || _lightGrid.GetLength(1) != localHeight)
+            if (_lightGrid == null || _lightGrid.GetLength(0) != lightmapWidth || _lightGrid.GetLength(1) != lightmapHeight)
             {
-                _lightGrid = new float[localWidth, localHeight];
-                _colorBuffer = new Color32[localWidth * localHeight];
+                _lightGrid = new float[lightmapWidth, lightmapHeight];
+                _blurGrid = new float[lightmapWidth, lightmapHeight];
+                _colorBuffer = new Color32[lightmapWidth * lightmapHeight];
             }
             else
             {
@@ -100,9 +111,9 @@ namespace OceanGame
             _lightQueue.Clear();
 
             // Seed light sources
-            for (int localX = 0; localX < localWidth; localX++)
+            for (int localX = 0; localX < tileWidth; localX++)
             {
-                for (int localY = 0; localY < localHeight; localY++)
+                for (int localY = 0; localY < tileHeight; localY++)
                 {
                     int worldPosX = xMin + localX;
                     int worldPosY = yMin + localY;
@@ -110,17 +121,14 @@ namespace OceanGame
                     var fgTd = world.FgGrid.GetTileData(worldPosX, worldPosY);
                     var bgTd = world.BgGrid.GetTileData(worldPosX, worldPosY);
 
-                    if (!fgTd.HasTile && !bgTd.HasTile && world.FluidGrid.GetFluidType(worldPosX, worldPosY) == FluidType.Air)
+                    if (((fgTd.HasTile && !fgTd.IsSolid) || !fgTd.HasTile) && !bgTd.HasTile && world.FluidGrid.GetFluidType(worldPosX, worldPosY) == FluidType.Air)
                     {
-                        _lightGrid[localX, localY] = _fullBrightness;
-                        _lightQueue.Enqueue(new Vector2Int(localX, localY));
+                        SeedTile(localX, localY, _fullBrightness);
                     }
                     else if (fgTd.LightLevel > 0 || bgTd.LightLevel > 0)
                     {
-                        var largestLightVal = Mathf.Max(fgTd.LightLevel, bgTd.LightLevel);
-                        float t = largestLightVal / 100f;
-                        _lightGrid[localX, localY] = Mathf.Lerp(0, _fullBrightness, t);
-                        _lightQueue.Enqueue(new Vector2Int(localX, localY));
+                        float sourceStrength = Mathf.Max(fgTd.LightLevel, bgTd.LightLevel) / 100f;
+                        SeedTile(localX, localY, _fullBrightness * Mathf.Clamp01(sourceStrength));
                     }
                 }
             }
@@ -131,18 +139,24 @@ namespace OceanGame
                 Vector2Int curr = _lightQueue.Dequeue();
                 float currLight = _lightGrid[curr.x, curr.y];
 
+                // Multiplicative decay never reaches zero by itself, so do not continue
+                // propagating imperceptibly small values through the grid.
+                if (currLight <= _propagationCutoff) continue;
+
                 foreach (Vector2Int dir in _directions)
                 {
                     int nx = curr.x + dir.x;
                     int ny = curr.y + dir.y;
 
-                    if (nx >= 0 && nx < localWidth && ny >= 0 && ny < localHeight)
+                    if (nx >= 0 && nx < lightmapWidth && ny >= 0 && ny < lightmapHeight)
                     {
-                        // Calculate target tile world coordinates
-                        float decay = GetDecay(nx, ny, world);
+                        float highestAdjacentLight = GetHighestAdjacentLight(nx, ny, lightmapWidth, lightmapHeight);
+                        if (highestAdjacentLight <= _propagationCutoff) continue;
 
-                        float potentialLight = currLight - decay;
-                        if (potentialLight < 0f) potentialLight = 0f;
+                        float transmission = GetTransmission(nx, ny, world);
+                        float potentialLight = highestAdjacentLight - transmission;
+
+                        if (potentialLight <= _propagationCutoff) continue;
 
                         if (potentialLight > _lightGrid[nx, ny])
                         {
@@ -153,12 +167,17 @@ namespace OceanGame
                 }
             }
 
+            if(_enableBlurPass)
+            {
+                BlurLightGrid(lightmapWidth, lightmapHeight);
+            }
+
             // Populate greyscale color buffer
             float fullBrightnessInv = 1f / _fullBrightness; // Multiplies are faster than division loops
 
-            for (int localY = 0; localY < localHeight; localY++)
+            for (int localY = 0; localY < lightmapHeight; localY++)
             {
-                for (int localX = 0; localX < localWidth; localX++)
+                for (int localX = 0; localX < lightmapWidth; localX++)
                 {
                     float lightValue = _lightGrid[localX, localY];
                     float lightFraction = lightValue * fullBrightnessInv;
@@ -167,7 +186,7 @@ namespace OceanGame
                     else if (lightFraction < 0f) lightFraction = 0f;
 
                     byte greyScale = (byte)(lightFraction * 255f);
-                    _colorBuffer[localY * localWidth + localX] = new Color32(greyScale, greyScale, greyScale, 255);
+                    _colorBuffer[localY * lightmapWidth + localX] = new Color32(greyScale, greyScale, greyScale, 255);
                 }
             }
 
@@ -180,25 +199,102 @@ namespace OceanGame
 
             // Update Overlay positioning
             Vector2 center = new Vector2(_lmBounds.xMin + _lmBounds.xMax, _lmBounds.yMin + _lmBounds.yMax) * 0.5f;
-            Vector2 size = new(localWidth, localHeight);
+            Vector2 size = new(tileWidth, tileHeight);
 
             _lightmapOverlay.rectTransform.position = center;
             _lightmapOverlay.rectTransform.sizeDelta = size;
             _lightmapOverlay.rectTransform.localScale = Vector3.one;
         }
 
-        private float GetDecay(int localX, int localY, WorldManager world)
+        private void SeedTile(int localTileX, int localTileY, float lightValue)
         {
-            int worldPosX = _lmBounds.xMin + localX;
-            int worldPosY = _lmBounds.yMin + localY;
+            int lightX = localTileX * _lightCellsPerTile;
+            int lightY = localTileY * _lightCellsPerTile;
+
+            for (int x = 0; x < _lightCellsPerTile; x++)
+            {
+                for (int y = 0; y < _lightCellsPerTile; y++)
+                {
+                    Vector2Int lightPosition = new(lightX + x, lightY + y);
+                    _lightGrid[lightPosition.x, lightPosition.y] = lightValue;
+                    _lightQueue.Enqueue(lightPosition);
+                }
+            }
+        }
+
+        private float GetTransmission(int lightX, int lightY, WorldManager world)
+        {
+            int worldPosX = _lmBounds.xMin + (lightX / _lightCellsPerTile);
+            int worldPosY = _lmBounds.yMin + (lightY / _lightCellsPerTile);
 
             var fgTd = world.FgGrid.GetTileData(worldPosX, worldPosY);
-            var fluidType = world.FluidGrid.GetFluidType(worldPosX, worldPosY);
 
-            if (fgTd.HasTile && fgTd.TileConfig.IsSolid) return _solidFgDecay;
-            if (fluidType == FluidType.Water) return _waterDecay;
+            return fgTd.HasTile && fgTd.IsSolid
+                ? _solidFgTransmission
+                : _permeableTransmission;
+        }
 
-            return _baseDecay;
+        private float GetHighestAdjacentLight(int x, int y, int width, int height)
+        {
+            float highestLight = 0f;
+
+            if (x > 0) highestLight = Mathf.Max(highestLight, _lightGrid[x - 1, y]);
+            if (x < width - 1) highestLight = Mathf.Max(highestLight, _lightGrid[x + 1, y]);
+            if (y > 0) highestLight = Mathf.Max(highestLight, _lightGrid[x, y - 1]);
+            if (y < height - 1) highestLight = Mathf.Max(highestLight, _lightGrid[x, y + 1]);
+
+            return highestLight;
+        }
+
+        private void BlurLightGrid(int width, int height)
+        {
+            // Horizontal pass
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    float sum = _lightGrid[x, y];
+                    int count = 1;
+
+                    if (x > 0)
+                    {
+                        sum += _lightGrid[x - 1, y];
+                        count++;
+                    }
+
+                    if (x < width - 1)
+                    {
+                        sum += _lightGrid[x + 1, y];
+                        count++;
+                    }
+
+                    _blurGrid[x, y] = sum / count;
+                }
+            }
+
+            // Vertical pass
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    float sum = _blurGrid[x, y];
+                    int count = 1;
+
+                    if (y > 0)
+                    {
+                        sum += _blurGrid[x, y - 1];
+                        count++;
+                    }
+
+                    if (y < height - 1)
+                    {
+                        sum += _blurGrid[x, y + 1];
+                        count++;
+                    }
+
+                    _lightGrid[x, y] = sum / count;
+                }
+            }
         }
 
     }

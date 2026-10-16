@@ -1186,8 +1186,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 793, y: 446}
-  m_SizeDelta: {x: 1586, y: 892}
+  m_AnchoredPosition: {x: 800, y: 450}
+  m_SizeDelta: {x: 1600, y: 900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &328273110
 GameObject:
@@ -7408,12 +7408,14 @@ MonoBehaviour:
   _multiplyMaterial: {fileID: 2100000, guid: c9c44d8d34d4a42d59d850f4cc9d34f9, type: 2}
   _lightOverlay: {fileID: 328273110}
   _showLight: 1
-  _lightmapFilterMode: 0
+  _lightmapFilterMode: 1
   _extraLightmapPadding: 8
-  _fullBrightness: 10
-  _solidFgDecay: 0.88
-  _baseDecay: 0.24
-  _waterDecay: 0.24
+  _lightCellsPerTile: 2
+  _fullBrightness: 6
+  _enableBlurPass: 0
+  _solidFgTransmission: 1
+  _permeableTransmission: 0.2
+  _propagationCutoff: 0.0001
 --- !u!114 &2043979318
 MonoBehaviour:
   m_ObjectHideFlags: 0
