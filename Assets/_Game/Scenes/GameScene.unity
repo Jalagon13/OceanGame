@@ -1393,7 +1393,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.2946778, g: 0.66481215, b: 0.8113208, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -7408,14 +7408,14 @@ MonoBehaviour:
   _multiplyMaterial: {fileID: 2100000, guid: c9c44d8d34d4a42d59d850f4cc9d34f9, type: 2}
   _lightOverlay: {fileID: 328273110}
   _showLight: 1
-  _lightmapFilterMode: 1
+  _lightmapFilterMode: 0
   _extraLightmapPadding: 8
   _lightCellsPerTile: 2
   _fullBrightness: 6
   _enableBlurPass: 0
-  _solidFgTransmission: 1
+  _lightContrast: 1.75
+  _solidFgTransmission: 0.75
   _permeableTransmission: 0.2
-  _propagationCutoff: 0.0001
 --- !u!114 &2043979318
 MonoBehaviour:
   m_ObjectHideFlags: 0

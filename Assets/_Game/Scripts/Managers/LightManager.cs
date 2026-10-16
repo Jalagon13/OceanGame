@@ -20,14 +20,15 @@ namespace OceanGame
         [SerializeField] private int _lightCellsPerTile;
         [SerializeField, Min(1f)] private float _fullBrightness;
         [SerializeField] private bool _enableBlurPass = true;
+        [Tooltip("Pushes light values away from the midpoint toward dark or full brightness. Set to 1 for no adjustment.")]
+        [SerializeField, Range(1f, 3f)] private float _lightContrast = 1.2f;
         
         [Header("Light Transmission")]
         [Tooltip("Light diminished after entering a light cell occupied by a solid foreground tile.")]
-        [SerializeField, Min(0)] private float _solidFgTransmission = 0.56f;
+        [SerializeField] private float _solidFgTransmission = 0.56f;
+        
         [Tooltip("Light diminished after entering empty space, water, or a non-solid foreground tile.")]
-        [SerializeField, Min(0)] private float _permeableTransmission = 0.88f;
-        [Tooltip("Propagation stops once the light value is at or below this value.")]
-        [SerializeField, Min(0.0001f)] private float _propagationCutoff = 0.01f;
+        [SerializeField] private float _permeableTransmission = 0.88f;
 
         private RectInt _lmBounds;
         private Texture2D _lightmapTexture;
@@ -36,7 +37,7 @@ namespace OceanGame
         private float[,] _blurGrid;
 
         private Queue<Vector2Int> _lightQueue;
-        private static readonly Vector2Int[] _directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+        private static readonly Vector2Int[] _directions = { new(1, 1), new(-1, 1), new(1, -1), new(-1, -1), Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
         
         public float FullBrightness => _fullBrightness;
 
@@ -139,24 +140,20 @@ namespace OceanGame
                 Vector2Int curr = _lightQueue.Dequeue();
                 float currLight = _lightGrid[curr.x, curr.y];
 
-                // Multiplicative decay never reaches zero by itself, so do not continue
-                // propagating imperceptibly small values through the grid.
-                if (currLight <= _propagationCutoff) continue;
-
+                if (currLight <= 0) continue;
+                
                 foreach (Vector2Int dir in _directions)
                 {
                     int nx = curr.x + dir.x;
                     int ny = curr.y + dir.y;
-
+                    
                     if (nx >= 0 && nx < lightmapWidth && ny >= 0 && ny < lightmapHeight)
                     {
                         float highestAdjacentLight = GetHighestAdjacentLight(nx, ny, lightmapWidth, lightmapHeight);
-                        if (highestAdjacentLight <= _propagationCutoff) continue;
-
                         float transmission = GetTransmission(nx, ny, world);
                         float potentialLight = highestAdjacentLight - transmission;
 
-                        if (potentialLight <= _propagationCutoff) continue;
+                        if (potentialLight <= 0) continue;
 
                         if (potentialLight > _lightGrid[nx, ny])
                         {
@@ -172,9 +169,24 @@ namespace OceanGame
                 BlurLightGrid(lightmapWidth, lightmapHeight);
             }
 
-            // Populate greyscale color buffer
             float fullBrightnessInv = 1f / _fullBrightness; // Multiplies are faster than division loops
 
+            // Increase contrast around the midpoint before converting the grid to greyscale.
+            if (_lightContrast > 1f)
+            {
+                for (int localY = 0; localY < lightmapHeight; localY++)
+                {
+                    for (int localX = 0; localX < lightmapWidth; localX++)
+                    {
+                        float lightFraction = Mathf.Clamp01(_lightGrid[localX, localY] * fullBrightnessInv);
+                        float darkPower = Mathf.Pow(lightFraction, _lightContrast);
+                        float brightPower = Mathf.Pow(1f - lightFraction, _lightContrast);
+                        _lightGrid[localX, localY] = _fullBrightness * (darkPower / (darkPower + brightPower));
+                    }
+                }
+            }
+
+            // Populate greyscale color buffer
             for (int localY = 0; localY < lightmapHeight; localY++)
             {
                 for (int localX = 0; localX < lightmapWidth; localX++)
@@ -222,6 +234,18 @@ namespace OceanGame
             }
         }
 
+        private float GetHighestAdjacentLight(int x, int y, int width, int height)
+        {
+            float highestLight = 0f;
+
+            if (x > 0) highestLight = Mathf.Max(highestLight, _lightGrid[x - 1, y]); // Left
+            if (x < width - 1) highestLight = Mathf.Max(highestLight, _lightGrid[x + 1, y]); // Right
+            if (y > 0) highestLight = Mathf.Max(highestLight, _lightGrid[x, y - 1]); // Up
+            if (y < height - 1) highestLight = Mathf.Max(highestLight, _lightGrid[x, y + 1]); // Down
+
+            return highestLight;
+        }
+
         private float GetTransmission(int lightX, int lightY, WorldManager world)
         {
             int worldPosX = _lmBounds.xMin + (lightX / _lightCellsPerTile);
@@ -229,21 +253,7 @@ namespace OceanGame
 
             var fgTd = world.FgGrid.GetTileData(worldPosX, worldPosY);
 
-            return fgTd.HasTile && fgTd.IsSolid
-                ? _solidFgTransmission
-                : _permeableTransmission;
-        }
-
-        private float GetHighestAdjacentLight(int x, int y, int width, int height)
-        {
-            float highestLight = 0f;
-
-            if (x > 0) highestLight = Mathf.Max(highestLight, _lightGrid[x - 1, y]);
-            if (x < width - 1) highestLight = Mathf.Max(highestLight, _lightGrid[x + 1, y]);
-            if (y > 0) highestLight = Mathf.Max(highestLight, _lightGrid[x, y - 1]);
-            if (y < height - 1) highestLight = Mathf.Max(highestLight, _lightGrid[x, y + 1]);
-
-            return highestLight;
+            return fgTd.HasTile && fgTd.IsSolid ? _solidFgTransmission : _permeableTransmission;
         }
 
         private void BlurLightGrid(int width, int height)

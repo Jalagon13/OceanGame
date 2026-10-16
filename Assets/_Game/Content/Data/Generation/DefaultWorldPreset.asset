@@ -68,7 +68,7 @@ MonoBehaviour:
         _maxIslandHeightFromSL: 16
         _maxIslandDepthFromSL: 14
         _islandBaseFrequency: 0.02
-        _islandDetailFrequency: 0.08
+        _islandDetailFrequency: 0.12
         _islandDetailInfluence: 0.5
         _islandSolidThreshold: 0.4
         _generateUnderSeaTerrain: 1
