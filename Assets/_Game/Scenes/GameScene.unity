@@ -7409,13 +7409,11 @@ MonoBehaviour:
   _lightOverlay: {fileID: 328273110}
   _showLight: 1
   _lightmapFilterMode: 0
-  _extraLightmapPadding: 4
+  _extraLightmapPadding: 8
   _fullBrightness: 10
-  _decayBuffer: 0
-  _solidFgDecay: 0.44
-  _baseDecay: 0.12
-  _waterDecay: 0.12
-  _blurPasses: 0
+  _solidFgDecay: 0.88
+  _baseDecay: 0.24
+  _waterDecay: 0.24
 --- !u!114 &2043979318
 MonoBehaviour:
   m_ObjectHideFlags: 0
