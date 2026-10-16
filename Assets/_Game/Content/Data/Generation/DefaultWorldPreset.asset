@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe0e4c828bd83465e82ab75a6c973b41, type: 3}
   m_Name: DefaultWorldPreset
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
-  UseRandomSeed: 1
+  UseRandomSeed: 0
   Seed: 0
   GenColumnsPerFrame: 50
   Width: 1600
@@ -65,15 +65,15 @@ MonoBehaviour:
         _spawnIslandRadiusX: 8
         _spawnIslandRadiusY: 4
         _generateIslands: 1
-        _maxIslandHeightFromSL: 22
-        _maxIslandDepthFromSL: 22
-        _islandBaseFrequency: 0.03
+        _maxIslandHeightFromSL: 16
+        _maxIslandDepthFromSL: 14
+        _islandBaseFrequency: 0.02
         _islandDetailFrequency: 0.08
         _islandDetailInfluence: 0.5
         _islandSolidThreshold: 0.4
         _generateUnderSeaTerrain: 1
-        _seaLevelOffset: 4
-        _fadeToGenTopYStart: 15
+        _seaLevelOffset: 3
+        _fadeToGenTopYStart: 7
         _baseFrequency: 0.08
         _detailFrequency: 0.08
         _detailInfluence: 0.5

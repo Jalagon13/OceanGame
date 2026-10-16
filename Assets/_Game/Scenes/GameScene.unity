@@ -1418,7 +1418,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 28
+  orthographic size: 18
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -7407,15 +7407,15 @@ MonoBehaviour:
   _lightmapOverlay: {fileID: 328273112}
   _multiplyMaterial: {fileID: 2100000, guid: c9c44d8d34d4a42d59d850f4cc9d34f9, type: 2}
   _lightOverlay: {fileID: 328273110}
-  _showLight: 0
+  _showLight: 1
   _lightmapFilterMode: 0
   _extraLightmapPadding: 4
   _fullBrightness: 10
-  _decayBuffer: 1
-  _solidFgDecay: 2
-  _baseDecay: 1
-  _waterDecay: 0.5
-  _blurPasses: 1
+  _decayBuffer: 0
+  _solidFgDecay: 0.44
+  _baseDecay: 0.12
+  _waterDecay: 0.12
+  _blurPasses: 0
 --- !u!114 &2043979318
 MonoBehaviour:
   m_ObjectHideFlags: 0
