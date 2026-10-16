@@ -9,32 +9,38 @@ namespace OceanGame
     {
         public static LightManager Instance { get; private set; }
 
-        [SerializeField] private RawImage _lightmapOverlay;
-        [SerializeField] private Material _multiplyMaterial;
-        [SerializeField] private GameObject _lightOverlay;
-
         [Header("Light Settings")]
         [SerializeField] private bool _showLight = true;
-        [SerializeField] private FilterMode _lightmapFilterMode;
+        [SerializeField] private Material _multiplyMaterial;
+        [SerializeField, Min(1f)] private float _fullBrightness;
         [SerializeField] private int _extraLightmapPadding;
         [SerializeField] private int _lightCellsPerTile;
-        [SerializeField, Min(1f)] private float _fullBrightness;
-        [SerializeField] private bool _enableBlurPass = true;
         [Tooltip("Pushes light values away from the midpoint toward dark or full brightness. Set to 1 for no adjustment.")]
         [SerializeField, Range(1f, 3f)] private float _lightContrast = 1.2f;
-        
+
         [Header("Light Transmission")]
         [Tooltip("Light diminished after entering a light cell occupied by a solid foreground tile.")]
         [SerializeField] private float _solidFgTransmission = 0.56f;
-        
+
         [Tooltip("Light diminished after entering empty space, water, or a non-solid foreground tile.")]
         [SerializeField] private float _permeableTransmission = 0.88f;
 
+        [Header("Background Settings")]
+        [SerializeField] private RawImage _backgroundOverlay;
+        [SerializeField] private GameObject _backgroundLightOverlay;
+        [SerializeField] private FilterMode _backgroundLightmapFilterMode;
+
+        [Header("Foreground Settings")]
+        [SerializeField] private RawImage _foregroundOverlay;
+        [SerializeField] private GameObject _foregroundLightOverlay;
+        [SerializeField] private FilterMode _foregroundLightmapFilterMode;
+        
         private RectInt _lmBounds;
-        private Texture2D _lightmapTexture;
-        private Color32[] _colorBuffer;
+        private Texture2D _foregroundLightmapTexture;
+        private Texture2D _backgroundLightmapTexture;
+        private Color32[] _foregroundColorBuffer;
+        private Color32[] _backgroundColorBuffer;
         private float[,] _lightGrid;
-        private float[,] _blurGrid;
 
         private Queue<Vector2Int> _lightQueue;
         private static readonly Vector2Int[] _directions = { new(1, 1), new(-1, 1), new(1, -1), new(-1, -1), Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
@@ -45,7 +51,8 @@ namespace OceanGame
         {
             Instance = this;
 
-            _lightOverlay.SetActive(_showLight);
+            _foregroundLightOverlay.SetActive(_showLight);
+            _backgroundLightOverlay.SetActive(_showLight);
 
             _lightQueue = new Queue<Vector2Int>(100 * 100 * _lightCellsPerTile * _lightCellsPerTile);
         }
@@ -60,7 +67,8 @@ namespace OceanGame
             if (PlayerCamera.Instance != null) PlayerCamera.Instance.OnVisibleTileBoundsChanged -= OnBoundsChanged;
 
             // Prevent memory leaks when changing scenes
-            if (_lightmapTexture != null) Destroy(_lightmapTexture);
+            if (_foregroundLightmapTexture != null) Destroy(_foregroundLightmapTexture);
+            if (_backgroundLightmapTexture != null) Destroy(_backgroundLightmapTexture);
         }
 
         private void OnBoundsChanged(RectInt oldBounds, RectInt newBounds)
@@ -82,27 +90,42 @@ namespace OceanGame
             int lightmapWidth = tileWidth * _lightCellsPerTile;
             int lightmapHeight = tileHeight * _lightCellsPerTile;
 
-            if (_lightmapTexture == null) // Initialize if new
+            if (_foregroundLightmapTexture == null) // Initialize if new
             {
-                _lightmapTexture = new(lightmapWidth, lightmapHeight, TextureFormat.RGBA32, false)
+                _foregroundLightmapTexture = new(lightmapWidth, lightmapHeight, TextureFormat.RGBA32, false)
                 {
-                    filterMode = _lightmapFilterMode,
+                    filterMode = _foregroundLightmapFilterMode,
                     wrapMode = TextureWrapMode.Clamp
                 };
             }
-            else if (_lightmapTexture.width != lightmapWidth || _lightmapTexture.height != lightmapHeight) // dynamically set it when camera changes dimensions
+            else if (_foregroundLightmapTexture.width != lightmapWidth || _foregroundLightmapTexture.height != lightmapHeight) // dynamically set it when camera changes dimensions
             {
-                _lightmapTexture.Reinitialize(lightmapWidth, lightmapHeight);
-                _lightmapTexture.filterMode = _lightmapFilterMode;
-                _lightmapTexture.wrapMode = TextureWrapMode.Clamp;
+                _foregroundLightmapTexture.Reinitialize(lightmapWidth, lightmapHeight);
+                _foregroundLightmapTexture.filterMode = _foregroundLightmapFilterMode;
+                _foregroundLightmapTexture.wrapMode = TextureWrapMode.Clamp;
+            }
+
+            if (_backgroundLightmapTexture == null) // Initialize if new
+            {
+                _backgroundLightmapTexture = new(lightmapWidth, lightmapHeight, TextureFormat.RGBA32, false)
+                {
+                    filterMode = _backgroundLightmapFilterMode,
+                    wrapMode = TextureWrapMode.Clamp
+                };
+            }
+            else if (_backgroundLightmapTexture.width != lightmapWidth || _backgroundLightmapTexture.height != lightmapHeight) // dynamically set it when camera changes dimensions
+            {
+                _backgroundLightmapTexture.Reinitialize(lightmapWidth, lightmapHeight);
+                _backgroundLightmapTexture.filterMode = _backgroundLightmapFilterMode;
+                _backgroundLightmapTexture.wrapMode = TextureWrapMode.Clamp;
             }
 
             // Manage light grid and color buffer sizes safely
             if (_lightGrid == null || _lightGrid.GetLength(0) != lightmapWidth || _lightGrid.GetLength(1) != lightmapHeight)
             {
                 _lightGrid = new float[lightmapWidth, lightmapHeight];
-                _blurGrid = new float[lightmapWidth, lightmapHeight];
-                _colorBuffer = new Color32[lightmapWidth * lightmapHeight];
+                _foregroundColorBuffer = new Color32[lightmapWidth * lightmapHeight];
+                _backgroundColorBuffer = new Color32[lightmapWidth * lightmapHeight];
             }
             else
             {
@@ -164,11 +187,6 @@ namespace OceanGame
                 }
             }
 
-            if(_enableBlurPass)
-            {
-                BlurLightGrid(lightmapWidth, lightmapHeight);
-            }
-
             float fullBrightnessInv = 1f / _fullBrightness; // Multiplies are faster than division loops
 
             // Increase contrast around the midpoint before converting the grid to greyscale.
@@ -186,7 +204,8 @@ namespace OceanGame
                 }
             }
 
-            // Populate greyscale color buffer
+            // Populate separate lightmaps. White is neutral for the multiply material,
+            // so it prevents an overlay from affecting the other visual layer.
             for (int localY = 0; localY < lightmapHeight; localY++)
             {
                 for (int localX = 0; localX < lightmapWidth; localX++)
@@ -198,24 +217,44 @@ namespace OceanGame
                     else if (lightFraction < 0f) lightFraction = 0f;
 
                     byte greyScale = (byte)(lightFraction * 255f);
-                    _colorBuffer[localY * lightmapWidth + localX] = new Color32(greyScale, greyScale, greyScale, 255);
+                    int bufferIndex = localY * lightmapWidth + localX;
+                    int worldPosX = _lmBounds.xMin + (localX / _lightCellsPerTile);
+                    int worldPosY = _lmBounds.yMin + (localY / _lightCellsPerTile);
+                    
+                    var fgTd = world.FgGrid.GetTileData(worldPosX, worldPosY);
+                    bool hasSolidFgTile = fgTd.HasTile && fgTd.IsSolid;
+
+                    Color32 litColor = new(greyScale, greyScale, greyScale, 255);
+                    Color32 neutralColor = new(255, 255, 255, 255);
+
+                    _foregroundColorBuffer[bufferIndex] = hasSolidFgTile ? litColor : neutralColor;
+                    _backgroundColorBuffer[bufferIndex] = litColor;
                 }
             }
 
-            // Apply lightmap overlay
-            _lightmapTexture.SetPixels32(_colorBuffer);
-            _lightmapTexture.Apply();
+            // Apply point-filtered foreground lighting only where foreground tiles exist.
+            _foregroundLightmapTexture.SetPixels32(_foregroundColorBuffer);
+            _foregroundLightmapTexture.Apply();
+            _foregroundOverlay.texture = _foregroundLightmapTexture;
+            _foregroundOverlay.material = _multiplyMaterial;
 
-            _lightmapOverlay.texture = _lightmapTexture;
-            _lightmapOverlay.material = _multiplyMaterial;
+            // Apply bilinear background lighting only where foreground tiles do not cover it.
+            _backgroundLightmapTexture.SetPixels32(_backgroundColorBuffer);
+            _backgroundLightmapTexture.Apply();
+            _backgroundOverlay.texture = _backgroundLightmapTexture;
+            _backgroundOverlay.material = _multiplyMaterial;
 
             // Update Overlay positioning
             Vector2 center = new Vector2(_lmBounds.xMin + _lmBounds.xMax, _lmBounds.yMin + _lmBounds.yMax) * 0.5f;
             Vector2 size = new(tileWidth, tileHeight);
 
-            _lightmapOverlay.rectTransform.position = center;
-            _lightmapOverlay.rectTransform.sizeDelta = size;
-            _lightmapOverlay.rectTransform.localScale = Vector3.one;
+            _foregroundOverlay.rectTransform.position = center;
+            _foregroundOverlay.rectTransform.sizeDelta = size;
+            _foregroundOverlay.rectTransform.localScale = Vector3.one;
+
+            _backgroundOverlay.rectTransform.position = center;
+            _backgroundOverlay.rectTransform.sizeDelta = size;
+            _backgroundOverlay.rectTransform.localScale = Vector3.one;
         }
 
         private void SeedTile(int localTileX, int localTileY, float lightValue)
@@ -254,57 +293,6 @@ namespace OceanGame
             var fgTd = world.FgGrid.GetTileData(worldPosX, worldPosY);
 
             return fgTd.HasTile && fgTd.IsSolid ? _solidFgTransmission : _permeableTransmission;
-        }
-
-        private void BlurLightGrid(int width, int height)
-        {
-            // Horizontal pass
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    float sum = _lightGrid[x, y];
-                    int count = 1;
-
-                    if (x > 0)
-                    {
-                        sum += _lightGrid[x - 1, y];
-                        count++;
-                    }
-
-                    if (x < width - 1)
-                    {
-                        sum += _lightGrid[x + 1, y];
-                        count++;
-                    }
-
-                    _blurGrid[x, y] = sum / count;
-                }
-            }
-
-            // Vertical pass
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    float sum = _blurGrid[x, y];
-                    int count = 1;
-
-                    if (y > 0)
-                    {
-                        sum += _blurGrid[x, y - 1];
-                        count++;
-                    }
-
-                    if (y < height - 1)
-                    {
-                        sum += _blurGrid[x, y + 1];
-                        count++;
-                    }
-
-                    _lightGrid[x, y] = sum / count;
-                }
-            }
         }
 
     }
