@@ -7512,7 +7512,7 @@ MonoBehaviour:
   _extraLightmapPadding: 8
   _lightCellsPerTile: 1
   _lightContrast: 1.75
-  _solidFgTransmission: 0.75
+  _solidFgTransmission: 0.8
   _permeableTransmission: 0.425
   _backgroundOverlay: {fileID: 2097336594}
   _backgroundLightOverlay: {fileID: 2097336592}

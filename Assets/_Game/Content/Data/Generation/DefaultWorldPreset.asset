@@ -25,6 +25,7 @@ MonoBehaviour:
   - rid: 2895663963195310357
   - rid: 2895664510129406076
   - rid: 2783294085391712386
+  - rid: 2783294214768951562
   references:
     version: 2
     RefIds:
@@ -79,6 +80,10 @@ MonoBehaviour:
         _detailInfluence: 0.5
         _shallowSolidThreshold: 0.5
         _deepSolidThreshold: 0.1
+    - rid: 2783294214768951562
+      type: {class: SetBgGenStep, ns: OceanGame, asm: Assembly-CSharp}
+      data:
+        RunStep: 1
     - rid: 2895663963195310357
       type: {class: SetFluidStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
