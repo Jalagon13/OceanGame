@@ -37,7 +37,7 @@ MonoBehaviour:
         RunStep: 1
         _oreConfigs:
         - OreTile: {fileID: 11400000, guid: 75d3adf13369b426cbdbcc99aabd6f3d, type: 2}
-          StartingDepth: 10
+          StartingDepth: 25
           ChunkSize: 30
           VeinsPerChunk: 5
           VeinMinDistance: 7
@@ -45,7 +45,7 @@ MonoBehaviour:
           MinVeinSize: 3
           MaxVeinSize: 8
         - OreTile: {fileID: 11400000, guid: e7b35e8f4d4be47e784aa3e4bb7295a2, type: 2}
-          StartingDepth: 50
+          StartingDepth: 70
           ChunkSize: 30
           VeinsPerChunk: 4
           VeinMinDistance: 8
@@ -67,8 +67,8 @@ MonoBehaviour:
         _limestoneSO: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
         _depthOfSandLayer: 2
         _noiseFrequency: 0.08
-        _noiseAmplitude: 6
-        _yValFromSeaLevel: -17
+        _noiseAmplitude: 8
+        _yValFromSeaLevel: -20
         _undergroundBottomLevel: 200
     - rid: 2783294214768951573
       type: {class: UnderSeaTerrainGenStep, ns: OceanGame, asm: Assembly-CSharp}
@@ -76,8 +76,8 @@ MonoBehaviour:
         RunStep: 1
         _limestoneSO: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
         _generateUnderSeaTerrain: 1
-        _seaLevelOffset: 3
-        _fadeToGenTopYStart: 7
+        _seaLevelOffset: 4
+        _fadeToGenTopYStart: 8
         _baseFrequency: 0.15
         _detailFrequency: 0.085
         _detailInfluence: 0.6
@@ -87,15 +87,17 @@ MonoBehaviour:
       type: {class: SurfaceIslandsGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
         RunStep: 1
+        _minIslandGap: 8
+        _maxIslandGap: 27
         _islandTile: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
         _minIslandBlobCount: 3
-        _maxIslandBlobCount: 8
+        _maxIslandBlobCount: 10
         _minBlobWidth: 8
-        _maxBlobWidth: 18
-        _minBlobHeight: 6
-        _maxBlobHeight: 20
-        _minBlobGap: 3
-        _maxBlobGap: 6
+        _maxBlobWidth: 20
+        _minBlobHeight: 2
+        _maxBlobHeight: 16
+        _minBlobGap: 4
+        _maxBlobGap: 7
         _noiseFrequency: 0.14
         _noiseInfluence: 0.719
         _densityThreshold: 0.183

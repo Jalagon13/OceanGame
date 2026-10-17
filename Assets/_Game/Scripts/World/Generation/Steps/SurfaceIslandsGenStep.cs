@@ -27,11 +27,41 @@ namespace OceanGame
 
         public override IEnumerator Execute(WorldGenContext ctx)
         {
-            GenerateIsland(ctx, ctx.Width / 2, ctx.SeaLevel);
+            IslandLayout centerLayout = CreateIslandLayout(ctx);
+            IslandBounds centerBounds = GenerateIsland(ctx, centerLayout, ctx.Width / 2, ctx.SeaLevel);
+
+            int rightEdge = centerBounds.RightEdge;
+            while (rightEdge < ctx.Width - 1)
+            {
+                IslandLayout layout = CreateIslandLayout(ctx);
+                
+                int islandGap = GetRandomSize(_minIslandGap, _maxIslandGap, (float)ctx.Random.NextDouble());
+                int islandLeft = rightEdge + islandGap + 1;
+                int islandCenterX = islandLeft - layout.LeftOffset;
+                
+                IslandBounds bounds = GenerateIsland(ctx, layout, islandCenterX, ctx.SeaLevel);
+                
+                rightEdge = bounds.RightEdge;
+            }
+
+            int leftEdge = centerBounds.LeftEdge;
+            while (leftEdge > 0)
+            {
+                IslandLayout layout = CreateIslandLayout(ctx);
+                
+                int islandGap = GetRandomSize(_minIslandGap, _maxIslandGap, (float)ctx.Random.NextDouble());
+                int islandRight = leftEdge - islandGap - 1;
+                int islandCenterX = islandRight - layout.RightOffset;
+                
+                IslandBounds bounds = GenerateIsland(ctx, layout, islandCenterX, ctx.SeaLevel);
+                
+                leftEdge = bounds.LeftEdge;
+            }
+
             yield break;
         }
 
-        private void GenerateIsland(WorldGenContext ctx, int islandCenterX, int islandCenterY)
+        private IslandLayout CreateIslandLayout(WorldGenContext ctx)
         {
             int minBlobCount = _minIslandBlobCount;
             int maxBlobCount = _maxIslandBlobCount;
@@ -40,6 +70,7 @@ namespace OceanGame
             int[] blobWidths = new int[blobCount];
             int[] blobHeights = new int[blobCount];
             int[] blobGaps = new int[blobCount - 1];
+            float[] blobCenterOffsets = new float[blobCount];
             int totalCenterDistance = 0;
 
             for (int i = 0; i < blobCount; i++)
@@ -58,15 +89,33 @@ namespace OceanGame
                 }
             }
 
-            float currentCenterX = islandCenterX - totalCenterDistance / 2f;
+            float currentCenterOffset = -totalCenterDistance / 2f;
+            int leftOffset = int.MaxValue;
+            int rightOffset = int.MinValue;
 
             for (int i = 0; i < blobCount; i++)
             {
-                GenerateBlob(ctx, currentCenterX, islandCenterY, blobWidths[i], blobHeights[i]);
+                blobCenterOffsets[i] = currentCenterOffset;
+                float halfWidth = Mathf.Max(0.5f, (blobWidths[i] - 1) / 2f);
+                leftOffset = Mathf.Min(leftOffset, Mathf.FloorToInt(currentCenterOffset - halfWidth));
+                rightOffset = Mathf.Max(rightOffset, Mathf.CeilToInt(currentCenterOffset + halfWidth));
 
                 if (i < blobGaps.Length)
-                    currentCenterX += blobGaps[i];
+                    currentCenterOffset += blobGaps[i];
             }
+
+            return new IslandLayout(blobWidths, blobHeights, blobCenterOffsets, leftOffset, rightOffset);
+        }
+
+        private IslandBounds GenerateIsland(WorldGenContext ctx, IslandLayout layout, int islandCenterX, int islandCenterY)
+        {
+            for (int i = 0; i < layout.BlobWidths.Length; i++)
+            {
+                GenerateBlob(ctx, islandCenterX + layout.BlobCenterOffsets[i], islandCenterY,
+                    layout.BlobWidths[i], layout.BlobHeights[i]);
+            }
+
+            return new IslandBounds(islandCenterX + layout.LeftOffset, islandCenterX + layout.RightOffset);
         }
 
         private int GetRandomSize(int configuredMin, int configuredMax, float percent)
@@ -108,6 +157,36 @@ namespace OceanGame
                     if (density >= _densityThreshold)
                         ctx.FgGrid[x, y] = new TileData(_islandTile.GetId());
                 }
+            }
+        }
+
+        private sealed class IslandLayout
+        {
+            public int[] BlobWidths { get; }
+            public int[] BlobHeights { get; }
+            public float[] BlobCenterOffsets { get; }
+            public int LeftOffset { get; }
+            public int RightOffset { get; }
+
+            public IslandLayout(int[] blobWidths, int[] blobHeights, float[] blobCenterOffsets, int leftOffset, int rightOffset)
+            {
+                BlobWidths = blobWidths;
+                BlobHeights = blobHeights;
+                BlobCenterOffsets = blobCenterOffsets;
+                LeftOffset = leftOffset;
+                RightOffset = rightOffset;
+            }
+        }
+
+        private readonly struct IslandBounds
+        {
+            public int LeftEdge { get; }
+            public int RightEdge { get; }
+
+            public IslandBounds(int left, int right)
+            {
+                LeftEdge = left;
+                RightEdge = right;
             }
         }
     }

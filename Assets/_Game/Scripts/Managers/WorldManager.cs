@@ -17,6 +17,7 @@ namespace OceanGame
         [field: SerializeField] public WorldGenerator WorldGen { get; private set; }
         [SerializeField] private Tilemap _foregroundTilemap;
         [SerializeField] private Tilemap _backgroundTilemap;
+        [SerializeField] private ParallaxBackground _surfaceBg;
 
         [Header("Tile Repair")]
         [SerializeField, Min(0f)] private float _tileRepairDelay = 5f;
@@ -106,6 +107,8 @@ namespace OceanGame
                     FluidGrid.SetFluidData(x, y, context.FluidGrid[x, y]);
                 }
             }
+
+            _surfaceBg.Initialize();
 
             IsWorldReady = true;
             OnWorldReady?.Invoke();
