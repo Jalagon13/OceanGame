@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe0e4c828bd83465e82ab75a6c973b41, type: 3}
   m_Name: DefaultWorldPreset
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
-  UseRandomSeed: 1
+  UseRandomSeed: 0
   Seed: 0
   GenColumnsPerFrame: 50
   Width: 1600
@@ -20,7 +20,8 @@ MonoBehaviour:
   SeaLevel: 365
   UndergroundBottomLevel: 275
   Steps:
-  - rid: 2783294169296928864
+  - rid: 2783294214768951575
+  - rid: 2783294214768951573
   - rid: 2688502357985853566
   - rid: 2895663963195310357
   - rid: 2895664510129406076
@@ -57,33 +58,40 @@ MonoBehaviour:
         _kelp: {fileID: 11400000, guid: eb775bac2fe1947c1b732966b2e22c8e, type: 2}
         _minKelpSpace: 1
         _maxKelpSpace: 4
-    - rid: 2783294169296928864
-      type: {class: BaseTerrainGenStep, ns: OceanGame, asm: Assembly-CSharp}
-      data:
-        RunStep: 1
-        _sandSO: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
-        _generateStartingIsland: 1
-        _spawnIslandRadiusX: 8
-        _spawnIslandRadiusY: 4
-        _generateIslands: 1
-        _maxIslandHeightFromSL: 16
-        _maxIslandDepthFromSL: 14
-        _islandBaseFrequency: 0.02
-        _islandDetailFrequency: 0.12
-        _islandDetailInfluence: 0.5
-        _islandSolidThreshold: 0.4
-        _generateUnderSeaTerrain: 1
-        _seaLevelOffset: 3
-        _fadeToGenTopYStart: 7
-        _baseFrequency: 0.08
-        _detailFrequency: 0.08
-        _detailInfluence: 0.5
-        _shallowSolidThreshold: 0.5
-        _deepSolidThreshold: 0.1
     - rid: 2783294214768951562
       type: {class: SetBgGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
         RunStep: 1
+    - rid: 2783294214768951573
+      type: {class: UnderSeaTerrainGenStep, ns: OceanGame, asm: Assembly-CSharp}
+      data:
+        RunStep: 1
+        _limestoneSO: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
+        _generateUnderSeaTerrain: 1
+        _seaLevelOffset: 3
+        _fadeToGenTopYStart: 8
+        _baseFrequency: 0.15
+        _detailFrequency: 0.085
+        _detailInfluence: 0.6
+        _shallowSolidThreshold: 0.485
+        _deepSolidThreshold: 0.125
+    - rid: 2783294214768951575
+      type: {class: SurfaceIslandsGenStep, ns: OceanGame, asm: Assembly-CSharp}
+      data:
+        RunStep: 1
+        _islandTile: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
+        _minIslandWidth: 15
+        _maxIslandWidth: 39
+        _minIslandHeight: 6
+        _maxIslandHeight: 17
+        _minIslandGap: 2
+        _maxIslandGap: 40
+        _gapBiasPower: 4.25
+        _minIslandSeaLevelOffset: -1
+        _maxIslandSeaLevelOffset: 1
+        _noiseFrequency: 0.14
+        _noiseInfluence: 0.719
+        _densityThreshold: 0.183
     - rid: 2895663963195310357
       type: {class: SetFluidStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
