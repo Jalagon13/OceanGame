@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -6,98 +5,108 @@ namespace OceanGame
 {
     public class SurfaceIslandsGenStep : WorldGenStep
     {
+        [Header("Surface Generation")]
+        [SerializeField] private int _minIslandGap = 15;
+        [SerializeField] private int _maxIslandGap = 30;
+    
+        [Header("Island Generation")]
         [SerializeField] private TileConfigSO _islandTile;
-        [SerializeField] private int _minIslandWidth;
-        [SerializeField] private int _maxIslandWidth;
-        [SerializeField] private int _minIslandHeight;
-        [SerializeField] private int _maxIslandHeight;
-        [SerializeField] private int _minIslandGap;
-        [SerializeField] private int _maxIslandGap;
-        [SerializeField, Range(1f, 5f)] private float _gapBiasPower = 2f;
-        [SerializeField] private int _minIslandSeaLevelOffset = -5;
-        [SerializeField] private int _maxIslandSeaLevelOffset = 5;
+        [SerializeField, Min(1)] private int _minIslandBlobCount = 3;
+        [SerializeField, Min(1)] private int _maxIslandBlobCount = 8;
+        [SerializeField, Min(1)] private int _minBlobWidth = 15;
+        [SerializeField, Min(1)] private int _maxBlobWidth = 39;
+        [SerializeField, Min(1)] private int _minBlobHeight = 6;
+        [SerializeField, Min(1)] private int _maxBlobHeight = 17;
+        [SerializeField, Min(0)] private int _minBlobGap = 1;
+        [SerializeField, Min(0)] private int _maxBlobGap = 4;
+
+        [Header("Blob Settings")]
         [SerializeField] private float _noiseFrequency = 0.08f;
         [SerializeField, Range(0f, 1f)] private float _noiseInfluence = 0.5f;
         [SerializeField, Range(0f, 1f)] private float _densityThreshold = 0.45f;
-        
+
         public override IEnumerator Execute(WorldGenContext ctx)
         {
-            int x = 0;
-            
-            while(x < ctx.Width)
-            {
-                float percent = (float)ctx.Random.NextDouble();
-                int seaLevelOffset = Mathf.RoundToInt(Mathf.Lerp(_minIslandSeaLevelOffset, _maxIslandSeaLevelOffset, percent));
-
-                int islandWidth = Mathf.RoundToInt(Mathf.Lerp(_minIslandWidth, _maxIslandWidth, percent));
-                int islandHeight = Mathf.RoundToInt(Mathf.Lerp(_minIslandHeight, _maxIslandHeight, percent));
-                int halfWidth = Mathf.Max(1, islandWidth / 2);
-                
-                int islandCenterX = x + halfWidth;
-                int islandCenterY = ctx.SeaLevel + seaLevelOffset;
-                
-                GenerateIsland(ctx, islandCenterX, islandCenterY, islandWidth, islandHeight);
-
-                float gapPercent = (float)ctx.Random.NextDouble();
-
-                if (gapPercent < 0.5f)
-                {
-                    // Map 0..0.5 to 0..1, square it, then map back to 0..0.5.
-                    float normalized = gapPercent / 0.5f;
-                    gapPercent = Mathf.Pow(normalized, _gapBiasPower) * 0.5f;
-                }
-                else
-                {
-                    // Mirror the same curve around the midpoint.
-                    float normalized = (1f - gapPercent) / 0.5f;
-                    gapPercent = 1f - (Mathf.Pow(normalized, _gapBiasPower) * 0.5f);
-                }
-
-                int gap = Mathf.RoundToInt(Mathf.Lerp(_minIslandGap, _maxIslandGap, gapPercent));
-                
-                x += Mathf.Max(1, gap); // For now keep them potentially close because so there can organically be large compound islands
-                
-                yield return null;
-            }
-
-            // Add the guaranteed island after the regular islands are generated.
-            int centerIslandWidth = Mathf.Max(1, (_minIslandWidth + _maxIslandWidth) / 2);
-            int centerIslandHeight = Mathf.Max(1, (_minIslandHeight + _maxIslandHeight) / 2);
-
-            GenerateIsland(ctx, ctx.Width / 2, ctx.SeaLevel, centerIslandWidth, centerIslandHeight);
-
+            GenerateIsland(ctx, ctx.Width / 2, ctx.SeaLevel);
+            yield break;
         }
 
-        private void GenerateIsland(WorldGenContext ctx, int islandCenterX, int islandCenterY, int islandWidth, int islandHeight)
+        private void GenerateIsland(WorldGenContext ctx, int islandCenterX, int islandCenterY)
+        {
+            int minBlobCount = _minIslandBlobCount;
+            int maxBlobCount = _maxIslandBlobCount;
+            int blobCount = ctx.Random.Next(minBlobCount, maxBlobCount + 1);
+
+            int[] blobWidths = new int[blobCount];
+            int[] blobHeights = new int[blobCount];
+            int[] blobGaps = new int[blobCount - 1];
+            int totalCenterDistance = 0;
+
+            for (int i = 0; i < blobCount; i++)
+            {
+                float position = blobCount == 1 ? 0.5f : (float)i / (blobCount - 1);
+                float centerBias = 1f - Mathf.Abs(position * 2f - 1f);
+                float sizePercent = Mathf.Lerp(Mathf.Pow((float)ctx.Random.NextDouble(), 2f), 1f, centerBias);
+
+                blobWidths[i] = Mathf.Max(1, GetRandomSize(_minBlobWidth, _maxBlobWidth, sizePercent));
+                blobHeights[i] = Mathf.Max(1, GetRandomSize(_minBlobHeight, _maxBlobHeight, sizePercent));
+
+                if (i < blobGaps.Length)
+                {
+                    blobGaps[i] = GetRandomSize(_minBlobGap, _maxBlobGap, (float)ctx.Random.NextDouble());
+                    totalCenterDistance += blobGaps[i];
+                }
+            }
+
+            float currentCenterX = islandCenterX - totalCenterDistance / 2f;
+
+            for (int i = 0; i < blobCount; i++)
+            {
+                GenerateBlob(ctx, currentCenterX, islandCenterY, blobWidths[i], blobHeights[i]);
+
+                if (i < blobGaps.Length)
+                    currentCenterX += blobGaps[i];
+            }
+        }
+
+        private int GetRandomSize(int configuredMin, int configuredMax, float percent)
+        {
+            int min = Mathf.Max(0, Mathf.Min(configuredMin, configuredMax));
+            int max = Mathf.Max(min, Mathf.Max(configuredMin, configuredMax));
+            return Mathf.RoundToInt(Mathf.Lerp(min, max, percent));
+        }
+
+        private void GenerateBlob(WorldGenContext ctx, float centerX, int centerY, int width, int height)
         {
             float seedX = ctx.Random.Next(-100000, 100000);
             float seedY = ctx.Random.Next(-100000, 100000);
 
-            int islandHalfWidth = Mathf.Max(1, islandWidth / 2);
-            int islandHalfHeight = Mathf.Max(1, islandHeight / 2);
+            float halfWidth = Mathf.Max(0.5f, (width - 1) / 2f);
+            int startY = centerY - height / 2;
+            float blobCenterY = startY + (height - 1) / 2f;
+            float halfHeight = Mathf.Max(0.5f, (height - 1) / 2f);
 
-            int minX = Mathf.Max(0, islandCenterX - islandHalfWidth);
-            int maxX = Mathf.Min(ctx.Width - 1, islandCenterX + islandHalfWidth);
-            int minY = Mathf.Max(0, islandCenterY - islandHalfHeight);
-            int maxY = Mathf.Min(ctx.Height - 1, islandCenterY + islandHalfHeight);
+            int minX = Mathf.Max(0, Mathf.FloorToInt(centerX - halfWidth));
+            int maxX = Mathf.Min(ctx.Width - 1, Mathf.CeilToInt(centerX + halfWidth));
+            int minY = Mathf.Max(0, startY);
+            int maxY = Mathf.Min(ctx.Height - 1, startY + height - 1);
 
             for (int x = minX; x <= maxX; x++)
             {
                 for (int y = minY; y <= maxY; y++)
                 {
-                    float dx = (float)(x - islandCenterX) / islandHalfWidth;
-                    float dy = (float)(y - islandCenterY) / islandHalfHeight;
+                    float dx = (x - centerX) / halfWidth;
+                    float dy = (y - blobCenterY) / halfHeight;
                     float normalizedDistance = Mathf.Sqrt(dx * dx + dy * dy);
 
-                    if (normalizedDistance > 1.2f) continue;
+                    if (normalizedDistance > 1.2f)
+                        continue;
 
                     float noiseSample = Mathf.PerlinNoise(x * _noiseFrequency + seedX, y * _noiseFrequency + seedY);
                     float density = (1f - normalizedDistance) + ((noiseSample - 0.5f) * _noiseInfluence);
 
                     if (density >= _densityThreshold)
-                    {
                         ctx.FgGrid[x, y] = new TileData(_islandTile.GetId());
-                    }
                 }
             }
         }

@@ -145,7 +145,7 @@ namespace OceanGame
                     var fgTd = world.FgGrid.GetTileData(worldPosX, worldPosY);
                     var bgTd = world.BgGrid.GetTileData(worldPosX, worldPosY);
 
-                    if (((fgTd.HasTile && !fgTd.IsSolid) || !fgTd.HasTile) && !bgTd.HasTile && world.FluidGrid.GetFluidType(worldPosX, worldPosY) == FluidType.Air)
+                    if (((fgTd.HasTile && !fgTd.IsSolid) || !fgTd.HasTile) && !bgTd.HasTile /* && world.FluidGrid.GetFluidType(worldPosX, worldPosY) == FluidType.Air */)
                     {
                         SeedTile(localX, localY, _fullBrightness);
                     }

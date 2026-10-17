@@ -22,11 +22,12 @@ MonoBehaviour:
   Steps:
   - rid: 2783294214768951575
   - rid: 2783294214768951573
+  - rid: 2783294214768951562
+  - rid: 2783294240802209792
   - rid: 2688502357985853566
   - rid: 2895663963195310357
   - rid: 2895664510129406076
   - rid: 2783294085391712386
-  - rid: 2783294214768951562
   references:
     version: 2
     RefIds:
@@ -62,6 +63,13 @@ MonoBehaviour:
       type: {class: SetBgGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
         RunStep: 1
+        _sandSO: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
+        _limestoneSO: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
+        _depthOfSandLayer: 2
+        _noiseFrequency: 0.08
+        _noiseAmplitude: 6
+        _yValFromSeaLevel: -17
+        _undergroundBottomLevel: 200
     - rid: 2783294214768951573
       type: {class: UnderSeaTerrainGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
@@ -69,29 +77,35 @@ MonoBehaviour:
         _limestoneSO: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
         _generateUnderSeaTerrain: 1
         _seaLevelOffset: 3
-        _fadeToGenTopYStart: 8
+        _fadeToGenTopYStart: 7
         _baseFrequency: 0.15
         _detailFrequency: 0.085
         _detailInfluence: 0.6
-        _shallowSolidThreshold: 0.485
+        _shallowSolidThreshold: 0.5
         _deepSolidThreshold: 0.125
     - rid: 2783294214768951575
       type: {class: SurfaceIslandsGenStep, ns: OceanGame, asm: Assembly-CSharp}
       data:
         RunStep: 1
         _islandTile: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
-        _minIslandWidth: 15
-        _maxIslandWidth: 39
-        _minIslandHeight: 6
-        _maxIslandHeight: 17
-        _minIslandGap: 2
-        _maxIslandGap: 40
-        _gapBiasPower: 4.25
-        _minIslandSeaLevelOffset: -1
-        _maxIslandSeaLevelOffset: 1
+        _minIslandBlobCount: 3
+        _maxIslandBlobCount: 8
+        _minBlobWidth: 8
+        _maxBlobWidth: 18
+        _minBlobHeight: 6
+        _maxBlobHeight: 20
+        _minBlobGap: 3
+        _maxBlobGap: 6
         _noiseFrequency: 0.14
         _noiseInfluence: 0.719
         _densityThreshold: 0.183
+    - rid: 2783294240802209792
+      type: {class: SandLayerStep, ns: OceanGame, asm: Assembly-CSharp}
+      data:
+        RunStep: 1
+        _sandTile: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
+        _depthOfSandLayer: 2
+        _depthOfSandFromSurface: 60
     - rid: 2895663963195310357
       type: {class: SetFluidStep, ns: OceanGame, asm: Assembly-CSharp}
       data:

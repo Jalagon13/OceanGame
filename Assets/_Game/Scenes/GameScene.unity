@@ -4818,7 +4818,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 809a702732703425aabf213c8efa7694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.OxygenManager
-  _baseMaxOxygen: 40
+  _baseMaxOxygen: 400
   _airRefillDuration: 3
   _underwaterDrainRate: 1
   _lowOxygenWarningPercentage: 0.3
