@@ -8,9 +8,6 @@ namespace OceanGame
         public static OxygenManager Instance { get; private set; }
 
         [Header("Starting Oxygen & Drain")]
-        [Tooltip("Base oxygen capacity when no tank is equipped.")]
-        [SerializeField] private int _baseMaxOxygen = 45;
-        
         [Tooltip("Seconds to refill oxygen from 0 to full in air.")]
         [SerializeField] private float _airRefillDuration = 2.5f;
         
@@ -22,19 +19,6 @@ namespace OceanGame
         [Range(0.05f, 0.5f)]
         [SerializeField] private float _lowOxygenWarningPercentage = 0.25f;
 
-        [Header("Suffocation & Grace Period")]
-        [Tooltip("Grace period in seconds after oxygen reaches 0 before damage/suffocation begins.")]
-        [SerializeField] private float _suffocationGraceDuration = 3f;
-        
-        [Tooltip("Damage dealt per tick once the grace period expires.")]
-        [SerializeField] private int _drowningDamage = 5;
-        
-        [Tooltip("Interval in seconds between drowning damage ticks.")]
-        [SerializeField] private float _drowningDamageInterval = 1f;
-        
-        [Tooltip("Debuff icon shown in BuffUI while suffocating.")]
-        [SerializeField] private Sprite _drowningBuffIcon;
-
         public Stat MaxOxygen { get; private set; }
         public float CurrentOxygen { get; private set; }
         public float OxygenPercentage => MaxOxygen != null && MaxOxygen.GetValue() > 0 ? CurrentOxygen / MaxOxygen.GetValue() : 0f;
@@ -44,19 +28,14 @@ namespace OceanGame
         public event Action OnOxygenLowWarning; // Triggered once when dropping below warning threshold
         public event Action OnOxygenRefilled; // Triggered when oxygen recovers above warning threshold (to hide UI warnings)
 
-        private Buff _drowningBuff;
-        private StatModifier _currentTankModifier;
-        private float _drowningDamageTimer;
-        private float _graceTimer;
-        private bool _isDrowning;
+        private Buff _wellOxygenatedBuff;
         private bool _hasTriggeredLowWarning;
 
         private void Awake()
         {
             Instance = this;
-            MaxOxygen = new Stat(_baseMaxOxygen);
-            CurrentOxygen = _baseMaxOxygen;
-            _graceTimer = _suffocationGraceDuration;
+            MaxOxygen = new Stat(0);
+            CurrentOxygen = 0f;
         }
 
         private void Start()
@@ -88,17 +67,22 @@ namespace OceanGame
             player.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
             player.Health.CurrentLifeState.OnValueChanged += OnLifeStateChanged;
 
+            var tank = Player.Instance.Equipment != null ? Player.Instance.Equipment.CurrentOxygenTank : null;
+            if (tank != null)
+            {
+                ApplyTankDuration(tank.OxygenDuration, tank.AdditionalHealth);
+            }
+            else
+            {
+                UpdateWellOxygenatedBuff();
+            }
+
             OnOxygenChanged?.Invoke(CurrentOxygen, MaxOxygen.GetValue());
         }
 
         private void OnLifeStateChanged(LifeState previousValue, LifeState newValue)
         {
-            if (newValue == LifeState.Dead)
-            {
-                StopDrowning();
-                ResetGracePeriod();
-            }
-            else if (previousValue == LifeState.Dead && newValue == LifeState.Alive)
+            if (previousValue == LifeState.Dead && newValue == LifeState.Alive)
             {
                 RefillToMax();
             }
@@ -110,24 +94,22 @@ namespace OceanGame
             if (!WorldManager.Instance.IsWorldReady) return;
             if (Player.Instance.Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
 
+            if (Player.Instance.Equipment == null || Player.Instance.Equipment.CurrentOxygenTank == null)
+            {
+                return;
+            }
+
             int maxOxygen = MaxOxygen.GetValue();
             bool canBreathe = !Player.Instance.IsInWater() || Player.Instance.IsHeadInAir();
 
             if (canBreathe)
             {
-                // In air: stop drowning, reset timers
-                if (_isDrowning)
-                {
-                    StopDrowning();
-                }
-                
-                ResetGracePeriod();
-
                 if (CurrentOxygen < maxOxygen)
                 {
                     float refillSpeed = maxOxygen / Mathf.Max(0.1f, _airRefillDuration);
                     CurrentOxygen = Mathf.Min(maxOxygen, CurrentOxygen + refillSpeed * Time.deltaTime);
                     OnOxygenChanged?.Invoke(CurrentOxygen, maxOxygen);
+                    UpdateWellOxygenatedBuff();
 
                     // Reset warning trigger flag once recovered above threshold
                     if (_hasTriggeredLowWarning && (CurrentOxygen / maxOxygen) > _lowOxygenWarningPercentage)
@@ -144,6 +126,7 @@ namespace OceanGame
                 {
                     CurrentOxygen = Mathf.Max(0f, CurrentOxygen - _underwaterDrainRate * Time.deltaTime);
                     OnOxygenChanged?.Invoke(CurrentOxygen, maxOxygen);
+                    UpdateWellOxygenatedBuff();
 
                     // Check percentage threshold for warning
                     float percentage = CurrentOxygen / maxOxygen;
@@ -153,100 +136,61 @@ namespace OceanGame
                         OnOxygenLowWarning?.Invoke();
                     }
 
-                    // While player still has oxygen, keep grace period timer reset
-                    ResetGracePeriod();
-                }
-                else
-                {
-                    // Oxygen reached 0: Count down grace period
-                    if (_graceTimer > 0f)
-                    {
-                        _graceTimer -= Time.deltaTime;
-                    }
-                    else
-                    {
-                        // Grace period reached 0 -> Start DOT and Buff
-                        if (!_isDrowning)
-                        {
-                            StartDrowning();
-                        }
-
-                        _drowningDamageTimer -= Time.deltaTime;
-                        if (_drowningDamageTimer <= 0f)
-                        {
-                            _drowningDamageTimer = _drowningDamageInterval;
-                            Player.Instance.Character.Health.TakeDamage(_drowningDamage, triggerIFrame: false);
-                        }
-                    }
                 }
             }
         }
 
-        private void ResetGracePeriod()
+        public void ApplyTankDuration(int oxygenDuration, int additionalHealth)
         {
-            _graceTimer = _suffocationGraceDuration;
-        }
+            MaxOxygen = new Stat(Mathf.Max(0, oxygenDuration));
+            CurrentOxygen = MaxOxygen.GetValue();
+            _hasTriggeredLowWarning = false;
 
-        private void StartDrowning()
-        {
-            _isDrowning = true;
-            _drowningDamageTimer = _drowningDamageInterval;
-
-            if (_drowningBuff == null)
-            {
-                _drowningBuff = new Buff("Suffocating", StatType.MoveSpeed, flatAmount: 0, percentAmount: 0f, duration: -1f, icon: _drowningBuffIcon);
-            }
-
-            Player.Instance.Character.Stats.StartBuff(_drowningBuff);
-        }
-
-        private void StopDrowning()
-        {
-            _isDrowning = false;
-            _drowningDamageTimer = 0f;
-
-            if (_drowningBuff != null && Player.Instance.Character != null)
-            {
-                Player.Instance.Character.Stats.StopBuff(_drowningBuff);
-            }
-        }
-
-        public void ApplyTankModifier(int additionalOxygen)
-        {
-            RemoveTankModifier();
-
-            if (additionalOxygen > 0)
-            {
-                _currentTankModifier = new StatModifier(StatModifierType.Flat, additionalOxygen);
-                MaxOxygen.AddModifier(_currentTankModifier);
-            }
-
+            UpdateWellOxygenatedBuff(additionalHealth);
             OnOxygenChanged?.Invoke(CurrentOxygen, MaxOxygen.GetValue());
+            OnOxygenRefilled?.Invoke();
         }
 
-        public void RemoveTankModifier()
+        public void RemoveTankDuration()
         {
-            if (_currentTankModifier.Value > 0)
+            MaxOxygen = new Stat(0);
+            CurrentOxygen = 0f;
+            _hasTriggeredLowWarning = false;
+
+            UpdateWellOxygenatedBuff();
+            OnOxygenChanged?.Invoke(CurrentOxygen, 0f);
+            OnOxygenRefilled?.Invoke();
+        }
+
+        private void UpdateWellOxygenatedBuff(int? additionalHealth = null)
+        {
+            var character = Player.Instance != null ? Player.Instance.Character : null;
+            if (character == null) return;
+
+            var tank = Player.Instance.Equipment != null ? Player.Instance.Equipment.CurrentOxygenTank : null;
+            int healthBonus = additionalHealth ?? (tank != null ? tank.AdditionalHealth : 0);
+            bool shouldHaveBuff = tank != null && CurrentOxygen > 0f && healthBonus > 0;
+            bool hasBuff = _wellOxygenatedBuff != null && _wellOxygenatedBuff.IsActive;
+
+            if (hasBuff && (!shouldHaveBuff || _wellOxygenatedBuff.FlatAmount != healthBonus))
             {
-                MaxOxygen.RemoveModifier(_currentTankModifier);
-                _currentTankModifier = default;
+                character.Stats.StopBuff(_wellOxygenatedBuff);
+                _wellOxygenatedBuff = null;
+                hasBuff = false;
             }
 
-            int max = MaxOxygen.GetValue();
-            if (CurrentOxygen > max)
+            if (!hasBuff && shouldHaveBuff)
             {
-                CurrentOxygen = max;
+                _wellOxygenatedBuff = new Buff("Well Oxygenated", StatType.MaxHealth, flatAmount: healthBonus, icon: tank.DisplayIcon);
+                character.Stats.StartBuff(_wellOxygenatedBuff);
             }
-
-            OnOxygenChanged?.Invoke(CurrentOxygen, max);
         }
 
         public void RefillToMax()
         {
-            StopDrowning();
-            ResetGracePeriod();
             _hasTriggeredLowWarning = false;
             CurrentOxygen = MaxOxygen.GetValue();
+            UpdateWellOxygenatedBuff();
             OnOxygenChanged?.Invoke(CurrentOxygen, MaxOxygen.GetValue());
             OnOxygenRefilled?.Invoke();
         }

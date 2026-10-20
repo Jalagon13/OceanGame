@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Tank_OxygenTank
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.OxygenTankItemSO
   <ItemName>k__BackingField: Oxygen Tank
-  <Description>k__BackingField: +30 seconds of oxygen when equipped
+  <Description>k__BackingField: 30 seconds of oxygen and +20 max health while oxygen remains
   <DisplayIcon>k__BackingField: {fileID: -3544011162389870280, guid: 2f87ce7e588154a76acbf2c4eda5fff0, type: 3}
   <IsStackable>k__BackingField: 0
-  <AdditionalOxygen>k__BackingField: 30
+  <OxygenDuration>k__BackingField: 30
+  <AdditionalHealth>k__BackingField: 20

@@ -197,7 +197,7 @@ namespace OceanGame
             var tankSO = CurrentOxygenTank;
             if (tankSO != null && OxygenManager.Instance != null)
             {
-                OxygenManager.Instance.ApplyTankModifier(tankSO.AdditionalOxygen);
+                OxygenManager.Instance.ApplyTankDuration(tankSO.OxygenDuration, tankSO.AdditionalHealth);
             }
 
             RefreshEquipment();
@@ -207,12 +207,13 @@ namespace OceanGame
         {
             if (EquippedOxygenTank.IsEmpty) return;
 
+            EquippedOxygenTank.Clear();
+
             if (OxygenManager.Instance != null)
             {
-                OxygenManager.Instance.RemoveTankModifier();
+                OxygenManager.Instance.RemoveTankDuration();
             }
 
-            EquippedOxygenTank.Clear();
             RefreshEquipment();
         }
 

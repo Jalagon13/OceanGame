@@ -6,6 +6,7 @@ namespace OceanGame
     public class OxygenTankItemSO : ItemSO
     {
         [field: Header("Oxygen Tank Settings")]
-        [field: SerializeField] public int AdditionalOxygen { get; private set; } = 30;
+        [field: SerializeField] public int OxygenDuration { get; private set; } = 30;
+        [field: SerializeField] public int AdditionalHealth { get; private set; } = 20;
     }
 }
