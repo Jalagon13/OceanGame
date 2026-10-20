@@ -769,7 +769,7 @@ ScriptedImporter:
       x: 144
       y: 0
       width: 32
-      height: 31
+      height: 32
     spriteID: 98af64a5864bb4ac6afe43ea717f7ce4
     spriteBone: []
     spriteOutline: []
@@ -960,6 +960,27 @@ ScriptedImporter:
       width: 16
       height: 16
     spriteID: d6e31fceed5b742e68d049e7c10200b4
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  - name: tile_bg_water
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 144
+      y: 32
+      width: 16
+      height: 16
+    spriteID: 04e07b3a993014d34a0842ef233f05c8
     spriteBone: []
     spriteOutline: []
     vertices: []
