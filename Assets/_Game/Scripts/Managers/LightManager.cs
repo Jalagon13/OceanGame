@@ -19,11 +19,8 @@ namespace OceanGame
         [SerializeField, Range(1f, 3f)] private float _lightContrast = 1.2f;
 
         [Header("Light Transmission")]
-        [Tooltip("Light diminished after entering a light cell occupied by a solid foreground tile.")]
         [SerializeField] private float _solidFgTransmission = 0.56f;
-
-        [Tooltip("Light diminished after entering empty space, water, or a non-solid foreground tile.")]
-        [SerializeField] private float _permeableTransmission = 0.88f;
+        [SerializeField] private float _bgTransmission = 0.88f;
 
         [Header("Background Settings")]
         [SerializeField] private RawImage _backgroundOverlay;
@@ -291,8 +288,10 @@ namespace OceanGame
             int worldPosY = _lmBounds.yMin + (lightY / _lightCellsPerTile);
 
             var fgTd = world.FgGrid.GetTileData(worldPosX, worldPosY);
+            var bgTd = world.BgGrid.GetTileData(worldPosX, worldPosY);
+            var environment = world.FluidGrid.GetFluidType(worldPosX, worldPosY);
 
-            return fgTd.HasTile && fgTd.IsSolid ? _solidFgTransmission : _permeableTransmission;
+            return fgTd.HasTile && fgTd.IsSolid ? _solidFgTransmission : _bgTransmission;
         }
 
     }

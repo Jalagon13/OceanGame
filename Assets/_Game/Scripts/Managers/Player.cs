@@ -12,9 +12,6 @@ namespace OceanGame
         public event Action<ServerCharacter> PlayerReady;
         
         [field: Header("Player Settings")]
-        [SerializeField] private CharacterSO _playerSO;
-        public CharacterSO Data => _playerSO;
-        
         [field: SerializeField] public float InteractRange { get; private set; } = 4.5f;
         [field: SerializeField] public Vector2 WalkingBoxColliderSize { get; private set; }
         [field: SerializeField] public Vector2 SwimmingBoxColliderSize { get; private set; }
@@ -31,6 +28,10 @@ namespace OceanGame
         [field: SerializeField] public float GravityForce { get; private set; }
         [field: SerializeField] public float TerminalVelocity { get; private set; }
 
+        [field: Header("Health Regen")]
+        [field: SerializeField, Min(0)] public float HealthRegenTickDuration { get; private set; } = 1;
+        [field: SerializeField, Min(0)] public int HealthRegenPerTick { get; private set; } = 1;
+
         public bool JumpPressed { get; set; }
         public bool WaterJumpBuffered { get; set; }
         public Vector2 RespawnPoint { get; private set; }
@@ -43,6 +44,7 @@ namespace OceanGame
         private bool _wasInWater;
         private bool _hasInitializedAmbience;
         private bool _hasInitialSpawn;
+        private Coroutine _healthRegenerationRoutine;
 
         private void Awake() 
         {
@@ -138,6 +140,9 @@ namespace OceanGame
         {
             if (Character == character) return;
 
+            if (Character != null) Character.Health.CurrentLifeState.OnValueChanged -= OnLifeStateChanged;
+            if (_healthRegenerationRoutine != null) StopCoroutine(_healthRegenerationRoutine);
+
             Character = character;
             Character.Health.CurrentLifeState.OnValueChanged += OnLifeStateChanged;
 
@@ -147,7 +152,19 @@ namespace OceanGame
             DepthTracker = Character.GetComponent<PlayerDepthTracker>();
 
             InitializeSpawn();
+
+            _healthRegenerationRoutine = StartCoroutine(HealthRegenerationRoutine());
+
             PlayerReady?.Invoke(Character);
+        }
+
+        private IEnumerator HealthRegenerationRoutine()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(HealthRegenTickDuration);
+                Character.Health.RestoreHealth(HealthRegenPerTick);
+            }
         }
 
         private void OnLifeStateChanged(LifeState previousValue, LifeState newValue)

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe0e4c828bd83465e82ab75a6c973b41, type: 3}
   m_Name: DefaultWorldPreset
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
-  UseRandomSeed: 0
+  UseRandomSeed: 1
   Seed: 0
   GenColumnsPerFrame: 50
   Width: 1600
@@ -67,8 +67,8 @@ MonoBehaviour:
         _limestoneSO: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
         _depthOfSandLayer: 2
         _noiseFrequency: 0.08
-        _noiseAmplitude: 8
-        _yValFromSeaLevel: -20
+        _noiseAmplitude: 6
+        _yValFromSeaLevel: -30
         _undergroundBottomLevel: 200
     - rid: 2783294214768951573
       type: {class: UnderSeaTerrainGenStep, ns: OceanGame, asm: Assembly-CSharp}
@@ -76,8 +76,8 @@ MonoBehaviour:
         RunStep: 1
         _limestoneSO: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
         _generateUnderSeaTerrain: 1
-        _seaLevelOffset: 4
-        _fadeToGenTopYStart: 8
+        _seaLevelOffset: 5
+        _fadeToGenTopYStart: 15
         _baseFrequency: 0.15
         _detailFrequency: 0.085
         _detailInfluence: 0.6
@@ -88,18 +88,19 @@ MonoBehaviour:
       data:
         RunStep: 1
         _minIslandGap: 8
-        _maxIslandGap: 27
+        _maxIslandGap: 22
         _islandTile: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
-        _minIslandBlobCount: 3
-        _maxIslandBlobCount: 10
-        _minBlobWidth: 8
+        _bgTile: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
+        _minIslandBlobCount: 6
+        _maxIslandBlobCount: 11
+        _minBlobWidth: 7
         _maxBlobWidth: 20
-        _minBlobHeight: 2
-        _maxBlobHeight: 16
-        _minBlobGap: 4
+        _minBlobHeight: 4
+        _maxBlobHeight: 21
+        _minBlobGap: 6
         _maxBlobGap: 7
         _noiseFrequency: 0.14
-        _noiseInfluence: 0.719
+        _noiseInfluence: 0.528
         _densityThreshold: 0.183
     - rid: 2783294240802209792
       type: {class: SandLayerStep, ns: OceanGame, asm: Assembly-CSharp}

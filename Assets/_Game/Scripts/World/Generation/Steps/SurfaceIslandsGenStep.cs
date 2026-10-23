@@ -11,6 +11,7 @@ namespace OceanGame
     
         [Header("Island Generation")]
         [SerializeField] private TileConfigSO _islandTile;
+        [SerializeField] private TileConfigSO _bgTile;
         [SerializeField, Min(1)] private int _minIslandBlobCount = 3;
         [SerializeField, Min(1)] private int _maxIslandBlobCount = 8;
         [SerializeField, Min(1)] private int _minBlobWidth = 15;
