@@ -18,7 +18,6 @@ namespace OceanGame
         [SerializeField] private Tilemap _foregroundTilemap;
         [SerializeField] private Tilemap _backgroundTilemap;
         [SerializeField] private ParallaxBackground _surfaceBg;
-        [SerializeField] private SpriteRenderer _seaLevelLine;
 
         [Header("Tile Repair")]
         [SerializeField, Min(0f)] private float _tileRepairDelay = 5f;
@@ -110,20 +109,6 @@ namespace OceanGame
             }
 
             _surfaceBg.Initialize();
-
-            if (_seaLevelLine != null)
-            {
-                Transform seaLevelTransform = _seaLevelLine.transform;
-                seaLevelTransform.position = new Vector3(width * 0.5f, SeaLevel + 1, seaLevelTransform.position.z);
-
-                Vector3 seaLevelScale = seaLevelTransform.localScale;
-                seaLevelScale.x = width;
-                seaLevelTransform.localScale = seaLevelScale;
-            }
-            else
-            {
-                Debug.LogWarning("Sea level line is not assigned.", this);
-            }
 
             IsWorldReady = true;
             OnWorldReady?.Invoke();

@@ -190,33 +190,6 @@ namespace OceanGame
             // Check if Helm, Chest, and Pants are equipped and belong to the same set.
         }
 
-        public void EquipOxygenTank(ushort itemId)
-        {
-            EquippedOxygenTank.AssignItem(itemId, 1);
-
-            var tankSO = CurrentOxygenTank;
-            if (tankSO != null && OxygenManager.Instance != null)
-            {
-                OxygenManager.Instance.ApplyTankDuration(tankSO.OxygenDuration, tankSO.AdditionalHealth);
-            }
-
-            RefreshEquipment();
-        }
-
-        public void UnequipOxygenTank()
-        {
-            if (EquippedOxygenTank.IsEmpty) return;
-
-            EquippedOxygenTank.Clear();
-
-            if (OxygenManager.Instance != null)
-            {
-                OxygenManager.Instance.RemoveTankDuration();
-            }
-
-            RefreshEquipment();
-        }
-
         public void RefreshEquipment()
         {
             OnEquipmentChanged?.Invoke();

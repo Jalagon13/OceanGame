@@ -12,7 +12,7 @@ namespace OceanGame
         
         [SerializeField] private float _throwItemForce = 15;
 
-        public InventorySlot CursorSlot { get; private set; } = new();
+        public InventorySlot CursorSlot { get; private set; } = new(); 
 
         private void Awake()
         {
@@ -52,59 +52,6 @@ namespace OceanGame
             CursorSlot.Clear();
 
             InventoryManager.Instance.RefreshInventory();
-        }
-
-        // Oxygen Tank
-        public void HandleOxygenTankSlotLeftClick()
-        {
-            var equip = Player.Instance.Equipment;
-            
-            HandleGenericEquipmentSlotClick(
-                equip.EquippedOxygenTank,
-                item => item is OxygenTankItemSO,
-                itemId => equip.EquipOxygenTank(itemId),
-                () => equip.UnequipOxygenTank()
-            );
-        }
-
-        public void HandleOxygenTankSlotRightClick()
-        {
-            if (Player.Instance == null || Player.Instance.Equipment == null) return;
-
-            InventorySlot equipSlot = Player.Instance.Equipment.EquippedOxygenTank;
-
-            if (equipSlot == null) return;
-            if (CursorSlot.IsEmpty && equipSlot.IsEmpty) return;
-
-            if (CursorSlot.IsEmpty)
-            {
-                ushort unequippedItemId = equipSlot.ItemId;
-                CursorSlot.AssignItem(unequippedItemId, 1);
-                Player.Instance.Equipment.UnequipOxygenTank();
-            }
-            else if (equipSlot.IsEmpty)
-            {
-                ItemSO itemSO = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
-                if (itemSO is not OxygenTankItemSO) return;
-
-                ushort itemIdToEquip = CursorSlot.ItemId;
-                CursorSlot.RemoveFromCurrentAmount(1);
-                Player.Instance.Equipment.EquipOxygenTank(itemIdToEquip);
-            }
-            else
-            {
-                ItemSO cursorItemSO = GameDataRegistry.Instance.GetItemSOFromItemId(CursorSlot.ItemId);
-                if (cursorItemSO is not OxygenTankItemSO) return;
-
-                if (CursorSlot.Amount == 1)
-                {
-                    ushort oldEquippedItemId = equipSlot.ItemId;
-                    ushort newEquippedItemId = CursorSlot.ItemId;
-
-                    CursorSlot.AssignItem(oldEquippedItemId, 1);
-                    Player.Instance.Equipment.EquipOxygenTank(newEquippedItemId);
-                }
-            }
         }
 
         // Armor (Helmet, Chest, Pants)
