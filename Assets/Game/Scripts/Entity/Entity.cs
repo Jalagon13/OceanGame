@@ -1,0 +1,34 @@
+using System;
+using Unity.Netcode;
+using UnityEngine;
+
+namespace SketchLand
+{
+    public abstract class Entity : NetworkBehaviour
+    {
+        [SerializeField] private bool _ignoreCollision;
+        public bool IgnoreCollision
+        {
+            get => _ignoreCollision;
+            set => _ignoreCollision = value;
+        }
+
+        [HideInInspector] public Vector2 Velocity;
+        [HideInInspector] public Vector2 ColliderSize;
+        
+        public GridPhysics.CollisionResult CollisionResult { get; private set; }
+
+        // Updating and moving the entity
+        public virtual void FixedTick(float fixedDeltaTime) 
+        {
+            CollisionResult = GridPhysics.MoveAndResolve(transform.position, Velocity, ColliderSize, fixedDeltaTime, _ignoreCollision);
+            transform.position = CollisionResult.NewPosition;
+        }
+
+        // If the phyics systems finds an overlap, do something with it
+        public virtual void OnEntityOverlap(Entity other)
+        {
+            
+        } 
+    }
+}
