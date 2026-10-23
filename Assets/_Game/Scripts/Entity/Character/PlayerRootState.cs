@@ -10,7 +10,6 @@ namespace OceanGame
     {
         public PlayerGroundedState Grounded { get; private set; }
         public PlayerAirborneState Airborne { get; private set; }
-        public PlayerSwimmingState Swimming { get; private set; }
 
         // Parameterless constructor for Unity serialization
         public PlayerRootState() : base() { }
@@ -22,7 +21,6 @@ namespace OceanGame
             // Construct child states once the context is available
             Grounded = new PlayerGroundedState(null, this, ctx);
             Airborne = new PlayerAirborneState(null, this, ctx);
-            Swimming = new PlayerSwimmingState(null, this, ctx);
         }
 
         protected override State GetInitialState() => Grounded;
@@ -121,16 +119,6 @@ namespace OceanGame
                 }
 
                 return (Parent as PlayerRootState).Grounded;
-            }
-            
-            if(_player.IsInWater())
-            {
-                if (_jumpBufferTimer > 0f)
-                {
-                    _player.WaterJumpBuffered = true;
-                }
-
-                return (Parent as PlayerRootState).Swimming;
             }
             
             return null;
@@ -238,140 +226,6 @@ namespace OceanGame
             }
 
             _jumpBufferTimer = _player.JumpBufferDuration;
-        }
-
-    }
-
-    #endregion
-
-    #region Swimming State
-
-    public class PlayerSwimmingState : State
-    {
-        private const float SwimSfxInterval = 0.75f;
-
-        private readonly ServerCharacter _ctx;
-        private Player _player;
-
-        private Vector2 _desiredVisualRotation;
-        private int _turnDegreeThreshold = 90;
-        private float _swimSfxTimer;
-
-        public PlayerSwimmingState(StateMachine m, State parent, ServerCharacter ctx) : base(m, parent)
-        {
-            _ctx = ctx;
-        }
-
-        protected override State GetTransition()
-        {
-            if (_player.IsHeadInAir() && (_player.JumpPressed || _player.WaterJumpBuffered))
-            {
-                _player.JumpPressed = false;
-                _player.WaterJumpBuffered = false;
-                _ctx.Velocity.y = _player.FromWaterJumpSpeed;
-
-                return (Parent as PlayerRootState).Airborne;
-            }
-
-            if (!_player.IsInWater())
-            {
-                if (!_ctx.CollisionResult.TouchingBottom)
-                {
-                    return (Parent as PlayerRootState).Airborne;
-                }
-                else
-                {
-                    return (Parent as PlayerRootState).Grounded;
-                }
-            }
-
-            return null;
-        }
-
-        protected override void OnEnter()
-        {
-            _player = Player.Instance;
-            _ctx.ColliderSize = _player.SwimmingBoxColliderSize;
-            _swimSfxTimer = 0f;
-            
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.WaterEnterSFX, _ctx.transform.position);
-        }
-
-        protected override void OnExit()
-        {
-            _ctx.VisualsGO.transform.up = Vector2.up;
-            _swimSfxTimer = 0f;
-
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.WaterExitSFX, _ctx.transform.position);
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.OxygenReplenishSFX, _ctx.transform.position);
-        }
-
-        protected override void OnFixedUpdate(float fixedDeltaTime)
-        {
-            if (_ctx.IsKnockedBack)
-            {
-                return;
-            }
-
-            float speedMult = Player.Instance.ArmHandler.IsSwinging ? 0.65f : 1f;
-            var currentSpeed = _ctx.Stats.MoveSpeed.GetValue() * speedMult;
-            _ctx.Velocity = Vector2.Lerp(_ctx.Velocity, _ctx.DesiredDirection * currentSpeed, fixedDeltaTime * _ctx.Data.BaseTurnSharpness);
-        }
-
-        protected override void OnUpdate(float deltaTime)
-        {
-            if (_ctx.DesiredDirection != Vector2.zero)
-            {
-                _swimSfxTimer += deltaTime;
-                if (_swimSfxTimer >= SwimSfxInterval)
-                {
-                    _swimSfxTimer %= SwimSfxInterval;
-                    AudioManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerSwimSFX, _ctx.transform.position);
-                }
-            }
-            else
-            {
-                _swimSfxTimer = 0f;
-            }
-
-            bool isArmHandling = Player.Instance.ArmHandler.IsActionHeld || Player.Instance.ArmHandler.IsSwinging || Player.Instance.RangedHandler.IsShooting;
-
-            if (isArmHandling)
-            {
-                Vector2 directionToMouse = WorldManager.MouseWorldPosition - (Vector2)_ctx.transform.position;
-                if (directionToMouse.sqrMagnitude > 0.0001f)
-                {
-                    Vector2 perpendicular = Vector2.Perpendicular(directionToMouse.normalized);
-                    perpendicular = Vector2.Dot(perpendicular, Vector2.up) >= 0f ? perpendicular : -perpendicular;
-
-                    float angleFromUpright = Vector2.SignedAngle(Vector2.up, perpendicular);
-                    float deviation01 = Mathf.InverseLerp(0f, 90f, Mathf.Abs(angleFromUpright));
-                    float rotationAmount = Mathf.Lerp(1f, 0.05f, deviation01);
-                    float adjustedAngle = angleFromUpright * rotationAmount;
-                    
-                    _desiredVisualRotation = Quaternion.Euler(0f, 0f, adjustedAngle) * Vector2.up;
-                }
-                else
-                {
-                    _desiredVisualRotation = Vector2.up;
-                }
-            }
-            else if (_ctx.Velocity.sqrMagnitude <= 10f && _ctx.DesiredDirection == Vector2.zero)
-            {
-                _desiredVisualRotation = Vector2.up;
-            }
-            else
-            {
-                _desiredVisualRotation = _ctx.DesiredDirection.normalized;
-            }
-
-            var angleDifference = Vector2.SignedAngle(_ctx.VisualsGO.transform.up, _desiredVisualRotation);
-
-            float lerpSpeed = Mathf.Abs(angleDifference) < _turnDegreeThreshold ? 10f : 40f;
-            float currentAngle = _ctx.VisualsGO.transform.eulerAngles.z;
-            float targetAngle = currentAngle + angleDifference;
-            float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, lerpSpeed * deltaTime);
-            _ctx.VisualsGO.transform.rotation = Quaternion.Euler(0, 0, newAngle);
         }
 
     }

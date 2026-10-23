@@ -9,10 +9,6 @@ namespace OceanGame
         public static WorldRenderer Instance { get; private set; }
         
         [SerializeField] private Camera _mainCamera;
-        [SerializeField] private TileBase _waterTile;
-        [SerializeField] private Tilemap _waterTilemap;
-        [SerializeField] private TileBase _waterBgTile;
-        [SerializeField] private Tilemap _waterBgTilemap;
 
         [Header("Decal Overlay References")]
         [SerializeField] private Tilemap _damageOverlayTilemap;
@@ -55,8 +51,6 @@ namespace OceanGame
                             Vector3Int tilePos = new Vector3Int(x, y, 0);
                             world.FgGrid.Tilemap.SetTile(tilePos, null);
                             world.BgGrid.Tilemap.SetTile(tilePos, null);
-                            _waterTilemap.SetTile(tilePos, null);
-                            _waterBgTilemap.SetTile(tilePos, null);
                             _damageOverlayTilemap.SetTile(tilePos, null);
                         }
                     }
@@ -150,24 +144,6 @@ namespace OceanGame
                     else if (bgTd.IsAir)
                     {
                         world.BgGrid.Tilemap.SetTile(tilePos3D, null);
-                    }
-                    
-                    // Process Sea Layer
-                    FluidType fluid = world.FluidGrid.GetFluidType(x, y);
-                    switch (fluid)
-                    {
-                        case FluidType.Water:
-                            _waterTilemap.SetTile(tilePos3D, _waterTile);
-                            _waterBgTilemap.SetTile(tilePos3D, _waterBgTile);
-                            break;
-                        case FluidType.Air:
-                            _waterTilemap.SetTile(tilePos3D, null);
-                            _waterBgTilemap.SetTile(tilePos3D, null);
-                            break;
-                        default:
-                            _waterTilemap.SetTile(tilePos3D, null);
-                            _waterBgTilemap.SetTile(tilePos3D, null);
-                            break;
                     }
                 }
             }

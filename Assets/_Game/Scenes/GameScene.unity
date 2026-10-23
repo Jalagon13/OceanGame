@@ -600,13 +600,6 @@ MonoBehaviour:
       Data3: -1045980032
       Data4: -882691186
     Path: event:/Player/AirThrustSFX
-  <PlayerWaterThrustSFX>k__BackingField:
-    Guid:
-      Data1: -178650094
-      Data2: 1315804617
-      Data3: 1270689671
-      Data4: -1526551179
-    Path: event:/Player/WaterThrustSFX
   <WaterEnterSFX>k__BackingField:
     Guid:
       Data1: -1818233781
@@ -2222,10 +2215,8 @@ MonoBehaviour:
   _tempSpawnEntries:
   - _character: {fileID: 11400000, guid: 887e9bbb18cc241e8afc54a9c9925063, type: 2}
     _weight: 0.35
-    _environment: 2
   - _character: {fileID: 11400000, guid: 2a9db1f511b6a4888a49dd1d2f56bd26, type: 2}
     _weight: 1
-    _environment: 0
 --- !u!114 &653184667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7132,10 +7123,9 @@ GameObject:
   - component: {fileID: 2043979314}
   - component: {fileID: 2043979315}
   - component: {fileID: 2043979316}
-  - component: {fileID: 2043979322}
-  - component: {fileID: 2043979318}
   - component: {fileID: 2043979321}
   - component: {fileID: 2043979317}
+  - component: {fileID: 2043979322}
   m_Layer: 0
   m_Name: WORLD
   m_TagString: Untagged
@@ -7174,7 +7164,6 @@ MonoBehaviour:
   _foregroundTilemap: {fileID: 1420173610}
   _backgroundTilemap: {fileID: 1608990557}
   _surfaceBg: {fileID: 856868902}
-  _seaLevelLine: {fileID: 0}
   _tileRepairDelay: 5
   _debugTreeConfig: {fileID: 11400000, guid: 4f515916d235640d480d2b10b7f502af, type: 2}
   _testProjectile: {fileID: 11400000, guid: b5e08a065994447879f5911de6519ca2, type: 2}
@@ -7191,10 +7180,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldRenderer
   _mainCamera: {fileID: 330585545}
-  _waterTile: {fileID: 11400000, guid: e40dc918111c04817b800659a09ce7f7, type: 2}
-  _waterTilemap: {fileID: 0}
-  _waterBgTile: {fileID: 11400000, guid: 94cb1df333f8442d8a9873d3186951f6, type: 2}
-  _waterBgTilemap: {fileID: 0}
   _damageOverlayTilemap: {fileID: 1458897857}
   _crackTiles:
   - {fileID: 11400000, guid: 0d4b958598fb5486b9793b724049138f, type: 2}
@@ -7244,18 +7229,6 @@ MonoBehaviour:
   _foregroundOverlay: {fileID: 328273112}
   _foregroundLightOverlay: {fileID: 328273110}
   _foregroundLightmapFilterMode: 0
---- !u!114 &2043979318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2043979312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad3c40d5996ba48a9b0408f6de2e7233, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.DrainManager
 --- !u!114 &2043979321
 MonoBehaviour:
   m_ObjectHideFlags: 0

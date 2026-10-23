@@ -23,7 +23,6 @@ namespace OceanGame
         [field: SerializeField] public EventReference OxygenReplenishSFX { get; private set; }
         [field: SerializeField] public EventReference PlayerSwimSFX { get; private set; }
         [field: SerializeField] public EventReference PlayerAirThrustSFX { get; private set; }
-        [field: SerializeField] public EventReference PlayerWaterThrustSFX { get; private set; }
         [field: SerializeField] public EventReference WaterEnterSFX { get; private set; }
         [field: SerializeField] public EventReference WaterExitSFX { get; private set; }
 

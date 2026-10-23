@@ -95,15 +95,11 @@ namespace OceanGame
 
         protected override void OnFixedUpdate(float fixedDeltaTime)
         {
-            Vector2Int itemTilePos = new(Mathf.FloorToInt(_ctx.Transform.position.x), Mathf.FloorToInt(_ctx.Transform.position.y - 0.5f));
-            bool isInWater = WorldManager.Instance.FluidGrid.GetFluidType(itemTilePos.x, itemTilePos.y) == FluidType.Water;
+            _ctx.Velocity.y -= _ctx.GravityForce * fixedDeltaTime;
 
-            float gravityScale = isInWater ? 0.25f : 1f;
-            _ctx.Velocity.y -= _ctx.GravityForce * gravityScale * fixedDeltaTime;
-
-            if (_ctx.Velocity.y < _ctx.TerminalVelocity * gravityScale)
+            if (_ctx.Velocity.y < _ctx.TerminalVelocity)
             {
-                _ctx.Velocity.y = _ctx.TerminalVelocity * gravityScale;
+                _ctx.Velocity.y = _ctx.TerminalVelocity;
             }
         }
     }

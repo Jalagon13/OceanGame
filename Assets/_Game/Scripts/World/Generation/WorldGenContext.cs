@@ -14,7 +14,6 @@ namespace OceanGame
 
         public TileData[,] FgGrid { get; set; }
         public TileData[,] BgGrid { get; set; }
-        public FluidType[,] FluidGrid { get; set; }
 
         public WorldGenContext(int width, int height, int seed, int undergroundBottomLevel, int genColumnsPerFrame, int seaLevel)
         {
@@ -26,7 +25,6 @@ namespace OceanGame
             GenColumnsPerFrame = genColumnsPerFrame;
             FgGrid = new TileData[width, height];
             BgGrid = new TileData[width, height];
-            FluidGrid = new FluidType[width, height];
             Random = new(Seed);
         }
     }

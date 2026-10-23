@@ -27,7 +27,6 @@ namespace OceanGame
         [SerializeField] private ProjectileSO _testProjectile;
 
         public enum LayerType { Foreground, Background }
-        public FluidGrid FluidGrid { get; private set; }
         public TileGrid FgGrid { get; private set; }
         public TileGrid BgGrid { get; private set; }
         public LayerType ActiveLayer { get; private set; } = LayerType.Foreground;
@@ -95,7 +94,6 @@ namespace OceanGame
             // Create fresh layers matching generated dimensions
             FgGrid = new TileGrid(width, height, _foregroundTilemap);
             BgGrid = new TileGrid(width, height, _backgroundTilemap);
-            FluidGrid = new FluidGrid(width, height);
 
             // Copy generated 2D tile arrays into layers
             for (int x = 0; x < width; x++)
@@ -104,7 +102,6 @@ namespace OceanGame
                 {
                     FgGrid.SetTileData(x, y, context.FgGrid[x, y]);
                     BgGrid.SetTileData(x, y, context.BgGrid[x, y]);
-                    FluidGrid.SetFluidData(x, y, context.FluidGrid[x, y]);
                 }
             }
 

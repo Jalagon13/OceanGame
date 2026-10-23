@@ -33,7 +33,6 @@ namespace OceanGame
         [field: SerializeField, Min(0)] public int HealthRegenPerTick { get; private set; } = 1;
 
         public bool JumpPressed { get; set; }
-        public bool WaterJumpBuffered { get; set; }
         public Vector2 RespawnPoint { get; private set; }
         public PlayerArmHandler ArmHandler { get; private set; }
         public PlayerRangedHandler RangedHandler { get; private set; }
@@ -41,8 +40,6 @@ namespace OceanGame
         public PlayerEquipment Equipment { get; private set; }
         public PlayerDepthTracker DepthTracker { get; private set; }
 
-        private bool _wasInWater;
-        private bool _hasInitializedAmbience;
         private bool _hasInitialSpawn;
         private Coroutine _healthRegenerationRoutine;
 
@@ -57,6 +54,8 @@ namespace OceanGame
             GameInput.Instance.OnJumpPressed += OnJumpPressed;
             GameInput.Instance.OnSecondaryActionPressed += InteractWithObject;
             WorldManager.Instance.OnWorldReady += InitializeSpawn;
+            AudioManager.Instance.StartSurfaceAmbience(FMODEvents.Instance.SurfaceAmbience);
+
             InitializeSpawn();
         }
         
@@ -71,7 +70,6 @@ namespace OceanGame
 
             if (AudioManager.Instance != null)
             {
-                AudioManager.Instance.StopOceanAmbience();
                 AudioManager.Instance.StopSurfaceAmbience();
             }
         }
@@ -79,26 +77,6 @@ namespace OceanGame
         private void Update()
         {
             if (!WorldManager.Instance.IsWorldReady || Character == null) return;
-
-            // Code for checking water ambience
-            bool isInWater = IsInWater();
-
-            if (!_hasInitializedAmbience || isInWater != _wasInWater)
-            {
-                if (isInWater)
-                {
-                    AudioManager.Instance.StartOceanAmbience(FMODEvents.Instance.OceanAmbience);
-                    AudioManager.Instance.StopSurfaceAmbience();
-                }
-                else
-                {
-                    AudioManager.Instance.StopOceanAmbience();
-                    AudioManager.Instance.StartSurfaceAmbience(FMODEvents.Instance.SurfaceAmbience);
-                }
-
-                _wasInWater = isInWater;
-                _hasInitializedAmbience = true;
-            }
 
             // If player is not dead and is holding down move input keep updating desired direction with it
             if (Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
@@ -203,9 +181,8 @@ namespace OceanGame
             if(!WorldManager.Instance.IsWorldReady || Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
         
             bool canJumpFromGround = Character.CollisionResult.TouchingBottom;
-            bool canJumpFromWater = Character.Machine.Root.Leaf() is PlayerSwimmingState && IsHeadInAir();
 
-            if (canJumpFromGround || canJumpFromWater)
+            if (canJumpFromGround)
             {
                 JumpPressed = true;
             }
@@ -216,22 +193,6 @@ namespace OceanGame
             if (!WorldManager.Instance.IsWorldReady || Character.Health.CurrentLifeState.Value == LifeState.Dead) return;
 
             Character.DesiredDirection = rawMoveInput;
-        }
-
-        public bool IsHeadInAir()
-        {
-            // Get top of head position using actual collider height
-            float headY = Character.transform.position.y + 1;
-            Vector2Int playerHeadTop = new Vector2Int(Mathf.FloorToInt(Character.transform.position.x), Mathf.FloorToInt(headY));
-
-            // Head is above water if top tile is AIR (or not Water)
-            return WorldManager.Instance.FluidGrid.GetFluidType(playerHeadTop.x, playerHeadTop.y) == FluidType.Air;
-        }
-
-        public bool IsInWater()
-        {
-            Vector2Int playerTilePos = new Vector2Int(Mathf.FloorToInt(Character.transform.position.x), Mathf.FloorToInt(Character.transform.position.y - 0.5f));
-            return WorldManager.Instance.FluidGrid.GetFluidType(playerTilePos.x, playerTilePos.y) == FluidType.Water;
         }
     }
 }

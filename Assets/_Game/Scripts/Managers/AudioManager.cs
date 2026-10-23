@@ -8,7 +8,6 @@ namespace OceanGame
     {
         public static AudioManager Instance { get; private set; }
 
-        private EventInstance _oceanAmbienceInstance;
         private EventInstance _surfaceAmbienceInstance;
         private Bus _masterBus;
 
@@ -20,7 +19,6 @@ namespace OceanGame
 
         private void OnDestroy()
         {
-            StopOceanAmbience();
             StopSurfaceAmbience();
         }
 
@@ -28,23 +26,6 @@ namespace OceanGame
         public void PlayOneShot(EventReference sound, Vector3 worldPos)
         {
             RuntimeManager.PlayOneShot(sound, worldPos);
-        }
-
-        public void StartOceanAmbience(EventReference ambience)
-        {
-            if (_oceanAmbienceInstance.isValid()) return;
-
-            _oceanAmbienceInstance = RuntimeManager.CreateInstance(ambience);
-            _oceanAmbienceInstance.start();
-        }
-
-        public void StopOceanAmbience()
-        {
-            if (!_oceanAmbienceInstance.isValid()) return;
-
-            _oceanAmbienceInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            _oceanAmbienceInstance.release();
-            _oceanAmbienceInstance = default;
         }
 
         public void StartSurfaceAmbience(EventReference ambience)
