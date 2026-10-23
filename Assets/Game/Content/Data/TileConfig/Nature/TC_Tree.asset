@@ -45,9 +45,9 @@ MonoBehaviour:
   _branchLeftTile: {fileID: 0}
   _branchRightTile: {fileID: 0}
   _topTile: {fileID: 11400000, guid: 38046957f6cee4639878c78189ad9315, type: 2}
-  <MinHeight>k__BackingField: 5
-  <MaxHeight>k__BackingField: 10
-  _branchChance: 0
+  <MinHeight>k__BackingField: 4
+  <MaxHeight>k__BackingField: 8
+  _branchChance: 0.25
   references:
     version: 2
     RefIds:

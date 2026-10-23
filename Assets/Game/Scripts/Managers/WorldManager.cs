@@ -89,7 +89,7 @@ namespace SketchLand
         {
             var width = context.Width;
             var height = context.Height;
-            SeaLevel = context.SeaLevel;
+            SeaLevel = context.RoughSurfaceHeight;
 
             // Create fresh layers matching generated dimensions
             FgGrid = new TileGrid(width, height, _foregroundTilemap);

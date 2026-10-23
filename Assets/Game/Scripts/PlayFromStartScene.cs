@@ -14,7 +14,7 @@ namespace SketchLand
     {
         static PlayFromStartScene()
         {
-            SceneAsset startScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/_Game/Scenes/MainMenuScene.unity");
+            SceneAsset startScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Game/Scenes/MainMenuScene.unity");
             EditorSceneManager.playModeStartScene = startScene;
         }
     }

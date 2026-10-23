@@ -36,7 +36,7 @@ namespace SketchLand
             foreach (OreConfig oreConfig in _oreConfigs)
             {
                 int chunkSize = Mathf.Max(1, oreConfig.ChunkSize);
-                int highestAllowedY = Mathf.Min(ctx.SeaLevel - oreConfig.StartingDepth, ctx.Height - 1);
+                int highestAllowedY = Mathf.Min(ctx.RoughSurfaceHeight - oreConfig.StartingDepth, ctx.Height - 1);
 
                 if (highestAllowedY < 0)
                 {
@@ -110,7 +110,7 @@ namespace SketchLand
                 return false;
             }
 
-            int depth = ctx.SeaLevel - pos.y;
+            int depth = ctx.RoughSurfaceHeight - pos.y;
             if (depth < oreConfig.StartingDepth)
             {
                 return false;

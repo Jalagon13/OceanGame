@@ -16,7 +16,7 @@ namespace SketchLand
                 int startY = ctx.Height - _tree.MaxHeight - 1;
 
                 // Travel from the top of the mpa to sea level
-                for (int y = startY; y >= ctx.SeaLevel; y--)
+                for (int y = startY; y >= ctx.RoughSurfaceHeight; y--)
                 {
                     bool hasTile = ctx.FgGrid[x, y].HasTile;
                     bool hasTileAbove = ctx.FgGrid[x, y + 1].HasTile;

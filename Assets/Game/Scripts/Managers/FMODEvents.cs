@@ -8,7 +8,6 @@ namespace SketchLand
         public static FMODEvents Instance { get; private set; }
 
         [field: Header("Ambience")]
-        [field: SerializeField] public EventReference OceanAmbience { get; private set; }
         [field: SerializeField] public EventReference SurfaceAmbience { get; private set; }
 
         [field: Header("UI")]
@@ -17,11 +16,8 @@ namespace SketchLand
         [field: SerializeField] public EventReference HotbarSlotChangedSFX { get; private set; }
         [field: SerializeField] public EventReference ItemPickupSFX { get; private set; }
         [field: SerializeField] public EventReference SlotClickedSFX { get; private set; }
-        [field: SerializeField] public EventReference OxygenWarningSFX { get; private set; }
 
         [field: Header("Player")]
-        [field: SerializeField] public EventReference OxygenReplenishSFX { get; private set; }
-        [field: SerializeField] public EventReference PlayerSwimSFX { get; private set; }
         [field: SerializeField] public EventReference PlayerAirThrustSFX { get; private set; }
         [field: SerializeField] public EventReference WaterEnterSFX { get; private set; }
         [field: SerializeField] public EventReference WaterExitSFX { get; private set; }

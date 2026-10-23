@@ -12,16 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe0e4c828bd83465e82ab75a6c973b41, type: 3}
   m_Name: DefaultWorldPreset
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.WorldGenPipelineSO
-  UseRandomSeed: 1
+  UseRandomSeed: 0
   Seed: 0
   GenColumnsPerFrame: 50
   Width: 1600
   Height: 400
-  SeaLevel: 365
+  RoughSurfaceHeight: 350
   UndergroundBottomLevel: 275
   Steps:
   - rid: 2783294373672517730
   - rid: 2783294373672517731
+  - rid: 2783294373672517735
   - rid: 2783294373672517732
   - rid: 2783294373672517734
   - rid: 2783294373672517733
@@ -32,27 +33,45 @@ MonoBehaviour:
       type: {class: SurfaceHeightMapStep, ns: SketchLand, asm: Assembly-CSharp}
       data:
         RunStep: 1
+        _amplitude: 15
+        _frequency: 0.03
     - rid: 2783294373672517731
       type: {class: FillWorldStep, ns: SketchLand, asm: Assembly-CSharp}
       data:
         RunStep: 1
-        _grassTile: {fileID: 0}
-        _dirtTile: {fileID: 0}
-        _stoneTile: {fileID: 0}
-        _dirtDepth: 0
+        _grassTile: {fileID: 11400000, guid: 578a10688548347e5a8e896d9305c527, type: 2}
+        _dirtTile: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
+        _stoneTile: {fileID: 11400000, guid: 4c03968963b3647e89b9d76186c74206, type: 2}
+        _dirtDepth: 6
     - rid: 2783294373672517732
       type: {class: OreGenStep, ns: SketchLand, asm: Assembly-CSharp}
       data:
         RunStep: 1
-        _oreConfigs: []
+        _oreConfigs:
+        - OreTile: {fileID: 11400000, guid: 75d3adf13369b426cbdbcc99aabd6f3d, type: 2}
+          StartingDepth: 20
+          ChunkSize: 25
+          VeinsPerChunk: 6
+          VeinMinDistance: 6
+          MaxAttemptsPerVein: 15
+          MinVeinSize: 2
+          MaxVeinSize: 8
     - rid: 2783294373672517733
       type: {class: TreeGenStep, ns: SketchLand, asm: Assembly-CSharp}
       data:
         RunStep: 1
-        _tree: {fileID: 0}
-        _minTreeSpace: 1
-        _maxTreeSpace: 4
+        _tree: {fileID: 11400000, guid: 4f515916d235640d480d2b10b7f502af, type: 2}
+        _minTreeSpace: 2
+        _maxTreeSpace: 5
     - rid: 2783294373672517734
       type: {class: SetBgGenStep, ns: SketchLand, asm: Assembly-CSharp}
       data:
         RunStep: 1
+        _dirtTile: {fileID: 11400000, guid: d927e8dc6d24d465b9dcd9aae0e08c71, type: 2}
+    - rid: 2783294373672517735
+      type: {class: CaveGenStep, ns: SketchLand, asm: Assembly-CSharp}
+      data:
+        RunStep: 1
+        _scale: 3
+        _frequency: 0.35
+        _caveThreshold: 0.6
