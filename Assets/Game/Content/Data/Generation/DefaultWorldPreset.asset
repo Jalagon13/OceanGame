@@ -19,7 +19,40 @@ MonoBehaviour:
   Height: 400
   SeaLevel: 365
   UndergroundBottomLevel: 275
-  Steps: []
+  Steps:
+  - rid: 2783294373672517730
+  - rid: 2783294373672517731
+  - rid: 2783294373672517732
+  - rid: 2783294373672517734
+  - rid: 2783294373672517733
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 2783294373672517730
+      type: {class: SurfaceHeightMapStep, ns: SketchLand, asm: Assembly-CSharp}
+      data:
+        RunStep: 1
+    - rid: 2783294373672517731
+      type: {class: FillWorldStep, ns: SketchLand, asm: Assembly-CSharp}
+      data:
+        RunStep: 1
+        _grassTile: {fileID: 0}
+        _dirtTile: {fileID: 0}
+        _stoneTile: {fileID: 0}
+        _dirtDepth: 0
+    - rid: 2783294373672517732
+      type: {class: OreGenStep, ns: SketchLand, asm: Assembly-CSharp}
+      data:
+        RunStep: 1
+        _oreConfigs: []
+    - rid: 2783294373672517733
+      type: {class: TreeGenStep, ns: SketchLand, asm: Assembly-CSharp}
+      data:
+        RunStep: 1
+        _tree: {fileID: 0}
+        _minTreeSpace: 1
+        _maxTreeSpace: 4
+    - rid: 2783294373672517734
+      type: {class: SetBgGenStep, ns: SketchLand, asm: Assembly-CSharp}
+      data:
+        RunStep: 1

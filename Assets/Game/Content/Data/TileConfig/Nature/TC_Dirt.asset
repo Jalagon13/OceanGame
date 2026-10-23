@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93c73fdc83b114b56a5d587022066f87, type: 3}
-  m_Name: TC_Limestone
+  m_Name: TC_Dirt
   m_EditorClassIdentifier: Assembly-CSharp::OceanGame.TileDataSO
   <RequiredHarvestType>k__BackingField: 1
   <MaxHP>k__BackingField: 100
@@ -18,25 +18,25 @@ MonoBehaviour:
   <Indestructible>k__BackingField: 0
   <IsSolid>k__BackingField: 1
   <Size>k__BackingField: {x: 1, y: 1}
-  <DrawTile>k__BackingField: {fileID: 11400000, guid: 4acdf8bdeeadb4fc1986f895489c236f, type: 2}
+  <DrawTile>k__BackingField: {fileID: 11400000, guid: b88885a348c99447d9249ef60af0ee81, type: 2}
   <TileHitSFX>k__BackingField:
     Guid:
-      Data1: 385692146
-      Data2: 1168839885
-      Data3: -1768191065
-      Data4: -302468917
-    Path: event:/World/StoneHitSFX
+      Data1: 2070957096
+      Data2: 1079413369
+      Data3: -2118459249
+      Data4: -142417729
+    Path: event:/World/SandHitSFX
   <TileDestroyedSFX>k__BackingField:
     Guid:
-      Data1: 367165706
-      Data2: 1225033850
-      Data3: 743236771
-      Data4: 1138547050
-    Path: event:/World/StoneDestroySFX
+      Data1: -1423510184
+      Data2: 1266889974
+      Data3: 1737393593
+      Data4: -848103714
+    Path: event:/World/SandDestroyedSFX
   <InteractBehavior>k__BackingField:
     rid: -2
   LootDrops:
-  - _item: {fileID: 11400000, guid: a8ba4590c8abf433dbe1aa7470e8b094, type: 2}
+  - _item: {fileID: 11400000, guid: b424afe4dee6641ca97d9b23d029ab30, type: 2}
     _minAmount: 1
     _maxAmount: 1
     _dropChance: 1

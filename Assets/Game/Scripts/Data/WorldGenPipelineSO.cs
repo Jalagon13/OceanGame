@@ -15,7 +15,7 @@ namespace SketchLand
         [Header("World")]
         public int Width = 100;
         public int Height = 100;
-        public int SeaLevel = 350;
+        public int RoughSurfaceHeight = 350;
         public int UndergroundBottomLevel = 275;
 
         [Header("Steps (Sequential Execution)")]
@@ -27,7 +27,7 @@ namespace SketchLand
             Debug.Log($"[WorldGen] Generation Started");
         
             int actualSeed = UseRandomSeed ? UnityEngine.Random.Range(0, 100000) : Seed;
-            var context = new WorldGenContext(Width, Height, actualSeed, UndergroundBottomLevel, GenColumnsPerFrame, SeaLevel);
+            var context = new WorldGenContext(Width, Height, actualSeed, UndergroundBottomLevel, GenColumnsPerFrame, RoughSurfaceHeight);
 
             for (int i = 0; i < Steps.Count; i++)
             {

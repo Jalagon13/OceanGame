@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93c73fdc83b114b56a5d587022066f87, type: 3}
+  m_Name: TC_Grass
+  m_EditorClassIdentifier: Assembly-CSharp::OceanGame.TileDataSO
+  <RequiredHarvestType>k__BackingField: 1
+  <MaxHP>k__BackingField: 100
+  <LightLevel>k__BackingField: 0
+  <Indestructible>k__BackingField: 0
+  <IsSolid>k__BackingField: 1
+  <Size>k__BackingField: {x: 1, y: 1}
+  <DrawTile>k__BackingField: {fileID: 11400000, guid: c874e0f2c3f0d4fdda8f7f81bfbad170, type: 2}
+  <TileHitSFX>k__BackingField:
+    Guid:
+      Data1: 2070957096
+      Data2: 1079413369
+      Data3: -2118459249
+      Data4: -142417729
+    Path: event:/World/SandHitSFX
+  <TileDestroyedSFX>k__BackingField:
+    Guid:
+      Data1: -1423510184
+      Data2: 1266889974
+      Data3: 1737393593
+      Data4: -848103714
+    Path: event:/World/SandDestroyedSFX
+  <InteractBehavior>k__BackingField:
+    rid: -2
+  LootDrops:
+  - _item: {fileID: 11400000, guid: b424afe4dee6641ca97d9b23d029ab30, type: 2}
+    _minAmount: 1
+    _maxAmount: 1
+    _dropChance: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
